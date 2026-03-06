@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta-Shopify Integration Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 30%,#334155 70%,#1e293b 100%);
+  background-attachment:fixed;
+  padding:40px 20px;
+  min-height:100vh;
+}
+.container {
+  background:linear-gradient(to bottom,#fff 0%,#f9fafb 40%,#f3f4f6 100%);
+  border-radius:28px;
+  max-width:1460px;
+  margin:0 auto;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.4);
+}
+.header-section {
+  background:linear-gradient(135deg,#6d28d9 0%,#7c3aed 20%,#8b5cf6 50%,#a855f7 80%,#7c3aed 100%);
+  padding:60px 50px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  border-bottom:2px solid rgba(255,255,255,.2);
+}
+.header-section::before {
+  content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 70%);
+  border-radius:50%;animation:float 6s ease-in-out infinite;
+}
+.header-section::after {
+  content:'';position:absolute;bottom:-20%;left:-5%;width:300px;height:300px;
+  background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 70%);
+  border-radius:50%;animation:float 8s ease-in-out infinite reverse;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(20px)}}
+h1{position:relative;color:#fff;font-size:3.2em;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:10px;}
+.subtitle{position:relative;color:rgba(255,255,255,.93);font-size:1.15em;font-weight:500;line-height:1.8;}
+.badge-container{position:relative;display:flex;justify-content:center;gap:12px;margin-top:22px;flex-wrap:wrap;}
+.badge{
+  background:rgba(255,255,255,.14);backdrop-filter:blur(20px);color:#fff;
+  padding:12px 22px;border-radius:50px;font-size:.82em;font-weight:600;
+  border:1.5px solid rgba(255,255,255,.32);text-transform:uppercase;letter-spacing:.6px;
+  transition:all .3s;cursor:pointer;
+}
+.badge:hover{background:rgba(255,255,255,.22);transform:translateY(-3px);}
+.content-section{padding:40px;}
+.diagram-card{
+  background:linear-gradient(135deg,#f5f7fa 0%,#f0f5ff 50%,#f5f8fc 100%);
+  border-radius:22px;padding:36px 30px;
+  border:1.5px solid rgba(200,210,230,.5);margin-bottom:30px;
+  overflow-x:auto;
+}
+#svgContainer svg { display:block; font-family:'Inter',sans-serif; }
+.legend-title{font-size:1.9em;color:#0f172a;font-weight:800;display:flex;align-items:center;gap:14px;margin-bottom:24px;letter-spacing:-.5px;}
+.legend-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px;}
+.legend-item{
+  background:rgba(255,255,255,.98);padding:20px 18px 20px 22px;border-radius:16px;
+  border:1.5px solid rgba(200,210,230,.4);border-left:7px solid;transition:transform .3s;
+}
+.legend-item:hover{transform:translateY(-4px);}
+.legend-item strong{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:1em;color:#0f172a;font-weight:700;}
+.legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.legend-item small{color:#475569;font-size:.86em;line-height:1.6;font-weight:500;}
+@media(max-width:900px){.legend-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.legend-grid{grid-template-columns:1fr}h1{font-size:2em}.content-section{padding:20px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header-section">
+    <h1>Meta, Savex And Shopify Integration</h1>
+    <p class="subtitle">An enterprise-grade workflow architecture for automated retail operations from discovery to doorstep.</p>
+    <div class="badge-container">
+      <div class="badge">💵 Secure Payments</div>
+      <div class="badge">🚚 Automated Fulfillment</div>
+      <div class="badge">📱 Live Tracking</div>
+      <div class="badge">🛡️ SECURITY AUDIT: OFAC COMPLIANCE</div>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <div class="diagram-card">
+      <div id="svgContainer"></div>
+    </div>
+
+    <h2 class="legend-title">🎯 Architecture Components</h2>
+    <div class="legend-grid">
+      <div class="legend-item" style="border-left-color:#2563eb">
+        <strong><span class="legend-dot" style="background:#2563eb"></span>MDC Ecosystem</strong>
+        <small>Custom frontend interface and centralized business logic server for custom TAT calculation.</small>
+      </div>
+      <div class="legend-item" style="border-left-color:#10b981">
+        <strong><span class="legend-dot" style="background:#10b981"></span>Shopify Engine</strong>
+        <small>The core commerce layer managing carts, catalogs, and secure checkout sessions.</small>
+      </div>
+      <div class="legend-item" style="border-left-color:#f59e0b">
+        <strong><span class="legend-dot" style="background:#f59e0b"></span>Payment Hub</strong>
+        <small>Gateway integration (PayU/Razorpay) ensuring secure, compliant payment processing.</small>
+      </div>
+      <div class="legend-item" style="border-left-color:#8b5cf6">
+        <strong><span class="legend-dot" style="background:#8b5cf6"></span>Savex ERP (IFS)</strong>
+        <small>The backbone for inventory, automated tax invoicing, and financial records.</small>
+      </div>
+      <div class="legend-item" style="border-left-color:#ef4444">
+        <strong><span class="legend-dot" style="background:#ef4444"></span>Logistics (3PL)</strong>
+        <small>Automated dispatch via BlueDart/Delhivery with real-time AWB generation.</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
+const ACTORS = [
+  { icon:'🌐', name:'MDC Front End',   sub:'User Interface',        c:'#2563eb', dk:'#1d4ed8', lt:'#dbeafe' },
+  { icon:'⚙️', name:'MDC Server',      sub:'Business Logic',        c:'#0ea5e9', dk:'#0284c7', lt:'#e0f2fe' },
+  { icon:'🛒', name:'Shopify',         sub:'Savex Store',           c:'#10b981', dk:'#059669', lt:'#d1fae5' },
+  { icon:'💳', name:'Payment Gateway', sub:'PayU/Razorpay/PineLab', c:'#f59e0b', dk:'#d97706', lt:'#fef3c7' },
+  { icon:'🖥️', name:'Savex ERP (IFS)',sub:'Inventory System',      c:'#8b5cf6', dk:'#7c3aed', lt:'#ede9fe' },
+  { icon:'🚚', name:'3PL',             sub:'BlueDart/Delhivery',    c:'#ef4444', dk:'#dc2626', lt:'#fee2e2' },
+];
+
+// Flow steps
+// { t:'band', cols:[a,b], bg, tc, text }   — background band + label
+// { t:'msg',  from, to, lines:[], dashed } — arrow message
+// { t:'self', actor, lines:[] }            — self call
+// { t:'altS', label, bg, tc }             — alt/else branch start
+// { t:'altE' }                             — end alt block
+const FLOW = [
+  { t:'band', cols:[0,1], bg:'rgba(219,234,254,0.7)', tc:'#1e40af', text:'🗂️  Product Catalogue & Pricing Management' },
+  { t:'msg',  from:1, to:0, lines:['Manage Product Catalogue','(Add/Update Products & Pricing)'] },
+  { t:'self', actor:1,      lines:['Store Catalogue Data','(Meta Platform Ready)'] },
+
+  { t:'band', cols:[0,4], bg:'rgba(209,250,229,0.7)', tc:'#065f46', text:'📦  Inventory and Product Display Page' },
+  { t:'msg',  from:4, to:1, lines:['MDC will pull Combined Inventory from Savex','(Physical - Allocated - Buffer)'] },
+  { t:'msg',  from:0, to:1, lines:['Input Pincode & Browse Products'] },
+  { t:'self', actor:1,      lines:['Calculate TAT - Subject to Availability of Inventory','(ERP Lead Time + 3PL Transit)'] },
+  { t:'msg',  from:1, to:0, lines:['Show TAT at Cart and PDP with','"Delivery by [Date]"'], dashed:true },
+
+  { t:'band', cols:[0,3], bg:'rgba(254,243,199,0.7)', tc:'#92400e', text:'💳  Transaction & Payment' },
+  { t:'msg',  from:0, to:1, lines:['Customer Click to Checkout the Cart'] },
+  { t:'msg',  from:1, to:2, lines:['Create Cart & Redirect User to Shopify Checkout'] },
+  { t:'self', actor:2,      lines:['Enter Payment Details','on Shopify Checkout'] },
+  { t:'msg',  from:2, to:3, lines:['Initiate Payment Request','(Amount, Order ID, Customer Info)'] },
+  { t:'self', actor:3,      lines:['Process Payment','(Authorization & Validation)'] },
+  { t:'msg',  from:3, to:2, lines:['Payment Success Response','(Transaction ID)'], dashed:true },
+  { t:'msg',  from:2, to:1, lines:['Payment Success Confirmation','+ Order Details'] },
+  { t:'msg',  from:2, to:0, lines:['Show Order Success Page'], dashed:true },
+  { t:'msg',  from:2, to:1, lines:['Webhook: Update User Account','"My Orders" Section'] },
+
+  { t:'band', cols:[1,2], bg:'rgba(254,235,200,0.7)', tc:'#92400e', text:'🛡️  SECURITY AUDIT: OFAC COMPLIANCE' },
+  { t:'self', actor:1,      lines:['Run OFAC Compliance Check','(Customer Name, Address, Country)'] },
+  { t:'altS', label:'alt   OFAC Check Failed',  bg:'rgba(255,247,237,0.9)', tc:'#c2410c' },
+    { t:'msg',  from:1, to:2, lines:['Cancel Order in Shopify','(Cooling Period: TBD)'] },
+    { t:'msg',  from:2, to:4, lines:['Notify Order Cancellation'] },
+    { t:'self', actor:4,      lines:['Process Refund','(Verify & Initiate)'] },
+    { t:'msg',  from:4, to:1, lines:['Refund Confirmation'], dashed:true },
+    { t:'msg',  from:1, to:0, lines:['Notify Customer','(Order Cancelled - Compliance Issue)'] },
+  { t:'altS', label:'else   OFAC Check Passed', bg:'rgba(240,253,244,0.9)', tc:'#065f46' },
+    { t:'msg',  from:1, to:2, lines:['Update Order Status/Tag','(OFAC Compliance: PASSED)'] },
+    { t:'self', actor:2,      lines:['Mark Order Ready','for Fulfillment'] },
+  { t:'altE' },
+
+  { t:'band', cols:[2,5], bg:'rgba(237,233,254,0.7)', tc:'#4c1d95', text:'📦  Order Fulfillment & Tracking' },
+  { t:'msg',  from:2, to:4, lines:['Pull Orders from Shopify','(OFAC Passed Orders Only)'] },
+  { t:'self', actor:4,      lines:['Generate Invoice, E-Invoice',' Eway Bill & Digital Signature'] },
+  { t:'msg',  from:4, to:5, lines:['API: Generate AWB/Docket','(Shipping Label)'] },
+  { t:'msg',  from:5, to:4, lines:['Return AWB Number'], dashed:true },
+  { t:'self', actor:4,      lines:['Make Entries in ERP','(Record AWB & Update Order Status)'] },
+  { t:'msg',  from:4, to:2, lines:['Update AWB on Shopify','(Order Tracking)'] },
+  { t:'msg',  from:4, to:1, lines:['Update AWB on MDC','(For User Tracking)'] },
+  { t:'msg',  from:1, to:0, lines:['Notify Customer via SMS, WhatsApp or Email','Delivery Status Updates'] },
+];
+
+// ─── LAYOUT CONSTANTS ────────────────────────────────────────────────────────
+const N      = ACTORS.length;         // 6
+const PAD_L  = 20;                    // left padding
+const PAD_R  = 20;                    // right padding
+const COL_W  = 200;                   // width of each actor column
+const SVG_W  = PAD_L + N * COL_W + PAD_R;
+
+const ACTOR_H    = 80;   // actor box height
+const BAND_H     = 36;   // phase band height
+const MSG_H      = 82;   // normal message row height
+const SELF_H     = 82;   // self-call row height
+const ALT_HDR_H  = 28;   // alt/else label bar height
+const ALT_PAD    = 6;    // padding around alt block
+
+// X centre of each actor column
+function cx(i) { return PAD_L + i * COL_W + COL_W / 2; }
+
+// ─── SVG HELPERS ─────────────────────────────────────────────────────────────
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs={}, children=[]) {
+  const e = document.createElementNS(SVG_NS, tag);
+  Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+  children.forEach(c => typeof c === 'string' ? e.appendChild(document.createTextNode(c)) : e.appendChild(c));
+  return e;
+}
+function rect(x,y,w,h,attrs={})  { return el('rect',  {x,y,width:w,height:h,rx:8,...attrs}); }
+function line(x1,y1,x2,y2,attrs) { return el('line',  {x1,y1,x2,y2,...attrs}); }
+function circle(cx,cy,r,attrs)   { return el('circle',{cx,cy,r,...attrs}); }
+
+function text(x, y, content, attrs={}) {
+  const t = el('text', {x, y, 'dominant-baseline':'middle', 'text-anchor':'middle', ...attrs});
+  if (Array.isArray(content)) {
+    content.forEach((line, i) => {
+      const tspan = el('tspan', {x, dy: i===0 ? 0 : '1.3em'});
+      tspan.textContent = line;
+      t.appendChild(tspan);
+    });
+  } else {
+    t.textContent = content;
+  }
+  return t;
+}
+
+// Wrapped text — returns array of lines split at maxW chars
+function wrapText(lines, maxChars=38) {
+  const out = [];
+  lines.forEach(l => {
+    if (l.length <= maxChars) { out.push(l); return; }
+    const words = l.split(' ');
+    let cur = '';
+    words.forEach(w => {
+      if ((cur+' '+w).trim().length > maxChars) { if(cur) out.push(cur.trim()); cur = w; }
+      else cur = (cur+' '+w).trim();
+    });
+    if (cur) out.push(cur.trim());
+  });
+  return out;
+}
+
+// ─── MEASURE pass: compute total SVG height ──────────────────────────────────
+function measureHeight() {
+  let y = ACTOR_H; // top actors
+  let inAlt = false;
+
+  FLOW.forEach(s => {
+    if (s.t === 'band') { y += BAND_H; }
+    else if (s.t === 'msg') {
+      const wrapped = wrapText(s.lines);
+      const extraH  = Math.max(0, (wrapped.length - 1) * 14);
+      y += MSG_H + extraH;
+    }
+    else if (s.t === 'self') {
+      const wrapped = wrapText(s.lines);
+      const extraH  = Math.max(0, (wrapped.length - 1) * 14);
+      y += SELF_H + extraH;
+    }
+    else if (s.t === 'altS') {
+      if (!inAlt) { y += ALT_PAD; inAlt = true; }
+      y += ALT_HDR_H;
+    }
+    else if (s.t === 'altE') { y += ALT_PAD; inAlt = false; }
+  });
+
+  y += ACTOR_H; // bottom actors
+  return y;
+}
+
+// ─── DRAW ────────────────────────────────────────────────────────────────────
+function draw() {
+  const SVG_H = measureHeight() + 20;
+  const svg = el('svg', { width: SVG_W, height: SVG_H, viewBox:`0 0 ${SVG_W} ${SVG_H}` });
+
+  // white background
+  svg.appendChild(rect(0, 0, SVG_W, SVG_H, { fill:'#ffffff', rx:0 }));
+
+  // defs for arrowheads
+  const defs = el('defs');
+  ACTORS.forEach((a, i) => {
+    // solid arrowhead
+    const m = el('marker', { id:`ah-${i}`, markerWidth:10, markerHeight:7, refX:9, refY:3.5, orient:'auto' });
+    m.appendChild(el('polygon', { points:'0 0, 10 3.5, 0 7', fill: a.c }));
+    defs.appendChild(m);
+    // dashed arrowhead (same colour)
+    const md = el('marker', { id:`ahd-${i}`, markerWidth:10, markerHeight:7, refX:9, refY:3.5, orient:'auto' });
+    md.appendChild(el('polygon', { points:'0 0, 10 3.5, 0 7', fill: a.c }));
+    defs.appendChild(md);
+  });
+  svg.appendChild(defs);
+
+  let stepNum = 1;
+  let y = 0;
+
+  // ── draw actor boxes ──────────────────────────────────────────────────────
+  function drawActors(yTop) {
+    ACTORS.forEach((a, i) => {
+      const x = PAD_L + i * COL_W + 6;
+      const w = COL_W - 12;
+      const h = ACTOR_H - 8;
+      // box
+      svg.appendChild(rect(x, yTop + 4, w, h, { fill: a.c, stroke: a.dk, 'stroke-width':2, rx:10 }));
+      // icon
+      svg.appendChild(text(x + w/2, yTop + 4 + 16, a.icon, { 'font-size':18, fill:'#fff' }));
+      // name
+      svg.appendChild(text(x + w/2, yTop + 4 + 36, a.name, { 'font-size':11, fill:'#fff', 'font-weight':'700' }));
+      // sub
+      svg.appendChild(text(x + w/2, yTop + 4 + 52, `(${a.sub})`, { 'font-size':9.5, fill:'rgba(255,255,255,0.85)' }));
+    });
+  }
+
+  drawActors(y);
+  y += ACTOR_H;
+
+  // ── lifeline layer (drawn behind everything) ──────────────────────────────
+  // We'll draw them after computing total height
+  const lifelineGroup = el('g');
+  svg.appendChild(lifelineGroup); // placeholder, filled after
+
+  // ── main drawing layer ────────────────────────────────────────────────────
+  const mainGroup = el('g');
+  svg.appendChild(mainGroup);
+
+  // Track alt block geometry for the border rect
+  let altStartY    = 0;
+  let inAlt        = false;
+  let altBg        = '#fff';
+  let altBranchBgs = [];
+
+  // band rects drawn in order
+  const bandRects  = []; // {x,y,w,h,bg}
+
+  function drawBand(step, yy) {
+    const x1 = PAD_L + step.cols[0] * COL_W;
+    const x2 = PAD_L + (step.cols[1] + 1) * COL_W;
+    // full width band behind
+    mainGroup.insertBefore(
+      rect(0, yy, SVG_W, BAND_H, { fill: step.bg, rx:0, stroke:'none' }),
+      mainGroup.firstChild
+    );
+    // label
+    mainGroup.appendChild(
+      text((x1+x2)/2, yy + BAND_H/2, step.text, {
+        'font-size':12, fill: step.tc, 'font-weight':'700',
+        'dominant-baseline':'middle', 'text-anchor':'middle'
+      })
+    );
+  }
+
+  function drawMsg(step, yy) {
+    const { from, to, lines, dashed } = step;
+    const color   = ACTORS[from].c;
+    const goRight = to > from;
+    const x1      = cx(from);
+    const x2      = cx(to);
+    const wrapped = wrapText(lines);
+    const rowH    = MSG_H + Math.max(0, (wrapped.length - 1) * 16);
+    const midY    = yy + rowH / 2;
+    const num     = stepNum++;
+
+    // arrow line
+    const arrowAttrs = {
+      stroke: color,
+      'stroke-width': 2,
+      'marker-end': `url(#ah-${ACTORS.indexOf(ACTORS.find(a=>a.c===color))})`
+    };
+    if (dashed) arrowAttrs['stroke-dasharray'] = '7,4';
+
+    // find actor index for marker
+    const fromIdx = from;
+    const markerEnd = `url(#ah-${fromIdx})`;
+
+    // shorten line to not overlap arrowhead
+    const arrowX2 = goRight ? x2 - 2 : x2 + 2;
+
+    mainGroup.appendChild(el('line', {
+      x1: x1, y1: midY, x2: arrowX2, y2: midY,
+      stroke: color, 'stroke-width': 2,
+      ...(dashed ? {'stroke-dasharray':'7,4'} : {}),
+      'marker-end': `url(#ah-${fromIdx})`
+    }));
+
+    // number circle at TAIL of arrow (sender side)
+    const numX = goRight ? x1 - 14 : x1 + 14;
+    mainGroup.appendChild(circle(numX, midY, 11, { fill: color, stroke:'#fff', 'stroke-width':1.5 }));
+    mainGroup.appendChild(text(numX, midY, String(num), {
+      'font-size':9, fill:'#fff', 'font-weight':'800',
+      'dominant-baseline':'middle', 'text-anchor':'middle'
+    }));
+
+    // label above arrow — clean text, no box border
+    const labelX     = (x1 + x2) / 2;
+    const lineH      = 13;
+    const totalTextH = wrapped.length * lineH;
+    // bottom of last text line sits 6px above the arrow
+    const textTopY   = midY - 8 - totalTextH;
+
+    // white knockout so lifelines don't bleed through text
+    const maxLineLen = Math.max(...wrapped.map(l => l.length));
+    const estW       = Math.min(maxLineLen * 6.6 + 12, Math.abs(x2 - x1) - 10);
+    mainGroup.appendChild(rect(
+      labelX - estW / 2, textTopY - 2, estW, totalTextH + 4,
+      { fill:'rgba(255,255,255,0.9)', stroke:'none', rx:3 }
+    ));
+
+    wrapped.forEach((ln, li) => {
+      mainGroup.appendChild(text(
+        labelX,
+        textTopY + li * lineH + lineH / 2,
+        ln,
+        {
+          'font-size'         : li === 0 ? 11 : 10,
+          fill                : color,
+          'font-weight'       : li === 0 ? '700' : '500',
+          'dominant-baseline' : 'middle',
+          'text-anchor'       : 'middle'
+        }
+      ));
+    });
+
+    return rowH;
+  }
+
+  function drawSelf(step, yy) {
+    const a       = ACTORS[step.actor];
+    const wrapped = wrapText(step.lines);
+    const rowH    = SELF_H + Math.max(0, (wrapped.length - 1) * 16);
+    const midY    = yy + rowH / 2;
+    const num     = stepNum++;
+    const x       = cx(step.actor);
+    const bw      = 170; // self box width
+    const bh      = wrapped.length * 14 + 12;
+
+    // self-loop lines: right from lifeline, down, back to lifeline
+    const lx1 = x;
+    const lx2 = x + 24;
+    const ly1 = midY - bh/2 - 2;
+    const ly2 = midY + bh/2 + 2;
+
+    mainGroup.appendChild(el('path', {
+      d: `M${lx1},${ly1} L${lx2},${ly1} L${lx2},${ly2} L${lx1},${ly2}`,
+      stroke: a.c, 'stroke-width':2, fill:'none',
+      'marker-end': `url(#ah-${step.actor})`
+    }));
+
+    // self box
+    mainGroup.appendChild(rect(x + 26, midY - bh/2, bw, bh, {
+      fill: a.lt, stroke: a.c, 'stroke-width':1.5, rx:8
+    }));
+    wrapped.forEach((ln, li) => {
+      mainGroup.appendChild(text(x + 26 + bw/2, midY - bh/2 + 10 + li*14, ln, {
+        'font-size': li===0 ? 11 : 10,
+        fill: a.c,
+        'font-weight': li===0 ? '700' : '500',
+        'dominant-baseline':'middle', 'text-anchor':'middle'
+      }));
+    });
+
+    // number circle at start of self (top-left of loop)
+    mainGroup.appendChild(circle(lx1 - 13, ly1, 11, { fill: a.c, stroke:'#fff', 'stroke-width':1.5 }));
+    mainGroup.appendChild(text(lx1 - 13, ly1, String(num), {
+      'font-size':9, fill:'#fff', 'font-weight':'800',
+      'dominant-baseline':'middle', 'text-anchor':'middle'
+    }));
+
+    return rowH;
+  }
+
+  // alt block outer rect drawn after all steps
+  let altBlocks = []; // {x,y,w,h}
+  let altY0 = 0;
+
+  FLOW.forEach(step => {
+    if (step.t === 'band') {
+      drawBand(step, y);
+      y += BAND_H;
+    }
+    else if (step.t === 'msg') {
+      const h = drawMsg(step, y);
+      y += h;
+    }
+    else if (step.t === 'self') {
+      const h = drawSelf(step, y);
+      y += h;
+    }
+    else if (step.t === 'altS') {
+      if (!inAlt) {
+        // start of whole alt block
+        altY0 = y;
+        inAlt = true;
+        y += ALT_PAD;
+      } else {
+        // divider between branches
+        mainGroup.appendChild(el('line', {
+          x1: PAD_L + 10, y1: y, x2: SVG_W - PAD_R - 10, y2: y,
+          stroke:'#f59e0b', 'stroke-width':1.5, 'stroke-dasharray':'5,3'
+        }));
+      }
+      // branch label bar
+      mainGroup.appendChild(rect(PAD_L + 10, y, SVG_W - PAD_L - PAD_R - 20, ALT_HDR_H, {
+        fill: step.bg, stroke:'none', rx:0
+      }));
+      mainGroup.appendChild(text(PAD_L + 26, y + ALT_HDR_H/2, step.label, {
+        'font-size':11, fill: step.tc, 'font-weight':'700',
+        'dominant-baseline':'middle', 'text-anchor':'start'
+      }));
+      y += ALT_HDR_H;
+    }
+    else if (step.t === 'altE') {
+      y += ALT_PAD;
+      // draw the alt block border (inserted before other elements so it's behind)
+      const altRect = rect(PAD_L + 10, altY0, SVG_W - PAD_L - PAD_R - 20, y - altY0, {
+        fill:'none', stroke:'#f59e0b', 'stroke-width':1.8,
+        'stroke-dasharray':'6,4', rx:10
+      });
+      mainGroup.insertBefore(altRect, mainGroup.firstChild);
+      inAlt = false;
+    }
+  });
+
+  // bottom actors
+  drawActors(y);
+  y += ACTOR_H;
+
+  // now draw lifelines (full height behind everything)
+  const totalFlowH = y;
+  ACTORS.forEach((a, i) => {
+    lifelineGroup.appendChild(el('line', {
+      x1: cx(i), y1: ACTOR_H - 4,
+      x2: cx(i), y2: totalFlowH - ACTOR_H + 4,
+      stroke: a.c, 'stroke-width':2, 'stroke-dasharray':'7,5', opacity:0.35
+    }));
+  });
+
+  // update svg height
+  svg.setAttribute('height', totalFlowH);
+  svg.setAttribute('viewBox', `0 0 ${SVG_W} ${totalFlowH}`);
+
+  return svg;
+}
+
+// ─── MOUNT ──────────────────────────────────────────────────────────────────
+const container = document.getElementById('svgContainer');
+const svg = draw();
+// make SVG responsive
+svg.style.width  = '100%';
+svg.style.height = 'auto';
+container.appendChild(svg);
+</script>
+</body>
+</html>
