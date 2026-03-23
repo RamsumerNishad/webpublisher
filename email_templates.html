@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>META - SAVEX | Communication Workflow</title>
+    <style>
+        :root {
+            --primary-black: #1a1a1a;
+            --secondary-gray: #f8f9fa;
+            --accent-blue: #0066cc;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            line-height: 1.6; 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f0f2f5; 
+        }
+
+        .document-container { 
+            max-width: 900px; 
+            margin: 40px auto; 
+            background: #ffffff; 
+            padding: 50px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 25px rgba(0,0,0,0.05); 
+        }
+
+        /* Header Branding */
+        .brand-header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid var(--primary-black); padding-bottom: 20px; }
+        .brand-header h1 { margin: 0; font-size: 32px; letter-spacing: 4px; text-transform: uppercase; }
+        .brand-header p { margin: 5px 0 0; color: var(--text-muted); font-weight: 300; }
+
+        /* Navigation Table */
+        .nav-section { margin-bottom: 50px; }
+        .nav-table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 8px; overflow: hidden; }
+        .nav-table th { background: var(--primary-black); color: #fff; text-align: left; padding: 15px; font-size: 13px; text-transform: uppercase; }
+        .nav-table td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        .nav-table tr:hover { background: var(--secondary-gray); }
+        .jump-link { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
+
+        /* Template Card Styles */
+        .template-card { 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            margin-bottom: 40px; 
+            overflow: hidden;
+            scroll-margin-top: 20px;
+        }
+        .template-header { 
+            background: var(--secondary-gray); 
+            padding: 20px; 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        .template-header h2 { margin: 0; font-size: 18px; color: var(--primary-black); }
+        .subject-line { font-family: monospace; background: #fff; padding: 10px; border: 1px dashed #ccc; margin-top: 10px; display: block; font-size: 14px; }
+        
+        .template-content { padding: 30px; background: #fff; }
+        
+        /* Bold Fields & Lists */
+        .field-label { font-weight: bold; color: #000; }
+        ul.details-list { list-style: none; padding: 0; margin: 20px 0; border-left: 3px solid var(--primary-black); padding-left: 20px; }
+        ul.details-list li { margin-bottom: 8px; }
+
+        /* Footer */
+        .doc-footer { text-align: center; margin-top: 60px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 20px; }
+
+        /* Responsive UI */
+        @media (max-width: 768px) {
+            .document-container { margin: 10px; padding: 25px; }
+            .nav-table { display: block; overflow-x: auto; }
+            .brand-header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    <header class="brand-header">
+        <h1>META - SAVEX</h1>
+        <p>Email Communication Templates</p>
+    </header>
+
+    <section class="nav-section">
+        <table class="nav-table">
+            <thead>
+                <tr>
+                    <th>Sr. No</th>
+                    <th>Template Name</th>
+                    <th>Triggered By</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Order Confirmation</td><td>Shopify/Meta</td><td><a href="#t1" class="jump-link">View Template</a></td></tr>
+                <tr><td>2</td><td>Packaging & Readiness</td><td>Savex</td><td><a href="#t2" class="jump-link">View Template</a></td></tr>
+                <tr><td>3</td><td>Order Dispatched</td><td>Savex</td><td><a href="#t3" class="jump-link">View Template</a></td></tr>
+                <tr><td>4</td><td>Order Delivered</td><td>Savex</td><td><a href="#t4" class="jump-link">View Template</a></td></tr>
+                <tr><td>5</td><td>RTO Initiated</td><td>Savex</td><td><a href="#t5" class="jump-link">View Template</a></td></tr>
+                <tr><td>6</td><td>Return Request Received</td><td>Savex/Meta</td><td><a href="#t6" class="jump-link">View Template</a></td></tr>
+                <tr><td>7</td><td>Refund Processed</td><td>Savex</td><td><a href="#t7" class="jump-link">View Template</a></td></tr>
+                <tr><td>8</td><td>Order Cancelled</td><td>Shopify/Meta</td><td><a href="#t8" class="jump-link">View Template</a></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div id="t1" class="template-card">
+        <div class="template-header">
+            <h2>1. Order Confirmation</h2>
+            <span class="subject-line"><strong>Subject:</strong> Order Confirmed: # [Order_Number] – Thanks for your purchase!</span>
+        </div>
+        <div class="template-content">
+            <p>Hi [Customer_Name],</p>
+            <p>Great news! We’ve received your order and our team is already getting it ready for you. You will receive another update as soon as your items are on their way.</p>
+            <p><strong>Order Details:</strong></p>
+            <ul class="details-list">
+                <li><span class="field-label">Order Number:</span> #[Order_Number]</li>
+                <li><span class="field-label">Date:</span> [Order_Date]</li>
+                <li><span class="field-label">Shipping Address:</span> [Shipping_Address]</li>
+                <li><span class="field-label">Items Ordered:</span> [Item_Name_1] x [Qty] — [Price] [Item_Name_2] x [Qty] — [Price]</li>
+                <li><span class="field-label">Total Amount:</span> [Total_Amount]</li>
+            </ul>
+            <p><span class="field-label">Next Steps:</span> You can track your order status anytime through your account dashboard: [Link_to_Account].</p>
+            <p>Best regards,<br><strong>The Meta Team</strong></p>
+        </div>
+    </div>
+
+    <div id="t2" class="template-card">
+        <div class="template-header">
+            <h2>2. Billing, Packaging & Readiness Update</h2>
+            <span class="subject-line"><strong>Subject:</strong> Great News! Your order #[Order_Number] is packed and ready to go</span>
+        </div>
+        <div class="template-content">
+            <p>Dear [Customer_Name],</p>
+            <p>We’re excited to let you know that we have finished processing your order #[Order_Number]. Our team has carefully packaged your items, and they are now sitting in our outbound area, ready for the courier to pick them up.</p>
+            <p><strong>Order Status:</strong></p>
+            <ul class="details-list">
+                <li><span class="field-label">Status:</span> Packaged & Ready for Shipment</li>
+                <li><span class="field-label">Invoice Date:</span> [Invoice_Date]</li>
+                <li><span class="field-label">Total Amount:</span> [Total_Amount]</li>
+                <li><span class="field-label">Payment Method:</span> [Payment_Method]</li>
+            </ul>
+            <p><span class="field-label">What’s Next?</span> As soon as the courier scans your package at our warehouse, we will send you a final Dispatch Email containing your tracking number and an estimated delivery date.</p>
+            <p>If you have any questions in the meantime, please feel free to reach out to us at [Support_Email].</p>
+            <p>Best regards,<br><strong>Savex Technologies Pvt Ltd</strong></p>
+        </div>
+    </div>
+
+    <div id="t3" class="template-card">
+        <div class="template-header">
+            <h2>3. Order Dispatched</h2>
+            <span class="subject-line"><strong>Subject:</strong> Your order #[Order_Number] has been shipped!</span>
+        </div>
+        <div class="template-content">
+            <p>Hi [Customer_Name],</p>
+            <p>The wait is almost over! Your order has been packed and handed over to our logistics partner.</p>
+            <p><strong>Shipping Details:</strong></p>
+            <ul class="details-list">
+                <li><span class="field-label">Carrier:</span> [Courier_Name]</li>
+                <li><span class="field-label">Tracking Number:</span> [Tracking_ID]</li>
+                <li><span class="field-label">Estimated Delivery:</span> [Estimated_Date]</li>
+            </ul>
+            <p><strong>[Track Your Package – Tracking URL]</strong></p>
+            <p>Please note that it may take up to 2 to 4 hours for the tracking link to become active.</p>
+            <p>Best regards,<br><strong>Savex Technologies Pvt Ltd</strong></p>
+        </div>
+    </div>
+
+    <div id="t4" class="template-card">
+        <div class="template-header">
+            <h2>4. Order Delivered</h2>
+            <span class="subject-line"><strong>Subject:</strong> Delivered! Your order #[Order_Number] has arrived 🎁</span>
+        </div>
+        <div class="template-content">
+            <p>Hi [Customer_Name],</p>
+            <p>According to our records, your order #[Order_Number] was successfully delivered.</p>
+            <p><strong>Delivery Summary:</strong></p>
+            <ul class="details-list">
+                <li><span class="field-label">Delivered On:</span> [Delivery_Date]</li>
+            </ul>
+            <p>We hope you love your new purchase! If you have a moment, share your experience here: [Review_Link].</p>
+            <p>Best regards,<br><strong>Savex Technologies Pvt Ltd</strong></p>
+        </div>
+    </div>
+
+    <div id="t5" class="template-card">
+        <div class="template-header">
+            <h2>5. Final Delivery Attempt Failed (RTO Initiated)</h2>
+            <span class="subject-line"><strong>Subject:</strong> URGENT: Your order #[Order_Number] is being returned to us</span>
+        </div>
+        <div class="template-content">
+            <p>Dear [Customer_Name],</p>
+            <p>Following multiple unsuccessful delivery attempts, our courier partner has officially marked your order #[Order_Number] as Return to Origin (RTO).</p>
+            <ul class="details-list">
+                <li><span class="field-label">Current Status:</span> Returning to Warehouse</li>
+                <li><span class="field-label">Tracking ID:</span> [Tracking_Number]</li>
+                <li><span class="field-label">RTO Date:</span> [Current_Date]</li>
+                <li><span class="field-label">Refund Amount:</span> [Total_Amount] (minus applicable fees)</li>
+            </ul>
+            <p><span class="field-label">Refund Information:</span> Once our warehouse team receives and inspects the returned package, we will automatically initiate a refund to your original payment method.</p>
+            <p>Best regards,<br><strong>Savex Technologies Pvt Ltd</strong></p>
+        </div>
+    </div>
+
+    <div id="t6" class="template-card">
+        <div class="template-header">
+            <h2>6. Return Request Received</h2>
+            <span class="subject-line"><strong>Subject:</strong> Return Request Received – Order #[Order_Number]</span>
+        </div>
+        <div class="template-content">
+            <p>Hi [Customer_Name],</p>
+            <p>We have received your request to return the following items from Order #[Order_Number]:</p>
+            <ul class="details-list">
+                <li><span class="field-label">Items:</span> [Item_Names]</li>
+                <li><span class="field-label">Reason:</span> [Return_Reason]</li>
+            </ul>
+            <p><span class="field-label">What happens next?</span> Our quality assurance team will review the request within 24–48 hours. Once approved, you will receive instructions on doorstep pickup.</p>
+            <p>Best regards,<br><strong>Savex Technologies Pvt Ltd</strong></p>
+        </div>
+    </div>
+
+    <div id="t7" class="template-card">
+        <div class="template-header">
+            <h2>7. Refund Processed</h2>
+            <span class="subject-line"><strong>Subject:</strong> Refund Confirmation: Order #[Order_Number]</span>
+        </div>
+        <div class="template-content">
+            <p>Hi [Customer_Name],</p>
+            <p>We’ve successfully processed your refund for Order #[Order_Number].</p>
+            <p><strong>Refund Details:</strong></p>
+            <ul class="details-list">
+                <li><span class="field-label">Amount:</span> [Refund_Amount]</li>
+                <li><span class="field-label">Refund Method:</span> [Original_Payment_Method]</li>
+                <li><span class="field-label">Transaction ID:</span> [Transaction_ID]</li>
+            </ul>
+            <p>Best regards,<br><strong>Savex Technologies Pvt Ltd</strong></p>
+        </div>
+    </div>
+
+    <div id="t8" class="template-card">
+        <div class="template-header">
+            <h2>8. Order Cancelled</h2>
+            <span class="subject-line"><strong>Subject:</strong> Order Cancelled: #[Order_Number]</span>
+        </div>
+        <div class="template-content">
+            <p>Dear [Customer_Name],</p>
+            <p>As requested, your order #[Order_Number] has been cancelled.</p>
+            <p>We’re sorry it didn't work out this time! You can re-order items here: [Shop_Link].</p>
+            <p>Best regards,<br><strong>META</strong></p>
+        </div>
+    </div>
+
+    <footer class="doc-footer">
+        <p>&copy; 2026 META | Managed by Savex Technologies Pvt Ltd</p>
+        <p>Confidential Document - Internal Use Only</p>
+    </footer>
+</div>
+
+</body>
+</html>
