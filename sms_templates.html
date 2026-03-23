@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>META | Notification Templates</title>
+    <style>
+        :root {
+            --primary-dark: #1a1a1a;
+            --accent-blue: #0056b3;
+            --bg-light: #f4f7f9;
+            --border-gray: #dee2e6;
+            --highlight-bg: #fff9c4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--primary-dark);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Responsive Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: var(--primary-dark);
+            color: #fff;
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border-gray);
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        tr:hover { background-color: #f8f9fa; }
+
+        /* Content Styling */
+        .variable {
+            color: var(--accent-blue);
+            font-weight: bold;
+            background-color: var(--highlight-bg);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .key-text {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .remarks-tag {
+            font-style: italic;
+            font-size: 12px;
+            color: #d32f2f;
+        }
+
+        .status-registered {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><META-SAVEX></META-SAVEX> SMS Templates</h1>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>S. No</th>
+                    <th>Template Name</th>
+                    <th>Template ID</th>
+                    <th>Template Content</th>
+                    <th>Registration Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Order_Confirmation</strong></td>
+                    <td>1007884020020785797</td>
+                    <td>Thank you for placing your order with <span class="key-text">META</span>. The details of <span class="key-text">Order ID</span> <span class="variable">{#var#}</span> have been sent to your registered email id. - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="status-registered">Registered</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Order_Packed</strong></td>
+                    <td>1007662205961126454</td>
+                    <td><span class="key-text">Packed:</span> Your <span class="key-text">META Order ID</span> <span class="variable">{#var#}</span> is packed and ready to be shipped - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="status-registered">Registered</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>Shipped</strong></td>
+                    <td>-</td>
+                    <td><span class="key-text">Shipped:</span> Your <span class="key-text">META Order ID</span> <span class="variable">{#var#}</span> is now on the way. Track your shipment to see the latest delivery status <span class="variable">{TrackingURL}</span> - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="remarks-tag"><strong>Awaiting tracking URL - Will be Register once its finalised</strong></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><strong>Delivered</strong></td>
+                    <td>1007797654990783349</td>
+                    <td><span class="key-text">Delivered:</span> Your <span class="key-text">META Order ID</span> <span class="variable">{#var#}</span> has been successfully delivered - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="status-registered">Registered</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><strong>Canceled</strong></td>
+                    <td>1007315158996496087</td>
+                    <td><span class="key-text">Canceled:</span> Your <span class="key-text">META Order ID</span> <span class="variable">{#var#}</span> has been canceled. If any payment was deducted, it will be refunded within <span class="key-text">7-10 days</span> - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="status-registered">Registered</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><strong>Refund_Successful</strong></td>
+                    <td>1007365712942757190</td>
+                    <td><span class="key-text">Refund Successful:</span> Refund of <span class="key-text">Rs.</span> <span class="variable">{#var#}</span> against your <span class="key-text">META Order ID</span> <span class="variable">{#var#}</span> has been successfully processed. Refund will reflect in <span class="key-text">7-10 business days</span> - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="status-registered">Registered</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td><strong>Refund_Initiated</strong></td>
+                    <td>1007686343130233702</td>
+                    <td><span class="key-text">Refund Initiated:</span> Refund of <span class="key-text">Rs.</span> <span class="variable">{#var#}</span> against your <span class="key-text">META Order ID</span> <span class="variable">{#var#}</span> has been initiated. We will intimate once the refund has been processed - Serviced by <span class="key-text">Savex Technologies</span></td>
+                    <td class="status-registered">Registered</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer style="text-align: center; font-size: 12px; color: #777; margin-top: 40px;">
+        &copy; 2026 META | Document managed by Savex Technologies Pvt Ltd.
+    </footer>
+</div>
+
+</body>
+</html>
