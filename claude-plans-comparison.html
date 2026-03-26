@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude AI Plans – Full Comparison</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0ede8;
+    --surface: rgba(255,255,255,0.72);
+    --surface-strong: rgba(255,255,255,0.92);
+    --border: rgba(0,0,0,0.09);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1a1714;
+    --text-muted: #6b6460;
+    --accent: #d4521a;
+    --accent-soft: rgba(212,82,26,0.1);
+    --team-std: #2563a8;
+    --team-prem: #7c3aed;
+    --max: #b45309;
+    --enterprise: #166534;
+    --team-std-bg: rgba(37,99,168,0.07);
+    --team-prem-bg: rgba(124,58,237,0.07);
+    --max-bg: rgba(180,83,9,0.07);
+    --enterprise-bg: rgba(22,101,52,0.07);
+    --yes: #15803d;
+    --no: #b91c1c;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(212,82,26,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(37,99,168,0.06) 0%, transparent 60%);
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 60px 24px 40px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(212,82,26,0.2);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.12;
+    color: var(--text);
+    max-width: 700px;
+    margin: 0 auto 16px;
+  }
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    font-weight: 400;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── PLAN CARDS ROW ── */
+  .plan-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 24px;
+  }
+
+  .plan-card {
+    background: var(--surface-strong);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .plan-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+  }
+  .card-std::before  { background: var(--team-std); }
+  .card-prem::before { background: var(--team-prem); }
+  .card-max::before  { background: var(--max); }
+  .card-ent::before  { background: var(--enterprise); }
+
+  .plan-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  .card-std  .plan-tag { background: var(--team-std-bg);   color: var(--team-std); }
+  .card-prem .plan-tag { background: var(--team-prem-bg);  color: var(--team-prem); }
+  .card-max  .plan-tag { background: var(--max-bg);        color: var(--max); }
+  .card-ent  .plan-tag { background: var(--enterprise-bg); color: var(--enterprise); }
+
+  .plan-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .plan-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .plan-price span { font-size: 0.85rem; font-weight: 400; color: var(--text-muted); }
+  .plan-billing { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px; }
+  .plan-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  .plan-usage {
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .card-std  .plan-usage { background: var(--team-std-bg);   color: var(--team-std); }
+  .card-prem .plan-usage { background: var(--team-prem-bg);  color: var(--team-prem); }
+  .card-max  .plan-usage { background: var(--max-bg);        color: var(--max); }
+  .card-ent  .plan-usage { background: var(--enterprise-bg); color: var(--enterprise); }
+
+  /* ── MAIN COMPARISON TABLE ── */
+  .comparison-wrap {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    padding: 0 24px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin-bottom: 24px;
+  }
+
+  .table-wrap {
+    background: var(--surface-strong);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr {
+    background: rgba(0,0,0,0.03);
+  }
+  th {
+    padding: 16px 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    border-bottom: 1.5px solid var(--border);
+    color: var(--text-muted);
+  }
+  th:first-child { width: 32%; }
+  th:not(:first-child) { text-align: center; width: 17%; }
+
+  .th-std  { color: var(--team-std)!important; }
+  .th-prem { color: var(--team-prem)!important; }
+  .th-max  { color: var(--max)!important; }
+  .th-ent  { color: var(--enterprise)!important; }
+
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,0,0,0.018); }
+
+  .section-header td {
+    padding: 14px 20px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(212,82,26,0.04);
+    border-top: 1.5px solid var(--border);
+    border-bottom: 1.5px solid var(--border);
+  }
+  .section-header td:first-child { border-radius: 0; }
+
+  td {
+    padding: 14px 20px;
+    font-size: 0.875rem;
+    vertical-align: middle;
+    color: var(--text);
+  }
+  td:not(:first-child) { text-align: center; }
+
+  .feat-name {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .feat-desc {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    display: block;
+    font-weight: 400;
+  }
+
+  .yes { color: var(--yes); font-size: 1.1rem; }
+  .no  { color: #ccc; font-size: 1.1rem; }
+
+  .val {
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+  .val-std  { background: var(--team-std-bg);   color: var(--team-std); }
+  .val-prem { background: var(--team-prem-bg);  color: var(--team-prem); }
+  .val-max  { background: var(--max-bg);        color: var(--max); }
+  .val-ent  { background: var(--enterprise-bg); color: var(--enterprise); }
+  .val-all  { background: rgba(0,0,0,0.05);     color: var(--text); }
+
+  /* ── WHO SECTION ── */
+  .who-section {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    padding: 0 24px;
+  }
+  .who-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .who-card {
+    background: var(--surface-strong);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+  }
+  .who-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .who-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .who-std  .who-icon { background: var(--team-std-bg);   }
+  .who-prem .who-icon { background: var(--team-prem-bg);  }
+  .who-max  .who-icon { background: var(--max-bg);        }
+  .who-ent  .who-icon { background: var(--enterprise-bg); }
+  .who-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .who-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .who-card li {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .who-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    font-size: 0.7rem;
+    top: 1px;
+    color: var(--accent);
+  }
+
+  /* ── API SECTION ── */
+  .api-section {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    padding: 0 24px;
+  }
+  .api-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .api-card {
+    background: var(--surface-strong);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 22px;
+    box-shadow: var(--shadow);
+  }
+  .api-model {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+  .api-tier {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+  }
+  .api-rows { display: flex; flex-direction: column; gap: 10px; }
+  .api-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 14px;
+    background: var(--bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .api-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+  .api-price { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+  .api-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+  .api-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .badge-opus     { background: #fef3c7; color: #92400e; }
+  .badge-sonnet   { background: #ede9fe; color: #5b21b6; }
+  .badge-haiku    { background: #dcfce7; color: #166534; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 48px 24px 40px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media(max-width: 900px) {
+    .plan-cards, .who-grid { grid-template-columns: repeat(2, 1fr); }
+    .api-grid { grid-template-columns: repeat(2, 1fr); }
+    th:first-child { width: 28%; }
+    td, th { padding: 12px 12px; font-size: 0.8rem; }
+  }
+  @media(max-width: 600px) {
+    .plan-cards, .who-grid, .api-grid { grid-template-columns: 1fr; }
+    .feat-desc { display: none; }
+    h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="badge">2026 Official Plans</div>
+  <h1>Claude AI Plans<br><em>Full Comparison</em></h1>
+  <p class="subtitle">Understand every plan at a glance — features explained in plain language so you can pick what's right for you.</p>
+</header>
+
+<!-- PLAN SUMMARY CARDS -->
+<div class="plan-cards">
+
+  <div class="plan-card card-std">
+    <span class="plan-tag">Team</span>
+    <div class="plan-name">Standard Seat</div>
+    <div class="plan-price">$20 <span>/ seat / mo</span></div>
+    <div class="plan-billing">Billed annually · $25 if monthly · Min. 5 seats</div>
+    <hr class="plan-divider">
+    <div class="plan-usage">1.25× Pro usage per session</div>
+  </div>
+
+  <div class="plan-card card-prem">
+    <span class="plan-tag">Team</span>
+    <div class="plan-name">Premium Seat</div>
+    <div class="plan-price">$100 <span>/ seat / mo</span></div>
+    <div class="plan-billing">Billed annually · $125 if monthly · Min. 5 seats</div>
+    <hr class="plan-divider">
+    <div class="plan-usage">6.25× Pro usage per session</div>
+  </div>
+
+  <div class="plan-card card-max">
+    <span class="plan-tag">Individual</span>
+    <div class="plan-name">Max Plan</div>
+    <div class="plan-price">$100–200 <span>/ mo</span></div>
+    <div class="plan-billing">Max 5× = $100 · Max 20× = $200 · Individual only</div>
+    <hr class="plan-divider">
+    <div class="plan-usage">25× – 100× Free tier usage</div>
+  </div>
+
+  <div class="plan-card card-ent">
+    <span class="plan-tag">Enterprise</span>
+    <div class="plan-name">Enterprise</div>
+    <div class="plan-price">Custom <span>/ seat / mo</span></div>
+    <div class="plan-billing">Annual contract · Usage billed at API rates · 150+ seats</div>
+    <hr class="plan-divider">
+    <div class="plan-usage">No usage cap — pay per token</div>
+  </div>
+
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="comparison-wrap">
+  <div class="section-title">Feature-by-Feature Comparison</div>
+  <p class="section-desc">Each feature is explained briefly so you understand what it actually means for your work.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="th-std">Team Standard</th>
+          <th class="th-prem">Team Premium</th>
+          <th class="th-max">Max Individual</th>
+          <th class="th-ent">Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- PRICING -->
+        <tr class="section-header"><td colspan="5">💰 Pricing</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Monthly Cost</span>
+            <span class="feat-desc">What you pay per seat each month</span>
+          </td>
+          <td><span class="val val-std">$20–25/seat</span></td>
+          <td><span class="val val-prem">$100–125/seat</span></td>
+          <td><span class="val val-max">$100 or $200</span></td>
+          <td><span class="val val-ent">Custom quote</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Minimum Team Size</span>
+            <span class="feat-desc">Smallest number of seats you must buy</span>
+          </td>
+          <td><span class="val val-std">5 seats</span></td>
+          <td><span class="val val-prem">5 seats</span></td>
+          <td><span class="val val-max">1 person</span></td>
+          <td><span class="val val-ent">150+ seats</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Billing Model</span>
+            <span class="feat-desc">How you're charged for usage</span>
+          </td>
+          <td><span class="val val-std">Flat seat fee</span></td>
+          <td><span class="val val-prem">Flat seat fee</span></td>
+          <td><span class="val val-max">Flat subscription</span></td>
+          <td><span class="val val-ent">Seat + API tokens</span></td>
+        </tr>
+
+        <!-- USAGE LIMITS -->
+        <tr class="section-header"><td colspan="5">⚡ Usage & Capacity</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Usage Multiplier vs Pro</span>
+            <span class="feat-desc">How many more messages you can send compared to the $20 Pro plan</span>
+          </td>
+          <td><span class="val val-std">1.25× Pro</span></td>
+          <td><span class="val val-prem">6.25× Pro</span></td>
+          <td><span class="val val-max">5× or 20× Pro</span></td>
+          <td><span class="val val-ent">Unlimited*</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Extra Usage Top-Up</span>
+            <span class="feat-desc">Option to buy more usage when you hit your limit mid-month</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Priority Access</span>
+            <span class="feat-desc">Skip the queue when servers are busy — you get faster responses</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓ Highest</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+        <!-- CONTEXT WINDOW -->
+        <tr class="section-header"><td colspan="5">📄 Context Window</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Context Window</span>
+            <span class="feat-desc">How much text Claude can read at once — larger = analyze bigger docs/code</span>
+          </td>
+          <td><span class="val val-std">200K tokens</span></td>
+          <td><span class="val val-prem">200K tokens</span></td>
+          <td><span class="val val-max">200K tokens</span></td>
+          <td><span class="val val-ent">500K–1M tokens</span></td>
+        </tr>
+
+        <!-- MODELS -->
+        <tr class="section-header"><td colspan="5">🧠 AI Models</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Access to All Claude Models</span>
+            <span class="feat-desc">Use Haiku (fast), Sonnet (balanced), and Opus (most powerful)</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Early Access to New Features</span>
+            <span class="feat-desc">You get to try new Claude capabilities before everyone else</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓ First</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Extended Thinking</span>
+            <span class="feat-desc">Claude thinks longer on hard problems — better answers for complex tasks</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+        <!-- CODING TOOLS -->
+        <tr class="section-header"><td colspan="5">💻 Coding Tools</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Claude Code</span>
+            <span class="feat-desc">AI that writes, edits, and runs code in your terminal — like an AI junior dev</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Create & Execute Files</span>
+            <span class="feat-desc">Claude can write and run code directly in chat — see results instantly</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Claude for Excel (beta)</span>
+            <span class="feat-desc">AI assistance inside Microsoft Excel for formulas, data, analysis</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Claude for PowerPoint (beta)</span>
+            <span class="feat-desc">AI that helps build and edit slides inside PowerPoint</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+        <!-- COLLABORATION -->
+        <tr class="section-header"><td colspan="5">🤝 Team Collaboration</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Projects & Knowledge Bases</span>
+            <span class="feat-desc">Shared folders where teams can upload docs so Claude remembers your context</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Project Sharing & Collaboration</span>
+            <span class="feat-desc">Multiple team members can contribute to and view shared AI conversations</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Claude Cowork</span>
+            <span class="feat-desc">Desktop tool to automate file and task management with AI</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+        <!-- CONNECTORS -->
+        <tr class="section-header"><td colspan="5">🔌 App Integrations</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Google Drive, Gmail, Calendar</span>
+            <span class="feat-desc">Claude reads your Drive files and emails to give context-aware answers</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Microsoft 365 & Slack</span>
+            <span class="feat-desc">Connect Claude to your company Slack and Office docs for seamless search</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">GitHub Integration</span>
+            <span class="feat-desc">Claude can read code from your GitHub repos directly</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Enterprise Search</span>
+            <span class="feat-desc">One search bar across ALL your connected tools — Slack, 365, Drive at once</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Google Docs Cataloging</span>
+            <span class="feat-desc">Automatically indexes your Google Docs so Claude can reference them</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+        <!-- ADMIN & SECURITY -->
+        <tr class="section-header"><td colspan="5">🔐 Admin, Security & Compliance</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Central Admin Console</span>
+            <span class="feat-desc">One dashboard to manage all users, seats, and billing for your org</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">SSO (Single Sign-On)</span>
+            <span class="feat-desc">Login with your company's existing system (Google, Okta, etc.) — no new password</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Domain Capture</span>
+            <span class="feat-desc">Anyone who signs up with your company email is auto-added to your org</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Role-Based Access Control</span>
+            <span class="feat-desc">Set who can see what — e.g. finance team can't access legal projects</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓ Fine-grained</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">SCIM Provisioning</span>
+            <span class="feat-desc">Automatically create/remove user accounts when staff join or leave HR system</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Audit Logs</span>
+            <span class="feat-desc">Full record of who used Claude, when, and what they did — for compliance</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Custom Data Retention</span>
+            <span class="feat-desc">Set how long Claude stores your conversations — meet legal requirements</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Compliance API</span>
+            <span class="feat-desc">Download your org's chat history and usage logs programmatically for audits</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Analytics API</span>
+            <span class="feat-desc">Get usage dashboards showing AI adoption across your whole organization</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">HIPAA Ready / BAA</span>
+            <span class="feat-desc">Healthcare compliance — Anthropic signs a data agreement for medical use</span>
+          </td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓ (sales only)</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Spend Controls</span>
+            <span class="feat-desc">Set monthly spending caps per user so no surprise overages</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Zero Data Training Guarantee</span>
+            <span class="feat-desc">Your conversations are never used to train Claude models</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">—</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+        <!-- PERSONAL PRODUCTIVITY -->
+        <tr class="section-header"><td colspan="5">🧩 Personal Productivity</td></tr>
+        <tr>
+          <td>
+            <span class="feat-name">Memory Across Chats</span>
+            <span class="feat-desc">Claude remembers facts about you from past conversations — no repeating yourself</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Research Mode</span>
+            <span class="feat-desc">Claude searches the web deeply and writes a structured research report for you</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Incognito / Private Chats</span>
+            <span class="feat-desc">Conversations not saved or stored — like browser private mode</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="feat-name">Claude for Chrome</span>
+            <span class="feat-desc">AI browsing assistant — Claude helps as you browse websites</span>
+          </td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- WHO IS IT FOR -->
+<div class="who-section">
+  <div class="section-title">Which Plan Is Right for You?</div>
+  <p class="section-desc">Match your role and needs to the best plan below.</p>
+  <div class="who-grid">
+
+    <div class="who-card who-std">
+      <div class="who-header">
+        <div class="who-icon">🏢</div>
+        <h3>Team Standard Seat</h3>
+      </div>
+      <ul>
+        <li>Business teams of 5–150 people</li>
+        <li>Marketing, HR, Sales, Operations staff</li>
+        <li>Teams that collaborate on shared AI projects</li>
+        <li>Organizations needing SSO & admin control</li>
+        <li>Those who don't need heavy daily coding</li>
+        <li>Budget-conscious teams wanting enterprise features</li>
+      </ul>
+    </div>
+
+    <div class="who-card who-prem">
+      <div class="who-header">
+        <div class="who-icon">⚙️</div>
+        <h3>Team Premium Seat</h3>
+      </div>
+      <ul>
+        <li>Lead engineers within company teams</li>
+        <li>Power users who hit Standard limits</li>
+        <li>Developers needing Claude Code in a managed org</li>
+        <li>Teams where a few people need far more usage</li>
+        <li>Mix with Standard seats to save cost</li>
+        <li>Those needing 6.25× more capacity than Pro</li>
+      </ul>
+    </div>
+
+    <div class="who-card who-max">
+      <div class="who-header">
+        <div class="who-icon">🚀</div>
+        <h3>Max Individual</h3>
+      </div>
+      <ul>
+        <li>Freelancers & solo developers/founders</li>
+        <li>Power users who hit Pro limits weekly/daily</li>
+        <li>Writers producing long-form content daily</li>
+        <li>Researchers analyzing huge documents</li>
+        <li>Those who don't need team collaboration features</li>
+        <li>Developers who want latest features first</li>
+      </ul>
+    </div>
+
+    <div class="who-card who-ent">
+      <div class="who-header">
+        <div class="who-icon">🏛️</div>
+        <h3>Enterprise</h3>
+      </div>
+      <ul>
+        <li>Large corporations with 150+ employees</li>
+        <li>Regulated industries: finance, healthcare, legal</li>
+        <li>Government agencies with compliance needs</li>
+        <li>Teams that need HIPAA, audit logs, SCIM</li>
+        <li>Orgs that want usage billed like a utility (pay per token)</li>
+        <li>Companies needing custom MSAs & dedicated support</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- API PRICING -->
+<div class="api-section">
+  <div class="section-title">API Charges</div>
+  <p class="section-desc">Pay-per-use pricing for developers building apps on Claude. Priced per million tokens (≈ 750,000 words). Input = what you send. Output = what Claude replies. Cache = reusing repeated context cheaply.</p>
+  <div class="api-grid">
+
+    <div class="api-card">
+      <span class="api-badge badge-opus">Most Powerful</span>
+      <div class="api-model">Claude Opus 4.6</div>
+      <div class="api-tier">Best for: Complex reasoning, long docs, agentic coding</div>
+      <div class="api-rows">
+        <div class="api-row"><span class="api-label">Input tokens</span><span class="api-price">$5 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Output tokens</span><span class="api-price">$25 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Cache write</span><span class="api-price">$6.25 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Cache read</span><span class="api-price">$0.50 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Fast mode input (≤200K)</span><span class="api-price">$30 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Fast mode output</span><span class="api-price">$150 / MTok</span></div>
+      </div>
+      <p class="api-note">⚠️ Input &gt;200K tokens doubles to $6 input / $22.50 output. Fast mode is a research preview (2.5× faster, premium priced).</p>
+    </div>
+
+    <div class="api-card">
+      <span class="api-badge badge-sonnet">Best Balance</span>
+      <div class="api-model">Claude Sonnet 4.6</div>
+      <div class="api-tier">Best for: Everyday tasks, customer apps, coding assistance</div>
+      <div class="api-rows">
+        <div class="api-row"><span class="api-label">Input tokens</span><span class="api-price">$3 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Output tokens</span><span class="api-price">$15 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Cache write</span><span class="api-price">$3.75 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Cache read</span><span class="api-price">$0.30 / MTok</span></div>
+        <div class="api-row"><span class="api-label">US-only inference</span><span class="api-price">1.1× pricing</span></div>
+      </div>
+      <p class="api-note">💡 Most cost-effective for high-volume production apps. Enterprise context window: 500K tokens with Sonnet 4.6. Web search and code execution tools have additional per-use fees.</p>
+    </div>
+
+    <div class="api-card">
+      <span class="api-badge badge-haiku">Fastest & Cheapest</span>
+      <div class="api-model">Claude Haiku 4.5</div>
+      <div class="api-tier">Best for: Real-time chat, quick queries, high-volume automation</div>
+      <div class="api-rows">
+        <div class="api-row"><span class="api-label">Input tokens</span><span class="api-price">$0.80 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Output tokens</span><span class="api-price">$4 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Cache write</span><span class="api-price">$1 / MTok</span></div>
+        <div class="api-row"><span class="api-label">Cache read</span><span class="api-price">$0.08 / MTok</span></div>
+      </div>
+      <p class="api-note">💡 Ideal for chatbots, search suggestions, and tasks where speed matters more than depth. ~6× cheaper than Sonnet for input tokens. Use prompt caching to slash costs when repeating system prompts.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Data sourced from official Anthropic documentation — <a href="https://support.claude.com" target="_blank">support.claude.com</a> &amp; <a href="https://claude.com/pricing" target="_blank">claude.com/pricing</a></p>
+  <p style="margin-top:8px;">Pricing as of March 2026. Prices exclude applicable taxes. API token prices may vary for US-only inference. Contact <a href="https://claude.com/contact-sales" target="_blank">Anthropic Sales</a> for Enterprise quotes.</p>
+  <p style="margin-top:8px; font-style: italic;">MTok = Million Tokens · 1 token ≈ ¾ of a word · 1M tokens ≈ 750,000 words</p>
+</footer>
+
+</body>
+</html>
