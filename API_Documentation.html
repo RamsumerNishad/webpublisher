@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Integration Documentation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1a1a2e;
+    background: #f8f9fc;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────────────────── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: #0f1c3f;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-logo h1 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+
+  .sidebar-logo p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .sidebar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 4px 10px;
+    background: rgba(0,184,148,0.15);
+    border: 1px solid rgba(0,184,148,0.3);
+    border-radius: 20px;
+  }
+
+  .sidebar-badge .dot {
+    width: 6px; height: 6px;
+    background: #00b894;
+    border-radius: 50%;
+  }
+
+  .sidebar-badge span {
+    font-size: 10px;
+    color: #00b894;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .sidebar-nav {
+    padding: 16px 0;
+    flex: 1;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 24px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-item:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-item.active {
+    color: #fff;
+    background: rgba(99,179,237,0.1);
+    border-left-color: #63b3ed;
+  }
+
+  .nav-item .method-pill {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #e67e22;
+    color: #fff;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── MAIN CONTENT ────────────────────────────────────────── */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid #e8ecf4;
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-breadcrumb {
+    font-size: 12px;
+    color: #8892a4;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topbar-breadcrumb span { color: #1a1a2e; font-weight: 500; }
+
+  .topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: #8892a4;
+  }
+
+  .base-url-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0f4ff;
+    border: 1px solid #c7d2f0;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: #3a5bd9;
+    font-weight: 500;
+  }
+
+  .content {
+    padding: 40px;
+    max-width: 860px;
+  }
+
+  /* ── SECTION ─────────────────────────────────────────────── */
+  .api-section {
+    margin-bottom: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e8ecf4;
+  }
+
+  .section-number {
+    width: 32px;
+    height: 32px;
+    background: #0f1c3f;
+    color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .section-title-group h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0f1c3f;
+    letter-spacing: -0.01em;
+  }
+
+  .section-title-group p {
+    font-size: 13px;
+    color: #8892a4;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* ── ENDPOINT BAR ────────────────────────────────────────── */
+  .endpoint-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #fff;
+    border: 1px solid #e0e6f4;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .method-tag {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .method-tag.post { background: #fff7ec; color: #c05621; border-right: 1px solid #f7dfc4; }
+  .method-tag.get  { background: #ecfdf5; color: #065f46; border-right: 1px solid #a7f3d0; }
+
+  .endpoint-path {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #1a1a2e;
+    flex: 1;
+  }
+
+  .endpoint-path .path-param {
+    color: #e67e22;
+  }
+
+  /* ── INFO BOX ────────────────────────────────────────────── */
+  .info-box {
+    background: #f0f6ff;
+    border: 1px solid #bdd5f8;
+    border-left: 3px solid #3a82f7;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #1e3a6e;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .info-box strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+    color: #1e3a6e;
+  }
+
+  /* ── PARAMETERS TABLE ────────────────────────────────────── */
+  .table-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8892a4;
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  .params-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e8ecf4;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    background: #fff;
+  }
+
+  .params-table thead tr {
+    background: #f4f6fc;
+  }
+
+  .params-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8892a4;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e8ecf4;
+  }
+
+  .params-table td {
+    padding: 11px 14px;
+    font-size: 13px;
+    color: #2d3748;
+    border-bottom: 1px solid #f0f3f9;
+    vertical-align: top;
+  }
+
+  .params-table tr:last-child td { border-bottom: none; }
+  .params-table tr:hover td { background: #fafbff; }
+
+  .param-name {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: #0f1c3f;
+    font-weight: 600;
+  }
+
+  .param-type {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: #6c63ff;
+    background: #f0eeff;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .badge-req {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .badge-req.yes { background: #fef3c7; color: #92400e; }
+  .badge-req.no  { background: #f1f5f9; color: #64748b; }
+
+  /* ── CODE BLOCK ──────────────────────────────────────────── */
+  .code-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1e2a45;
+    border-radius: 8px 8px 0 0;
+    padding: 10px 16px;
+  }
+
+  .code-label span {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .code-label .lang-tag {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+
+  .code-body {
+    background: #111827;
+    border-radius: 0 0 8px 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+
+  .code-body pre {
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: #e2e8f0;
+  }
+
+  .json-key    { color: #79b8ff; }
+  .json-string { color: #85e89d; }
+  .json-num    { color: #f97583; }
+  .json-bool   { color: #ffab70; }
+  .json-null   { color: #6a737d; }
+  .json-brace  { color: #e2e8f0; }
+
+  /* ── RESPONSE BOX ────────────────────────────────────────── */
+  .response-section { margin-bottom: 8px; }
+
+  .response-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-bottom: 10px;
+  }
+
+  .response-badge .code-label-sm {
+    font-size: 12px;
+    font-weight: 600;
+    color: #065f46;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .status-200 {
+    background: #065f46;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* ── STATUS TABLE ────────────────────────────────────────── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .status-card {
+    background: #fff;
+    border: 1px solid #e8ecf4;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  .status-card .status-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f1c3f;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .status-card .status-desc {
+    font-size: 12px;
+    color: #8892a4;
+    margin-top: 1px;
+  }
+
+  .status-card .status-cat {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+    display: inline-block;
+    letter-spacing: 0.03em;
+  }
+
+  .cat-active    { background: #ecfdf5; color: #065f46; }
+  .cat-completed { background: #e0f2fe; color: #075985; }
+  .cat-reverse   { background: #fff7ed; color: #c2410c; }
+  .cat-refund    { background: #fdf4ff; color: #7e22ce; }
+
+  .dot-active    { background: #10b981; }
+  .dot-completed { background: #0ea5e9; }
+  .dot-reverse   { background: #f97316; }
+  .dot-refund    { background: #a855f7; }
+
+  /* ── DIVIDER ─────────────────────────────────────────────── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid #e8ecf4;
+    margin: 0 0 56px;
+  }
+
+  /* ── COVER ───────────────────────────────────────────────── */
+  .cover {
+    background: linear-gradient(135deg, #0f1c3f 0%, #1a3065 100%);
+    padding: 56px 40px;
+    margin-bottom: 0;
+  }
+
+  .cover-inner { max-width: 860px; }
+
+  .cover h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .cover h1 span { color: #63b3ed; }
+
+  .cover p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 10px;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cover-meta-item label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .cover-meta-item span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  /* ── PRINT ───────────────────────────────────────────────── */
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .topbar { display: none; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .status-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>API Reference</h1>
+    <p>Integration Docs · v1.0</p>
+    <div class="sidebar-badge">
+      <div class="dot"></div>
+      <span>REST · JSON</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Getting Started</div>
+    <a class="nav-item" href="#overview">Overview &amp; Authentication</a>
+
+    <div class="nav-section-label" style="margin-top:8px;">Endpoints</div>
+    <a class="nav-item" href="#auth">
+      <span class="method-pill" style="background:#e67e22;">POST</span>
+      Authentication
+    </a>
+    <a class="nav-item" href="#invoice">
+      <span class="method-pill" style="background:#e67e22;">POST</span>
+      Invoice Upload
+    </a>
+    <a class="nav-item" href="#shipment">
+      <span class="method-pill" style="background:#e67e22;">POST</span>
+      Shipment Upload
+    </a>
+    <a class="nav-item" href="#status">
+      <span class="method-pill" style="background:#e67e22;">POST</span>
+      Status Upload
+    </a>
+    <a class="nav-item" href="#cancellation">
+      <span class="method-pill" style="background:#e67e22;">POST</span>
+      Cancellation
+    </a>
+    <a class="nav-item" href="#refund">
+      <span class="method-pill" style="background:#e67e22;">POST</span>
+      Refund Status Upload
+    </a>
+
+    <div class="nav-section-label" style="margin-top:8px;">Reference</div>
+    <a class="nav-item" href="#errors">Error Codes</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    Confidential · For Development Use Only
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-inner">
+      <h1>API Integration<br><span>Documentation</span></h1>
+      <p>Complete REST API reference for order management — authentication, invoicing, shipment tracking, and status updates.</p>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <label>Version</label>
+          <span>v1.0</span>
+        </div>
+        <div class="cover-meta-item">
+          <label>Protocol</label>
+          <span>HTTPS · REST</span>
+        </div>
+        <div class="cover-meta-item">
+          <label>Format</label>
+          <span>application/json</span>
+        </div>
+        <div class="cover-meta-item">
+          <label>Auth</label>
+          <span>Bearer Token</span>
+        </div>
+        <div class="cover-meta-item">
+          <label>Base Path</label>
+          <span>/V1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      API Docs &rsaquo; <span>Integration Reference</span>
+    </div>
+    <div class="topbar-meta">
+      <div class="base-url-badge">
+        <strong style="color:#8892a4;font-family:sans-serif;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">Base URL</strong>
+        https://{your-domain}/V1
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── OVERVIEW ───────────────────────────────────────────── -->
+    <section id="overview" class="api-section">
+      <div class="section-header">
+        <div class="section-number">★</div>
+        <div class="section-title-group">
+          <h2>Overview</h2>
+          <p>All endpoints use HTTP POST and require a Bearer token in the Authorization header. Requests and responses are JSON.</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Before you begin</strong>
+        Generate an access token using the Authentication endpoint. Include the token in every subsequent request as:<br>
+        <code style="font-family:monospace;color:#1a5cb5;font-size:12px;">Authorization: Bearer &lt;access_token&gt;</code>
+      </div>
+
+      <div class="table-label">Required Headers — All Endpoints</div>
+      <table class="params-table">
+        <thead>
+          <tr>
+            <th>Header</th>
+            <th>Value</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">Content-Type</span></td>
+            <td><span style="font-family:monospace;font-size:12px;">application/json</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+          </tr>
+          <tr>
+            <td><span class="param-name">Authorization</span></td>
+            <td><span style="font-family:monospace;font-size:12px;">Bearer &lt;access_token&gt;</span></td>
+            <td><span class="badge-req yes">Yes <em style="font-weight:400;">(except Auth API)</em></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── 1. AUTHENTICATION ─────────────────────────────────── -->
+    <section id="auth" class="api-section">
+      <div class="section-header">
+        <div class="section-number">01</div>
+        <div class="section-title-group">
+          <h2>Authentication API</h2>
+          <p>Obtain an access token by submitting valid admin credentials. The token must be passed in the Authorization header of all subsequent requests.</p>
+        </div>
+      </div>
+
+      <div class="endpoint-bar">
+        <div class="method-tag post">POST</div>
+        <div class="endpoint-path">/V1/integration/admin/token</div>
+      </div>
+
+      <div class="table-label">Request Body Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:160px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">username</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Admin username registered for API access.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">password</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Corresponding admin password.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">
+        <span>Request Payload</span>
+        <span class="lang-tag">JSON</span>
+      </div>
+      <div class="code-body">
+<pre>{
+  <span class="json-key">"username"</span>: <span class="json-string">"testapi"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"testapi123"</span>
+}</pre>
+      </div>
+
+      <div class="table-label">Response</div>
+      <div class="response-badge">
+        <span class="status-200">200 OK</span>
+        <span class="code-label-sm">"&lt;access_token&gt;"</span>
+      </div>
+      <div class="info-box" style="margin-top:8px;">
+        The response is a plain string — the access token. Store it securely and pass it as <code style="font-family:monospace;color:#1a5cb5;font-size:12px;">Authorization: Bearer &lt;token&gt;</code> in all subsequent requests.
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── 2. INVOICE UPLOAD ──────────────────────────────────── -->
+    <section id="invoice" class="api-section">
+      <div class="section-header">
+        <div class="section-number">02</div>
+        <div class="section-title-group">
+          <h2>Invoice Upload API</h2>
+          <p>Submit invoice details for one or more items within an order. Each item requires an invoice number, date, and optional remarks.</p>
+        </div>
+      </div>
+
+      <div class="endpoint-bar">
+        <div class="method-tag post">POST</div>
+        <div class="endpoint-path">/V1/order/<span class="path-param">{orderId}</span>/invoiceInfo</div>
+      </div>
+
+      <div class="table-label">Path Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:160px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">orderId</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the target order.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-label">Request Body Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:180px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">items</span></td>
+            <td><span class="param-type">array</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Array of invoice item objects. Must contain at least one item.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].orderItemId</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the order line item.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].invoiceNo</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Invoice number issued by the seller (e.g. <code style="font-family:monospace;font-size:11px;">INV-2024-001</code>).</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].invoiceDate</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Invoice date. Format: <code style="font-family:monospace;font-size:11px;">DD/MM/YYYY</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].invoiceRemarks</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req no">No</span></td>
+            <td>Additional notes on the invoice. Pass <code style="font-family:monospace;font-size:11px;">"NA"</code> if not applicable.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">
+        <span>Request Payload</span>
+        <span class="lang-tag">JSON</span>
+      </div>
+      <div class="code-body">
+<pre>{
+  <span class="json-key">"items"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"orderItemId"</span>: <span class="json-string">"738"</span>,
+      <span class="json-key">"invoiceNo"</span>:    <span class="json-string">"INV-2024-001"</span>,
+      <span class="json-key">"invoiceDate"</span>:  <span class="json-string">"22/09/2024"</span>,
+      <span class="json-key">"invoiceRemarks"</span>: <span class="json-string">"NA"</span>
+    <span class="json-brace">}</span>
+  <span class="json-brace">]</span>
+}</pre>
+      </div>
+
+      <div class="table-label">Response</div>
+      <div class="response-badge">
+        <span class="status-200">200 OK</span>
+        <span class="code-label-sm">"&lt;orderId&gt;"</span>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── 3. SHIPMENT UPLOAD ─────────────────────────────────── -->
+    <section id="shipment" class="api-section">
+      <div class="section-header">
+        <div class="section-number">03</div>
+        <div class="section-title-group">
+          <h2>Shipment Upload API</h2>
+          <p>Submit shipment details including item quantities, serial codes, and carrier tracking information for a specific order. Submitting this API automatically sets the order status to <strong>Packaged</strong>.</p>
+        </div>
+      </div>
+
+      <div class="info-box" style="background:#f0fdf4;border-color:#bbf7d0;border-left-color:#22c55e;color:#14532d;">
+        <strong style="color:#14532d;">Automatic Status Transition</strong>
+        On successful submission, the order status is automatically updated to <strong>Packaged</strong>. No separate status update call is required for this transition.
+      </div>
+
+      <div class="endpoint-bar">
+        <div class="method-tag post">POST</div>
+        <div class="endpoint-path">/V1/order/<span class="path-param">{orderId}</span>/shipment</div>
+      </div>
+
+      <div class="table-label">Path Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:160px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">orderId</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the target order.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-label">Request Body — Root &amp; Items</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:220px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">dateTime</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Shipment dispatch date. Format: <code style="font-family:monospace;font-size:11px;">DD/MM/YYYY</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items</span></td>
+            <td><span class="param-type">array</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Array of shipped item objects.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].orderItemId</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the order line item.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].qty</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Quantity of the item being shipped.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].extensionAttributes.snCode</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req no">No</span></td>
+            <td>Serial number (SN code) of the item, if applicable.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-label">Request Body — Tracks (Carrier)</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:220px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">tracks</span></td>
+            <td><span class="param-type">array</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Array of carrier tracking objects.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">tracks[].trackNumber</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Carrier-issued tracking number (e.g. <code style="font-family:monospace;font-size:11px;">TRK123456</code>).</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">tracks[].title</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Display name of the carrier (e.g. <code style="font-family:monospace;font-size:11px;">FedEx</code>, <code style="font-family:monospace;font-size:11px;">BlueDart</code>).</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">tracks[].carrierCode</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>System carrier code. Use <code style="font-family:monospace;font-size:11px;">"custom"</code> for non-standard carriers.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">
+        <span>Request Payload</span>
+        <span class="lang-tag">JSON</span>
+      </div>
+      <div class="code-body">
+<pre>{
+  <span class="json-key">"dateTime"</span>: <span class="json-string">"22/09/2024"</span>,
+  <span class="json-key">"items"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"orderItemId"</span>: <span class="json-num">738</span>,
+      <span class="json-key">"qty"</span>: <span class="json-num">1</span>,
+      <span class="json-key">"extensionAttributes"</span>: <span class="json-brace">{</span>
+        <span class="json-key">"snCode"</span>: <span class="json-string">"ABC123"</span>
+      <span class="json-brace">}</span>
+    <span class="json-brace">}</span>
+  <span class="json-brace">]</span>,
+  <span class="json-key">"tracks"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"trackNumber"</span>: <span class="json-string">"TRK123456"</span>,
+      <span class="json-key">"title"</span>:       <span class="json-string">"FedEx"</span>,
+      <span class="json-key">"carrierCode"</span>: <span class="json-string">"custom"</span>
+    <span class="json-brace">}</span>
+  <span class="json-brace">]</span>
+}</pre>
+      </div>
+
+      <div class="table-label">Response</div>
+      <div class="response-badge">
+        <span class="status-200">200 OK</span>
+        <span class="code-label-sm">"&lt;orderId&gt;"</span>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── 4. STATUS UPLOAD ───────────────────────────────────── -->
+    <section id="status" class="api-section">
+      <div class="section-header">
+        <div class="section-number">04</div>
+        <div class="section-title-group">
+          <h2>Status Upload API</h2>
+          <p>Update the fulfilment status of specific order items. Supports the active order lifecycle from shipment through delivery and returns. <strong>Processing</strong> and <strong>Packaged</strong> statuses are system-managed and cannot be set via this API.</p>
+        </div>
+      </div>
+
+      <div class="endpoint-bar">
+        <div class="method-tag post">POST</div>
+        <div class="endpoint-path">/V1/order/<span class="path-param">{orderId}</span>/orderStatus</div>
+      </div>
+
+      <div class="table-label">Path Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:160px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">orderId</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the target order.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-label">Request Body Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:200px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">items</span></td>
+            <td><span class="param-type">array</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Array of status update objects.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].orderItemId</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the order line item.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].orderStatus</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>New status value. See <strong>Allowed Status Values</strong> below.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].dateTime</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Date of the status change. Format: <code style="font-family:monospace;font-size:11px;">DD/MM/YYYY</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].remarks</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req no">No</span></td>
+            <td>Notes explaining the status change (e.g. reason for cancellation).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">
+        <span>Request Payload</span>
+        <span class="lang-tag">JSON</span>
+      </div>
+      <div class="code-body">
+<pre>{
+  <span class="json-key">"items"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"orderItemId"</span>: <span class="json-string">"738"</span>,
+      <span class="json-key">"orderStatus"</span>:  <span class="json-string">"Shipped"</span>,
+      <span class="json-key">"dateTime"</span>:    <span class="json-string">"22/09/2024"</span>,
+      <span class="json-key">"remarks"</span>:     <span class="json-string">"Dispatched via FedEx"</span>
+    <span class="json-brace">}</span>
+  <span class="json-brace">]</span>
+}</pre>
+      </div>
+
+      <div class="table-label">Allowed Status Values</div>
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="status-dot dot-active"></div>
+          <div>
+            <div class="status-name">Shipped</div>
+            <div class="status-desc">Handed to carrier for delivery</div>
+            <span class="status-cat cat-active">Active</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-active"></div>
+          <div>
+            <div class="status-name">In Transit</div>
+            <div class="status-desc">In transit to delivery address</div>
+            <span class="status-cat cat-active">Active</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-completed"></div>
+          <div>
+            <div class="status-name">Delivered</div>
+            <div class="status-desc">Successfully delivered to customer</div>
+            <span class="status-cat cat-completed">Completed</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-reverse"></div>
+          <div>
+            <div class="status-name">Reverse Pick up Initiated</div>
+            <div class="status-desc">Return pickup request raised</div>
+            <span class="status-cat cat-reverse">Reverse</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-reverse"></div>
+          <div>
+            <div class="status-name">Return in Transit</div>
+            <div class="status-desc">Returned item on its way back</div>
+            <span class="status-cat cat-reverse">Reverse</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-reverse"></div>
+          <div>
+            <div class="status-name">Returned</div>
+            <div class="status-desc">Item received back at warehouse</div>
+            <span class="status-cat cat-reverse">Reverse</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-label">Response</div>
+      <div class="response-badge">
+        <span class="status-200">200 OK</span>
+        <span class="code-label-sm">"&lt;orderId&gt;"</span>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── 5. CANCELLATION API ───────────────────────────────────── -->
+    <section id="cancellation" class="api-section">
+      <div class="section-header">
+        <div class="section-number">05</div>
+        <div class="section-title-group">
+          <h2>Cancellation API</h2>
+          <p>Cancel one or more items within an order. Use this endpoint to notify the system of customer-initiated or seller-initiated cancellations, along with the reason and timestamp.</p>
+        </div>
+      </div>
+
+      <div class="endpoint-bar">
+        <div class="method-tag post">POST</div>
+        <div class="endpoint-path">/V1/order/<span class="path-param">{orderId}</span>/cancel</div>
+      </div>
+
+      <div class="info-box" style="background:#fff8f0;border-color:#fed7aa;border-left-color:#f97316;color:#7c2d12;">
+        <strong style="color:#7c2d12;">Important</strong>
+        Cancellation is irreversible. Once an item is cancelled, its status cannot be reverted. Ensure all validations are performed on the client side before calling this endpoint.
+      </div>
+
+      <div class="table-label">Path Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:160px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">orderId</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the target order.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-label">Request Body Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:200px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">items</span></td>
+            <td><span class="param-type">array</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Array of cancellation objects. Must contain at least one item.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].orderItemId</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the order line item to cancel.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].dateTime</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Date of cancellation. Format: <code style="font-family:monospace;font-size:11px;">DD/MM/YYYY</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].cancelReason</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Reason for cancellation (e.g. <code style="font-family:monospace;font-size:11px;">"Customer request"</code>, <code style="font-family:monospace;font-size:11px;">"Out of stock"</code>).</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].remarks</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req no">No</span></td>
+            <td>Additional notes regarding the cancellation.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">
+        <span>Request Payload</span>
+        <span class="lang-tag">JSON</span>
+      </div>
+      <div class="code-body">
+<pre>{
+  <span class="json-key">"items"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"orderItemId"</span>:  <span class="json-string">"738"</span>,
+      <span class="json-key">"dateTime"</span>:     <span class="json-string">"22/09/2024"</span>,
+      <span class="json-key">"cancelReason"</span>: <span class="json-string">"Customer request"</span>,
+      <span class="json-key">"remarks"</span>:      <span class="json-string">"Customer called to cancel before dispatch"</span>
+    <span class="json-brace">}</span>
+  <span class="json-brace">]</span>
+}</pre>
+      </div>
+
+      <div class="table-label">Response</div>
+      <div class="response-badge">
+        <span class="status-200">200 OK</span>
+        <span class="code-label-sm">"&lt;orderId&gt;"</span>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── 6. REFUND STATUS UPLOAD ────────────────────────────── -->
+    <section id="refund" class="api-section">
+      <div class="section-header">
+        <div class="section-number">06</div>
+        <div class="section-title-group">
+          <h2>Refund Status Upload API</h2>
+          <p>Update the refund processing status for returned order items. Use this endpoint to track refund progress from initiation through to completion or decline.</p>
+        </div>
+      </div>
+
+      <div class="endpoint-bar">
+        <div class="method-tag post">POST</div>
+        <div class="endpoint-path">/V1/order/<span class="path-param">{orderId}</span>/refundStatus</div>
+      </div>
+
+      <div class="table-label">Path Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:160px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">orderId</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the target order.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-label">Request Body Parameters</div>
+      <table class="params-table">
+        <thead>
+          <tr><th style="width:200px;">Parameter</th><th style="width:90px;">Type</th><th style="width:80px;">Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">items</span></td>
+            <td><span class="param-type">array</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Array of refund status objects.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].orderItemId</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Unique identifier of the order line item.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].refundStatus</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Refund status value. See <strong>Allowed Refund Status Values</strong> below.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].dateTime</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req yes">Yes</span></td>
+            <td>Date of the refund status update. Format: <code style="font-family:monospace;font-size:11px;">DD/MM/YYYY</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].refundAmount</span></td>
+            <td><span class="param-type">number</span></td>
+            <td><span class="badge-req no">No</span></td>
+            <td>Refund amount to be processed. Required when status is <code style="font-family:monospace;font-size:11px;">"Refund Initiated"</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">items[].remarks</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="badge-req no">No</span></td>
+            <td>Notes on the refund decision or processing details.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">
+        <span>Request Payload</span>
+        <span class="lang-tag">JSON</span>
+      </div>
+      <div class="code-body">
+<pre>{
+  <span class="json-key">"items"</span>: <span class="json-brace">[</span>
+    <span class="json-brace">{</span>
+      <span class="json-key">"orderItemId"</span>:  <span class="json-string">"738"</span>,
+      <span class="json-key">"refundStatus"</span>: <span class="json-string">"Refund Initiated"</span>,
+      <span class="json-key">"dateTime"</span>:     <span class="json-string">"22/09/2024"</span>,
+      <span class="json-key">"refundAmount"</span>: <span class="json-num">1299.00</span>,
+      <span class="json-key">"remarks"</span>:      <span class="json-string">"Refund approved after quality inspection"</span>
+    <span class="json-brace">}</span>
+  <span class="json-brace">]</span>
+}</pre>
+      </div>
+
+      <div class="table-label">Allowed Refund Status Values</div>
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="status-dot dot-refund"></div>
+          <div>
+            <div class="status-name">Refund Pending</div>
+            <div class="status-desc">Refund request received, awaiting review</div>
+            <span class="status-cat cat-refund">Refund</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-refund"></div>
+          <div>
+            <div class="status-name">Refund Initiated</div>
+            <div class="status-desc">Refund approved and processing started</div>
+            <span class="status-cat cat-refund">Refund</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot dot-completed"></div>
+          <div>
+            <div class="status-name">Refunded</div>
+            <div class="status-desc">Amount successfully credited to customer</div>
+            <span class="status-cat cat-completed">Completed</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-dot" style="background:#ef4444;"></div>
+          <div>
+            <div class="status-name">Refund Declined</div>
+            <div class="status-desc">Refund request rejected after review</div>
+            <span class="status-cat" style="background:#fee2e2;color:#991b1b;">Declined</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-label">Response</div>
+      <div class="response-badge">
+        <span class="status-200">200 OK</span>
+        <span class="code-label-sm">"&lt;orderId&gt;"</span>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── ERROR CODES ────────────────────────────────────────── -->
+    <section id="errors" class="api-section">
+      <div class="section-header">
+        <div class="section-number">⚠</div>
+        <div class="section-title-group">
+          <h2>Error Codes</h2>
+          <p>All endpoints return standard HTTP status codes. Error responses include a <code style="font-family:monospace;font-size:12px;">message</code> field with details.</p>
+        </div>
+      </div>
+
+      <table class="params-table">
+        <thead>
+          <tr>
+            <th style="width:100px;">HTTP Code</th>
+            <th style="width:160px;">Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="font-family:monospace;font-weight:700;color:#065f46;background:#d1fae5;padding:2px 8px;border-radius:4px;font-size:12px;">200</span></td>
+            <td>OK</td>
+            <td>Request was successful.</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:monospace;font-weight:700;color:#92400e;background:#fef3c7;padding:2px 8px;border-radius:4px;font-size:12px;">400</span></td>
+            <td>Bad Request</td>
+            <td>Invalid payload structure or missing required parameters.</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:monospace;font-weight:700;color:#991b1b;background:#fee2e2;padding:2px 8px;border-radius:4px;font-size:12px;">401</span></td>
+            <td>Unauthorized</td>
+            <td>Missing, expired, or invalid Bearer token.</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:monospace;font-weight:700;color:#92400e;background:#fef3c7;padding:2px 8px;border-radius:4px;font-size:12px;">404</span></td>
+            <td>Not Found</td>
+            <td>The specified <code style="font-family:monospace;font-size:11px;">orderId</code> or <code style="font-family:monospace;font-size:11px;">orderItemId</code> does not exist.</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:monospace;font-weight:700;color:#92400e;background:#fef3c7;padding:2px 8px;border-radius:4px;font-size:12px;">422</span></td>
+            <td>Unprocessable Entity</td>
+            <td>Business logic validation failed (e.g. invalid status value or date format).</td>
+          </tr>
+          <tr>
+            <td><span style="font-family:monospace;font-weight:700;color:#991b1b;background:#fee2e2;padding:2px 8px;border-radius:4px;font-size:12px;">500</span></td>
+            <td>Internal Server Error</td>
+            <td>Unexpected server-side error. Contact the integration support team.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div style="padding: 24px 0 48px; font-size: 11px; color: #b0b8cc; border-top: 1px solid #e8ecf4; margin-top: 8px;">
+      API Integration Documentation &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; Confidential — For Development Use Only
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section[id]');
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActive(entry.target.id);
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(item.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
