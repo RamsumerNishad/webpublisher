@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Field Mapping — OnlineOrderProcessing Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #f4f6f9;
+      --bg-surface: #ffffff;
+      --bg-raised:  #f0f2f5;
+      --bg-hover:   #eef1f6;
+      --border:     rgba(0,0,0,0.07);
+      --border-md:  rgba(0,0,0,0.13);
+
+      --text-primary:   #1a1f2e;
+      --text-secondary: #5a6478;
+      --text-muted:     #9ba3b4;
+
+      --accent:     #2563eb;
+      --accent-dim: rgba(37,99,235,0.09);
+
+      --mand-bg:    rgba(220,38,38,0.07);
+      --mand-text:  #b91c1c;
+      --mand-border:rgba(220,38,38,0.22);
+
+      --cond-bg:    rgba(180,83,9,0.07);
+      --cond-text:  #b45309;
+      --cond-border:rgba(180,83,9,0.22);
+
+      --opt-bg:     rgba(5,150,105,0.07);
+      --opt-text:   #047857;
+      --opt-border: rgba(5,150,105,0.2);
+
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Sora', sans-serif;
+
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(244,246,249,0.90);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 4px 10px;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      opacity: 0.8;
+    }
+    .topbar-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      width: 14px; height: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    #search {
+      font-family: var(--sans);
+      font-size: 13px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      padding: 6px 12px 6px 32px;
+      width: 220px;
+      outline: none;
+      transition: border-color 0.2s, width 0.2s;
+    }
+    #search:focus { border-color: var(--accent); width: 280px; }
+    #search::placeholder { color: var(--text-muted); }
+
+    /* ── FILTER PILLS ── */
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-md);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active-all   { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active-mand  { background: var(--mand-bg); border-color: var(--mand-border); color: var(--mand-text); }
+    .filter-btn.active-cond  { background: var(--cond-bg); border-color: var(--cond-border); color: var(--cond-text); }
+    .filter-btn.active-opt   { background: var(--opt-bg); border-color: var(--opt-border); color: var(--opt-text); }
+
+    /* ── MAIN ── */
+    .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── HEADER ── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ── STATS ROW ── */
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 140px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .stat-dot.all  { background: var(--accent); }
+    .stat-dot.mand { background: var(--mand-text); }
+    .stat-dot.cond { background: var(--cond-text); }
+    .stat-dot.opt  { background: var(--opt-text); }
+    .stat-info {}
+    .stat-num {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      align-items: center;
+    }
+    .leg-item { display: flex; align-items: center; gap: 6px; }
+    .leg-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .leg-badge.mand { background: var(--mand-bg); color: var(--mand-text); border: 1px solid var(--mand-border); }
+    .leg-badge.cond { background: var(--cond-bg); color: var(--cond-text); border: 1px solid var(--cond-border); }
+    .leg-badge.opt  { background: var(--opt-bg);  color: var(--opt-text);  border: 1px solid var(--opt-border); }
+
+    /* ── TABLE WRAPPER ── */
+    .table-outer {
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead tr {
+      background: #eef1f6;
+      border-bottom: 1px solid var(--border-md);
+    }
+    th {
+      padding: 11px 14px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      user-select: none;
+    }
+    th.sortable { cursor: pointer; }
+    th.sortable:hover { color: var(--text-secondary); }
+    th .sort-icon { margin-left: 4px; opacity: 0.4; font-size: 9px; }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.row-mand { background: rgba(239,68,68,0.03); }
+    tr.row-cond { background: rgba(251,191,36,0.02); }
+    tr:hover td { background: var(--bg-hover) !important; }
+
+    .col-sr   { width: 48px; text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--mono); }
+    .col-api  { min-width: 180px; font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 500; }
+    .col-tbl  { min-width: 180px; font-family: var(--mono); font-size: 12px; color: var(--text-secondary); }
+    .col-type { min-width: 110px; font-family: var(--mono); font-size: 11px; color: #059669; }
+    .col-mand { width: 110px; text-align: center; }
+    .col-rem  { min-width: 260px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 9px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .badge.mand { background: var(--mand-bg); color: var(--mand-text); border-color: var(--mand-border); }
+    .badge.cond { background: var(--cond-bg); color: var(--cond-text); border-color: var(--cond-border); }
+    .badge.opt  { background: var(--opt-bg);  color: var(--opt-text);  border-color: var(--opt-border); }
+
+    .rem-text  { color: var(--text-secondary); line-height: 1.5; }
+    .rem-reason {
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.4;
+    }
+    .rem-unused { color: var(--text-muted); font-style: italic; font-size: 12px; }
+
+    /* group header rows */
+    tr.group-header td {
+      background: #f0f3f7;
+      padding: 7px 14px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      border-top: 1px solid var(--border-md);
+    }
+    tr.group-header td span {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    /* ── NO RESULTS ── */
+    #no-results {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 32px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .footer-right { display: flex; gap: 16px; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #ced3dc; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #adb5c4; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .topbar { padding: 0 16px; }
+      .main { padding: 20px 16px; }
+      .topbar-title { display: none; }
+      #search { width: 160px; }
+      #search:focus { width: 200px; }
+      .filters { gap: 4px; }
+      .filter-btn { padding: 3px 9px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-logo">API Spec</span>
+    <span class="topbar-title">Order Data Field Mapping</span>
+  </div>
+  <div class="topbar-right">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input id="search" type="search" placeholder="Search fields…" autocomplete="off" aria-label="Search fields" />
+    </div>
+    <div class="filters" role="group" aria-label="Filter by mandatory status">
+      <button class="filter-btn active-all" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="mandatory">Mandatory</button>
+      <button class="filter-btn" data-filter="conditional">Conditional</button>
+      <button class="filter-btn" data-filter="optional">Optional</button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>API Field Mapping — OnlineOrderProcessing</h1>
+    <p>Technical specification for API to internal database field configurations &nbsp;·&nbsp; v1.0</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-dot all"></div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Total fields</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-dot mand"></div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-mand">0</div>
+        <div class="stat-label">Mandatory</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-dot cond"></div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-cond">0</div>
+        <div class="stat-label">Conditional</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-dot opt"></div>
+      <div class="stat-info">
+        <div class="stat-num" id="stat-opt">0</div>
+        <div class="stat-label">Optional</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span class="leg-item"><span class="leg-badge mand">Yes</span> Always required</span>
+    <span class="leg-item"><span class="leg-badge cond">Conditional</span> Required in specific scenarios</span>
+    <span class="leg-item"><span class="leg-badge opt">No</span> Optional</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-outer">
+    <div class="table-scroll">
+      <table id="main-table" aria-label="API Field Mapping">
+        <thead>
+          <tr>
+            <th class="col-sr">Sr#</th>
+            <th class="col-api">API field name</th>
+            <th class="col-tbl">Table field name</th>
+            <th class="col-type">Datatype</th>
+            <th class="col-mand">Mandatory</th>
+            <th class="col-rem">Remark &amp; reason</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="no-results">No fields match your search or filter.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span id="footer-count"></span>
+    <div class="footer-right">
+      <span>Last updated: <strong style="color:var(--text-secondary)">May 2023</strong></span>
+      <span>Version <strong style="color:var(--text-secondary)">1.0</strong></span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+// mandatory: "yes" | "cond" | "no"
+// reason: shown below remark (null = hidden)
+const GROUPS = [
+  {
+    label: "Order identifiers", color: "#4f8ef7",
+    fields: [
+      [1,"SHIPPINGID","shipping_id","number","yes","Order Item ID","Primary identifier — cannot process any order without it"],
+      [2,"REFORDERID","ref_order_id","number","yes","Order Number","Links item to parent order — essential for tracking"],
+      [3,"VENDORCODE","vendor_code","varchar2(20)","yes",'Vendor name e.g. "APPLE"',"Needed to route order to correct vendor/supplier"],
+      [5,"ORDERDATE","order_date","date","yes","Order Date","Required for SLA tracking, invoicing, and reporting"],
+    ]
+  },
+  {
+    label: "Shipping / delivery", color: "#f87171",
+    fields: [
+      [4,"PORTALCITY","portal_city","varchar2(35)","yes","Customer shipping city","Used for delivery zone routing and logistics assignment"],
+      [6,"SHIPPINGNAME","shipping_name","varchar2(100)","yes","Recipient name","Courier cannot deliver without addressee name on the parcel"],
+      [7,"EMAIL","email","varchar2(100)","cond","Customer email address","Required if SHIPPINGEMAIL is absent — at least one contact email needed"],
+      [8,"SHIPPINGEMAIL","shipping_email","varchar2(100)","yes","Shipping email address","Order confirmation, tracking updates, and delivery alerts sent here"],
+      [9,"SHIPPINGADDRESS1","shipping_address1","varchar2(35)","yes","Delivery Address line 1","Core delivery address — shipment cannot be dispatched without it"],
+      [10,"SHIPPINGADDRESS2","shipping_address2","varchar2(35)","yes","Delivery Address line 2","Required to complete a full deliverable address"],
+      [11,"SHIPPINGADDRESS3","shipping_address3","varchar2(35)","no","Delivery Address line 3",null],
+      [12,"SHIPPINGMOBILE","shipping_mobile","varchar2(20)","yes","Recipient mobile number","Courier must contact recipient for delivery coordination"],
+      [13,"SHIPPINGLANDLINE","shipping_landline","varchar2(20)","no","Alternate contact number",null],
+      [14,"IPADDRESS","ip_address","varchar2(50)","no","Customer IP address — fraud detection",null],
+      [15,"SHIPPINGSTATE","shipping_state","varchar2(35)","yes","Delivery State","Required for GST jurisdiction, logistics routing, and address validation"],
+      [16,"SHIPPINGCITYCUSTOMER","shipping_city_customer","varchar2(35)","yes","Delivery City","Required for accurate courier zone mapping"],
+      [17,"PINCODE","pin_code","number","yes","Delivery pin code","Courier serviceability check and address geocoding depend on this"],
+      [18,"SHIPPINGLANDMARK","shipping_landmark","varchar2(500)","no","Delivery landmark",null],
+    ]
+  },
+  {
+    label: "Billing information", color: "#fbbf24",
+    fields: [
+      [19,"BILLINGFIRSTNAME","billing_first_name","varchar2(100)","yes","Billing first name","Required for invoice generation and GST compliance"],
+      [20,"BILLINGLASTNAME","billing_last_name","varchar2(100)","yes","Billing last name","Required for invoice generation"],
+      [21,"BILLINGEMAILID","billing_email_id","varchar2(100)","yes","Billing email address","Invoice and payment receipts are sent here"],
+      [22,"BILLINGMOBILE","billing_mobile","varchar2(35)","yes","Billing mobile","Required for payment verification and OTP-based auth"],
+      [23,"BILLINGADDRESS1","billing_address1","varchar2(2000)","yes","Billing Address line 1","Mandatory for GST-compliant invoice"],
+      [24,"BILLINGADDRESS2","billing_address2","varchar2(2000)","no","Billing Address line 2",null],
+      [25,"BILLINGADDRESS3","billing_address3","varchar2(2000)","no","Billing Address line 3",null],
+      [26,"BILLINGSTATENAME","billing_state_name","varchar2(35)","yes","Billing state","Required for GST state code on invoice"],
+      [27,"BILLINGPINCODE","billing_pin_code","number","yes","Billing pin code","Required for complete billing address on tax invoice"],
+      [28,"BILLINGCITY","billing_city","varchar2(35)","yes","Billing city","Required for complete billing address on tax invoice"],
+      [29,"BILLINGLANDMARK","billing_landmark","varchar2(500)","no","Billing landmark",null],
+      [31,"BILLINGCOMPANY","billing_company","varchar2(100)","cond","Billing company name","Required for B2B/GST orders and corporate customers"],
+    ]
+  },
+  {
+    label: "Product & pricing", color: "#34d399",
+    fields: [
+      [32,"PRODUCTNAME","product_name","varchar2(100)","yes","Product Name","Required for invoice line item, packing slip, and warehouse pick"],
+      [33,"SKU","s_k_u","varchar2(25)","yes","SKU code","Warehouse uses SKU to locate and pick the correct product"],
+      [34,"PARTCODE","part_code","varchar2(25)","yes","Part code","It should be Same as SKU if not diffrent coding of Part No"],
+      [35,"WAREHOUSECODE","warehouse_code","varchar2(15)","cond","Inventory Warehouse Code","Determines which warehouse fulfils the order - during invnetory allocations"],
+      [36,"UNIT","unit","number","yes","Quantity","Cannot fulfil an order without knowing how many units to pick"],
+      [37,"UNITPRICE","unit_price","number","yes","Price per unit","Required for invoice value, revenue recognition, and accounting"],
+      [38,"UNITDISCOUNT","unit_discount","number","no","Discounted amount per unit",null],
+      [39,"UNITTOTAL","unit_total","number","yes","Line total = (Unit Price − Unit Discount) × Unit","Required for invoice totals and order value calculations"],
+      [40,"MERCHANTDISCOUNT","merchant_discount","number","cond","EMI discount amount","Required for EMI orders to create Credit Note"],
+    ]
+  },
+  {
+    label: "Payment & order type", color: "#a78bfa",
+    fields: [
+      [41,"ISCODORDER","is_cod_order","varchar2(5)","yes",'"Y" if COD order, else "N"',"Determines cash collection at delivery — critical for courier instructions"],
+      [42,"ISPREORDER","is_pre_order","varchar2(5)","yes",'"Y" for prebooking, else "N"',"Affects inventory reservation and fulfilment scheduling"],
+      [43,"EMIMONTHNO","emi_month_no","number","cond","Number of EMI months opted","Required when payment mode is EMI"],
+      [44,"EMIINTEREST","emi_interest","number","cond","EMI interest rate charged","Required when payment mode is EMI"],
+      [45,"PAYMENTGATEWAY","payment_gateway","varchar2(100)","yes","Payment Gateway Name","Required for reconciliation and refund processing"],
+      [46,"PAYMENTMODE","payment_mode","varchar2(100)","yes",'Payment mode: "CC", "DC", "NB", etc.',"Required for payment reconciliation and COD/EMI routing logic"],
+      [47,"COUPONCODE","coupon_code","varchar2(100)","no","Coupon code if applied",null],
+      [48,"ISCOUPONENTERPRISE","is_coupon_enterprise","varchar2(5)","cond",'"Y" for BYOD orders only',"Required when order originates from a BYOD/enterprise channel"],
+      [49,"OFFERNAME","offer_name","varchar2(4000)","no","Campaign or offer name, if any",null],
+      [54,"TXNID","txnid","varchar2(100)","cond","GSTIN Number","Required for GST-registered / B2B customers"],
+      [64,"NEFTNO","neft_no","varchar2(100)","cond","NEFT/RTGS number","Required when payment mode is NEFT or RTGS"],
+      [79,"MERCHANTDISCOUNTRATE","merchant_discount_rate","number","cond","Discount rate on EMI","Required for EMI orders — used in Credit Note calculation"],
+    ]
+  },
+  {
+    label: "BYOD / enterprise / channel", color: "#f472b6",
+    fields: [
+      [55,"AGENTCOMPANY","agent_company","varchar2(100)","cond",'BYOD partner name e.g. "Vantage Circle"',"Required if order is placed via a BYOD partner"],
+      [56,"AGENTID","agent_id","varchar2(100)","cond","BYOD partner code","Required if order is placed via a BYOD partner"],
+      [72,"EPP","epp","varchar2(35)","cond",'"Yes" for corporate/BYOD/employee orders, else "No"',"Required for corporate/BYOD orders to trigger enterprise pricing flow"],
+      [73,"EPPNAME","epp_name","varchar2(100)","cond","Corporate name for EPP orders","Required when EPP = Yes"],
+      [74,"DOMAIN","domain","varchar2(100)","cond","Order origin domain","Required for multi-portal setups to identify source storefront"],
+      [75,"PARTNERTYPE","partner_type","varchar2(50)","cond",'BYOD type: "Enterprise" or "Partner"',"Required for all BYOD orders"],
+    ]
+  },
+  {
+    label: "Not in use — legacy fields", color: "#444c5a",
+    fields: [
+      [50,"ISDEAL","is_deal","varchar2(5)","no",null,null],
+      [51,"DEALPRICE","deal_price","number","no",null,null],
+      [52,"ISWARRANTY","is_warranty","varchar2(5)","no",null,null],
+      [53,"INKOFFER","ink_offer","varchar2(200)","no",null,null],
+      [57,"VIAAFFILIATE","via_affiliate","varchar2(100)","no",null,null],
+      [58,"AFFILIATENAME","affiliate_name","varchar2(200)","no",null,null],
+      [59,"BRANCHNAME","branch_name","varchar2(200)","no",null,null],
+      [60,"BANKNAME","bank_name","varchar2(200)","no",null,null],
+      [61,"DATEMONTH","date_month","varchar2(35)","no",null,null],
+      [62,"AMOUNT","amount","number","no",null,null],
+      [63,"CHEQUENO","cheque_no","varchar2(100)","no",null,null],
+      [65,"PICKFROM","pick_from","varchar2(200)","no",null,null],
+      [66,"OFFER1","offer1","varchar2(2000)","no",null,null],
+      [67,"OFFER1PRICE","offer1_price","number","no",null,null],
+      [68,"OFFER2","offer2","varchar2(2000)","no",null,null],
+      [69,"OFFER2PRICE","offer2_price","number","no",null,null],
+      [70,"OFFER3","offer3","varchar2(2000)","no",null,null],
+      [71,"OFFER3PRICE","offer3_price","number","no",null,null],
+      [76,"GIFTWRAPMSG","gift_wrap_msg","varchar2(2000)","no",null,null],
+      [77,"GIFTWRAPAMOUNT","gift_wrap_amount","number","no",null,null],
+      [78,"ISGIFTWRAPAVAILED","is_gift_wrap_availed","varchar2(5)","no",null,null],
+      [80,"STATUSTEXT","status_text","varchar2(100)","no",null,null],
+      [81,"OFFERTEXT","offer_text","varchar2(100)","no",null,null],
+      [82,"STARTDATE","start_date","date","no",null,null],
+      [83,"ENDDATE","end_date","date","no",null,null],
+      [84,"ISFREEBEE","is_freebee","varchar2(5)","no",null,null],
+      [85,"ISBUYBACK","is_buy_back","varchar2(5)","no",null,null],
+      [86,"MODELNUMBER","model_number","varchar2(100)","no",null,null],
+      [87,"IMEINUMBER","imei_number","varchar2(100)","no",null,null],
+      [88,"EXC_ORDER","exc_order","varchar2(5)","no",null,null],
+      [89,"EXC_PRICE","exc_price","number","no",null,null],
+      [90,"EXC_REF_NO","exc_ref_no","varchar2(200)","no",null,null],
+      [91,"EXC_ADDON_OFFER","exc_addon_offer","number","no",null,null],
+      [92,"EXC_MODEL","exc_model","varchar2(200)","no",null,null],
+      [93,"EXC_BRAND","exc_brand","varchar2(200)","no",null,null],
+      [94,"EXC_IMEI","exc_imei","varchar2(200)","no",null,null],
+      [95,"EXC_WAREHOUSE_CODE","exc_warehouse_code","varchar2(200)","no",null,null],
+      [96,"EXC_PINCODE","exc_pincode","number","no",null,null],
+      [97,"ORDER_SEGMENT","order_segment","varchar2(200)","no",null,null],
+      [98,"STORE_NAME","store_name","varchar2(200)","no",null,null],
+      [99,"STORE_ADDRESS","store_address","varchar2(200)","no",null,null],
+      [100,"STORE_ZIPCODE","store_zipcode","number","no",null,null],
+      [101,"STORE_STATE","store_state","varchar2(200)","no",null,null],
+      [102,"STORE_CITY","store_city","varchar2(200)","no",null,null],
+      [103,"STORE_CONTACT_NUMBER","store_contact_number","number","no",null,null],
+      [104,"OTP","otp","varchar2(200)","no",null,null],
+      [105,"OTP_EXPIRY_DATE","otp_expiry_date","date","no",null,null],
+      [106,"PAYMENT_AMOUNT","payment_amount","number","no",null,null],
+      [107,"PAYMENT_DATE","payment_date","date","no",null,null],
+      [108,"EXC_TYPE","exc_type","varchar2(200)","no",null,null],
+      [109,"EXCASPRICE","excasprice","varchar2(200)","no",null,null],
+      [110,"EXCSRVPTNR","excsrvptnr","varchar2(200)","no",null,null],
+      [111,"ASBUYBCKPR","asbuybckpr","varchar2(200)","no",null,null],
+      [112,"ASRDBUYVLU","asrdbuyvlu","varchar2(200)","no",null,null],
+      [113,"ASRDBUYMNT","asrdbuymnt","varchar2(200)","no",null,null],
+      [114,"SPCLINSTR","spclinstr","varchar2(200)","no",null,null],
+      [115,"QUOTEIDS","quoteids","varchar2(200)","no",null,null],
+      [116,"SERVICENO","serviceno","varchar2(200)","no",null,null],
+      [117,"PURINVOICE","purinvoice","varchar2(200)","no",null,null],
+      [118,"CUSTHDREF2","custhdref2","varchar2(200)","no","Extra field",null],
+      [119,"CUSTHDREF3","custhdref3","varchar2(200)","no","Extra field",null],
+      [120,"CUSTHDREF4","custhdref4","varchar2(200)","no","Extra field",null],
+      [121,"CUSTHDREF5","custhdref5","varchar2(200)","no","Extra field",null],
+      [122,"CUSTHDREF6","custhdref6","varchar2(200)","no","Extra field",null],
+      [123,"CUSTHDREF7","custhdref7","varchar2(200)","no","Extra field",null],
+      [124,"CUSTHDREF8","custhdref8","varchar2(200)","no","Extra field",null],
+      [125,"CUSTHDREF9","custhdref9","varchar2(200)","no","Extra field",null],
+      [126,"CUSTHDREF10","custhdref10","varchar2(200)","no","Extra field",null],
+      [127,"CUSTHDREF11","custhdref11","varchar2(200)","no","Extra field",null],
+      [128,"CUSTHDREF12","custhdref12","varchar2(200)","no","Extra field",null],
+      [129,"CUSTLIREF6","custliref6","varchar2(200)","no","Extra field",null],
+      [130,"CUSTLIREF7","custliref7","varchar2(200)","no","Extra field",null],
+      [131,"CUSTLIREF8","custliref8","varchar2(200)","no","Extra field",null],
+      [132,"CUSTLIREF9","custliref9","varchar2(200)","no","Extra field",null],
+    ]
+  }
+];
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+const tbody = document.getElementById('tbody');
+
+// Flatten for search/filter, keep group reference
+const allRows = [];
+
+GROUPS.forEach(group => {
+  group.fields.forEach(f => {
+    allRows.push({ group, field: f });
+  });
+});
+
+function badgeHTML(m) {
+  if (m === 'yes')  return '<span class="badge mand">Yes</span>';
+  if (m === 'cond') return '<span class="badge cond">Conditional</span>';
+  return '<span class="badge opt">No</span>';
+}
+
+function remHTML(rem, reason) {
+  if (!rem) return '<span class="rem-unused">Not in use</span>';
+  let h = `<div class="rem-text">${rem}</div>`;
+  if (reason) h += `<div class="rem-reason">${reason}</div>`;
+  return h;
+}
+
+function buildTable(filter, search) {
+  tbody.innerHTML = '';
+  let lastGroup = null;
+  let visible = 0;
+
+  const q = search.toLowerCase().trim();
+
+  allRows.forEach(({ group, field }) => {
+    const [sr, api, tbl, typ, mand, rem, reason] = field;
+
+    // filter
+    if (filter === 'mandatory'    && mand !== 'yes')  return;
+    if (filter === 'conditional'  && mand !== 'cond') return;
+    if (filter === 'optional'     && mand !== 'no')   return;
+
+    // search
+    if (q) {
+      const haystack = `${api} ${tbl} ${typ} ${rem||''} ${reason||''}`.toLowerCase();
+      if (!haystack.includes(q)) return;
+    }
+
+    // group header
+    if (group !== lastGroup) {
+      const gh = document.createElement('tr');
+      gh.className = 'group-header';
+      gh.innerHTML = `<td colspan="6"><span style="background:${group.color}"></span>${group.label}</td>`;
+      tbody.appendChild(gh);
+      lastGroup = group;
+    }
+
+    const tr = document.createElement('tr');
+    if (mand === 'yes')  tr.className = 'row-mand';
+    if (mand === 'cond') tr.className = 'row-cond';
+
+    tr.innerHTML = `
+      <td class="col-sr">${sr}</td>
+      <td class="col-api">${api}</td>
+      <td class="col-tbl">${tbl}</td>
+      <td class="col-type">${typ}</td>
+      <td class="col-mand">${badgeHTML(mand)}</td>
+      <td class="col-rem">${remHTML(rem, reason)}</td>
+    `;
+    tr.dataset.mand = mand;
+    tbody.appendChild(tr);
+    visible++;
+  });
+
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  document.getElementById('footer-count').textContent = `Showing ${visible} of ${allRows.length} fields`;
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateStats() {
+  const total = allRows.length;
+  const mand  = allRows.filter(r => r.field[4] === 'yes').length;
+  const cond  = allRows.filter(r => r.field[4] === 'cond').length;
+  const opt   = allRows.filter(r => r.field[4] === 'no').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-mand').textContent  = mand;
+  document.getElementById('stat-cond').textContent  = cond;
+  document.getElementById('stat-opt').textContent   = opt;
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────────────
+let activeFilter = 'all';
+let activeSearch = '';
+
+const filterBtns = document.querySelectorAll('.filter-btn');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    filterBtns.forEach(b => b.className = 'filter-btn');
+    if (activeFilter === 'all')         btn.className = 'filter-btn active-all';
+    else if (activeFilter === 'mandatory')   btn.className = 'filter-btn active-mand';
+    else if (activeFilter === 'conditional') btn.className = 'filter-btn active-cond';
+    else if (activeFilter === 'optional')    btn.className = 'filter-btn active-opt';
+    buildTable(activeFilter, activeSearch);
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  activeSearch = e.target.value;
+  buildTable(activeFilter, activeSearch);
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+updateStats();
+buildTable('all', '');
+</script>
+</body>
+</html>
