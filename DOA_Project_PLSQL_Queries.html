@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOA AI Project - PL/SQL Queries</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --ink: #1a2533;
+      --muted: #667789;
+      --line: #dbe4ee;
+      --code-bg: #ffffff;
+      --code-ink: #1f2937;
+      --accent: #0b6aa2;
+      --accent2: #0f7b55;
+      --accent3: #0e7490;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+      color: #10263e;
+      letter-spacing: 0.2px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--accent2);
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border: 1px solid #d6e0ea;
+      border-radius: 8px;
+      padding: 14px;
+      overflow: auto;
+      white-space: pre;
+      font-family: "Courier New", Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.45;
+      box-shadow: inset 0 0 0 1px #f3f7fb;
+    }
+    pre .sql-keyword {
+      color: #004f9f;
+      font-weight: 700;
+    }
+    pre .sql-string {
+      color: #9a3412;
+    }
+    pre .sql-comment {
+      color: #6b7280;
+      font-style: italic;
+    }
+    pre .sql-bind {
+      color: #7a1fa2;
+      font-weight: 600;
+    }
+    .query {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent3);
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+      margin-top: 12px;
+    }
+    .query-tools {
+      display: flex;
+      justify-content: flex-start;
+      margin: 0 0 8px;
+    }
+    .copy-btn {
+      border: 1px solid #bfd3e7;
+      background: #f7fbff;
+      color: #0f4b72;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .copy-btn:hover { background: #eaf4fd; }
+    .copy-btn.copied {
+      border-color: #1f7a49;
+      color: #1f7a49;
+      background: #dcfce7;
+    }
+    .anchor-link {
+      margin-left: 8px;
+      color: #8a9bb0;
+      text-decoration: none;
+      font-size: 0.9em;
+      visibility: hidden;
+    }
+    .support-footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding: 6px 4px 2px;
+    }
+    h2:hover .anchor-link,
+    h3:hover .anchor-link {
+      visibility: visible;
+    }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>DOA AI Project - PL/SQL Queries</h1>
+    </section>
+
+    <section class="card">
+      <h2 id="section-1">1. DOA PROJECT IFS RMA Queries (PDF)</h2>
+      <p class="meta">Source: DOA PROJECT IFS RMA Queries.pdf</p>
+      <div class="query">
+        <h3>1. GET DATA FOR RMA HEADER</h3>
+        <pre>SELECT
+    &#x27;TESTUSER4&#x27;                    AS RETURN_APPROVER_ID,          -- Hardcoded value
+    SYSDATE                        AS DATE_REQUESTED,              -- System date
+    T.contract                     AS CONTRACT,                    -- From CUST_ORDER_INV_HEAD_UIV_ALL view (T)
+    T.currency                     AS CURRENCY_CODE,               -- From CUST_ORDER_INV_HEAD_UIV_ALL view (T)
+    T.identity                     AS CUSTOMER_NO,                 -- From CUST_ORDER_INV_HEAD_UIV_ALL view (T)
+    T.invoice_no                   AS CUST_REF,                    -- Mapping T.invoice_no
+    T.contract                     AS RETURN_TO_CONTRACT,          -- From CUST_ORDER_INV_HEAD_UIV_ALL view (T)
+    &#x27;NOT PRINTED&#x27;                  AS RMA_REPORT_PRINTED_DB,       -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS USE_PRICE_INCL_TAX_DB,       -- Hardcoded value
+    T.delivery_address_id          AS CUSTOMER_NO_ADDR_NO,         -- Mapping T.delivery_address_id
+    &#x27;&#x27;                             AS CUSTOMER_NO_CREDIT,          -- Hardcoded value (empty string)
+    &#x27;en&#x27;                           AS LANGUAGE_CODE,               -- Hardcoded value
+    &#x27;&#x27;                             AS CUSTOMER_NO_CREDIT_ADDR_NO,  -- Hardcoded value (empty string)
+    &#x27;EXEMPT&#x27;                       AS TAX_LIABILITY,               -- Hardcoded value
+    &#x27;INDIA&#x27;                        AS SUPPLY_COUNTRY,              -- Hardcoded value
+    T.company                      AS COMPANY,                     -- From CUST_ORDER_INV_HEAD_UIV_ALL view (T)
+    &#x27;FALSE&#x27;                        AS JINSUI_INVOICE_DB,           -- Hardcoded value
+    &#x27;INCLUDE&#x27;                      AS INTRASTAT_EXEMPT_DB,         -- Hardcoded value
+    T.delivery_address_id          AS SHIP_ADDR_NO,                -- Mapping T.delivery_address_id
+    &#x27;N&#x27;                            AS SHIP_ADDR_FLAG_DB,           -- Hardcoded value
+    T.identity                     AS RETURN_FROM_CUSTOMER_NO,     -- From CUST_ORDER_INV_HEAD_UIV_ALL view (T)
+    T.delivery_address_id          AS RETURN_ADDR_NO,              -- Mapping T.delivery_address_id
+    &#x27;N&#x27;                            AS RETURN_ADDR_FLAG_DB,         -- Hardcoded value
+    &#x27;NormalReturn&#x27;                 AS RETURN_MAT_TYPE,             -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS C_BRANCH_TRANSFER,           -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS REPLACEMENT,                 -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS C_CLOSE_REPLACEMENT          -- Hardcoded value (No comma as it&#x27;s the last
+item)
+
+FROM IFSAPP.CUST_ORDER_INV_HEAD_UIV_ALL T
+WHERE T.invoice_no = &#x27;ITICOG0124103535&#x27;;</pre>
+      </div>
+      <div class="query">
+        <h3>2. Create RMA Header</h3>
+        <pre>--- CONTRACT and site are the same.
+DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) := &#x27;RETURN_APPROVER_ID&#x27; || chr(31) || &#x27;HOPUR20&#x27; || chr(30) ||
+                         &#x27;DATE_REQUESTED&#x27; || chr(31) || &#x27;2025-05-17-00.00.00&#x27; || chr(30) ||
+                         &#x27;CONTRACT&#x27; || chr(31) || &#x27;COVAL&#x27; || chr(30) ||
+                         &#x27;CURRENCY_CODE&#x27; || chr(31) || &#x27;INR&#x27; || chr(30) ||
+                         &#x27;CUSTOMER_NO&#x27; || chr(31) || &#x27;S00443&#x27; || chr(30) ||
+                         &#x27;CUST_REF&#x27; || chr(31) || &#x27;ITICOG0124103535&#x27; || chr(30) ||
+                         &#x27;RETURN_TO_CONTRACT&#x27; || chr(31) || &#x27;COVAL&#x27; || chr(30) ||
+                         &#x27;RMA_REPORT_PRINTED_DB&#x27; || chr(31) || &#x27;NOT PRINTED&#x27; || chr(30) ||
+                         &#x27;USE_PRICE_INCL_TAX_DB&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;CUSTOMER_NO_ADDR_NO&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;CUSTOMER_NO_CREDIT&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;LANGUAGE_CODE&#x27; || chr(31) || &#x27;en&#x27; || chr(30) ||
+                         &#x27;CUSTOMER_NO_CREDIT_ADDR_NO&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;TAX_LIABILITY&#x27; || chr(31) || &#x27;EXEMPT&#x27; || chr(30) ||
+                         &#x27;SUPPLY_COUNTRY&#x27; || chr(31) || &#x27;INDIA&#x27; || chr(30) ||
+                         &#x27;COMPANY&#x27; || chr(31) || &#x27;HOF&#x27; || chr(30) ||
+                         &#x27;JINSUI_INVOICE_DB&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;INTRASTAT_EXEMPT_DB&#x27; || chr(31) || &#x27;INCLUDE&#x27; || chr(30) ||
+                         &#x27;SHIP_ADDR_NO&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;SHIP_ADDR_FLAG_DB&#x27; || chr(31) || &#x27;N&#x27; || chr(30) ||
+                         &#x27;RETURN_FROM_CUSTOMER_NO&#x27; || chr(31) || &#x27;S00443&#x27; || chr(30) ||
+                         &#x27;RETURN_ADDR_NO&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;RETURN_ADDR_FLAG_DB&#x27; || chr(31) || &#x27;N&#x27; || chr(30) ||
+                         &#x27;RETURN_MAT_TYPE&#x27; || chr(31) || &#x27;NormalReturn&#x27; || chr(30) ||
+                         &#x27;C_BRANCH_TRANSFER&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;REPLACEMENT&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;C_CLOSE_REPLACEMENT&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30);
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+
+BEGIN
+  IFSAPP.RETURN_MATERIAL_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>3. Get Details for Created RMA</h3>
+        <pre>SELECT *
+FROM (
+  SELECT T.RMA_NO, T.OBJID, T.OBJVERSION
+    FROM IFSAPP.RETURN_MATERIAL T
+   WHERE T.CUST_REF               = &#x27;ITICOG0124103535&#x27;
+     AND T.RETURN_APPROVER_ID     = &#x27;HOPUR20&#x27;
+     AND T.CUSTOMER_NO            = &#x27;S00443&#x27;
+     AND T.CONTRACT               = &#x27;COVAL&#x27;
+     AND T.STATE                  = &#x27;Planned&#x27;
+     AND TRUNC(T.DATE_REQUESTED)  = TRUNC(SYSDATE)
+     AND T.RMA_NO NOT IN          (SELECT R.rma_no FROM IFSAPP.RETURN_MATERIAL_LINE R WHERE R.debit_invoice_no =
+T.CUST_REF)
+
+   ORDER BY T.OBJVERSION DESC
+)
+WHERE ROWNUM = 1;</pre>
+      </div>
+      <div class="query">
+        <h3>4. Update RMA Reason and Reference</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := &#x27;AAAWLGAAXAANNEkAAL&#x27;;
+   p2_ VARCHAR2(32000) := &#x27;CF$_RMA_REASON&#x27;||chr(31)||&#x27;DOA Clean&#x27;||chr(30);
+   p3_ VARCHAR2(32000) := &#x27;CUST_REF&#x27;||chr(31)||&#x27;ITICOG0124103535&#x27;||chr(30);
+   p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+
+BEGIN
+IFSAPP.RETURN_MATERIAL_CFP.Cf_Modify__(p0_ , p1_ , p2_ , p3_ , p4_ );
+COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>5. Get Details for RMA Lines</h3>
+        <pre>SELECT
+    &#x27;7830588&#x27;                      AS RMA_NO,                      -- Hardcoded value
+    T.CATALOG_NO                   AS CATALOG_NO,                  -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    T.description                  AS CATALOG_DESC,                -- Mapping T.description
+    &#x27;&#x27;                             AS CONDITION_CODE,              -- Hardcoded value
+    T.CONFIGURATION_ID             AS CONFIGURATION_ID,            -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    &#x27;1&#x27;                            AS QTY_TO_RETURN,               -- Hardcoded value
+    &#x27;DOA&#x27;                          AS RETURN_REASON_CODE,          -- Hardcoded value
+    &#x27;1&#x27;                            AS INSPECTION_INFO,             -- Hardcoded value
+    T.ORDER_NO                     AS ORDER_NO,                    -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    T.LINE_NO                      AS LINE_NO,                     -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    T.release_no                   AS REL_NO,                      -- Mapping T.release_no
+    T.series_id                    AS DEBIT_INVOICE_SERIES_ID,     -- Mapping T.series_id
+    T.INVOICE_NO                   AS DEBIT_INVOICE_NO,            -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    T.customer_po_no               AS PURCHASE_ORDER_NO,           -- Mapping T.customer_po_no
+    T.sale_unit_price              AS BASE_SALE_UNIT_PRICE_1,      -- Mapping T.sale_unit_price and renaming
+    T.sale_unit_price              AS BASE_SALE_UNIT_PRICE,        -- Mapping T.sale_unit_price
+    T.sale_unit_price              AS BASE_UNIT_PRICE_INCL_TAX_1,  -- Mapping T.sale_unit_price and renaming
+    T.sale_unit_price              AS BASE_UNIT_PRICE_INCL_TAX,    -- Mapping T.sale_unit_price
+    T.sale_unit_price              AS SALE_UNIT_PRICE_1,           -- Mapping T.sale_unit_price and renaming
+    T.SALE_UNIT_PRICE              AS SALE_UNIT_PRICE,             -- Mapping T.SALE_UNIT_PRICE
+    &#x27;1&#x27;                            AS PRICE_CONV_FACTOR,           -- Hardcoded value
+    T.sale_unit_price              AS UNIT_PRICE_INCL_TAX_1,       -- Mapping T.sale_unit_price and renaming
+    T.sale_unit_price              AS UNIT_PRICE_INCL_TAX,         -- Mapping T.sale_unit_price
+    &#x27;EXEMPT&#x27;                       AS TAX_LIABILITY,               -- Hardcoded value
+    &#x27;&#x27;                             AS CUSTOMER_TAX_USAGE_TYPE,     -- Hardcoded value
+    &#x27;&#x27;                             AS FEE_CODE,                    -- Hardcoded value
+    &#x27;&#x27;                             AS TAX_CLASS_ID,                -- Hardcoded value
+    T.tax_calc_structure_id        AS TAX_CALC_STRUCTURE_ID,       -- Mapping T.tax_calc_structure_id
+    T.deliv_type_id                AS DELIVERY_TYPE,               -- Mapping T.deliv_type_id
+    &#x27;TRUE&#x27;                         AS REBATE_BUILDER_DB,           -- Hardcoded value
+    T.item_id                      AS DEBIT_INVOICE_ITEM_ID,       -- Mapping T.item_id
+    T.CATALOG_NO                   AS PART_NO,                     -- Mapping T.CATALOG_NO to PART_NO
+    T.CONTRACT                     AS CONTRACT,                    -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    T.LINE_ITEM_NO                 AS LINE_ITEM_NO,                -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    &#x27;1&#x27;                            AS CURRENCY_RATE,               -- Hardcoded value
+    &#x27;1&#x27;                            AS CONV_FACTOR,                 -- Hardcoded value
+    &#x27;1&#x27;                            AS INVERTED_CONV_FACTOR,        -- Hardcoded value
+    T.company                      AS COMPANY,                     -- From CUSTOMER_ORDER_INV_JOIN view (T)
+    &#x27;EDITED&#x27;                       AS QTY_EDITED_FLAG,             -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS RENTAL_DB,                   -- Hardcoded value
+    &#x27;TRUE&#x27;                         AS FETCH_TAX_CODES,             -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS SET_TAX_FROM_ORIGINAL,       -- Hardcoded value
+    &#x27;FALSE&#x27;                        AS MULTIPLE_TAX_LINES           -- Hardcoded value
+
+FROM IFSAPP.CUSTOMER_ORDER_INV_JOIN T
+WHERE T.identity      = &#x27;S00443&#x27;
+  AND T.contract      = &#x27;COVAL&#x27;
+  AND T.catalog_no    = &#x27;W2N96AA#ACJ&#x27;
+  AND T.invoice_no    = &#x27;ITI23COG01117745&#x27;;</pre>
+      </div>
+      <div class="query">
+        <h3>6. Create RMA Lines</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) := &#x27;RMA_NO&#x27; || chr(31) || &#x27;7830462&#x27; || chr(30) ||
+                         &#x27;CATALOG_NO&#x27; || chr(31) || &#x27;6F9U1PA#ACJ&#x27; || chr(30) ||
+                         &#x27;CATALOG_DESC&#x27; || chr(31) || &#x27;NB PC Victus 15-fb0053AX&#x27; || chr(30) ||
+                         &#x27;CONDITION_CODE&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;CONFIGURATION_ID&#x27; || chr(31) || &#x27;*&#x27; || chr(30) ||
+                         &#x27;QTY_TO_RETURN&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;RETURN_REASON_CODE&#x27; || chr(31) || &#x27;DOA&#x27; || chr(30) ||
+                         &#x27;INSPECTION_INFO&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;ORDER_NO&#x27; || chr(31) || &#x27;CCOVAL102696&#x27; || chr(30) ||
+                         &#x27;LINE_NO&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;REL_NO&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;DEBIT_INVOICE_SERIES_ID&#x27; || chr(31) || &#x27;ITICOG0124&#x27; || chr(30) ||
+                         &#x27;DEBIT_INVOICE_NO&#x27; || chr(31) || &#x27;ITICOG0124103535&#x27; || chr(30) ||
+                         &#x27;PURCHASE_ORDER_NO&#x27; || chr(31) || &#x27;S00443/JUN-24/50&#x27; || chr(30) ||
+                         &#x27;BASE_SALE_UNIT_PRICE*1&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;BASE_SALE_UNIT_PRICE&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;BASE_UNIT_PRICE_INCL_TAX*1&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;BASE_UNIT_PRICE_INCL_TAX&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;SALE_UNIT_PRICE*1&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;SALE_UNIT_PRICE&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;PRICE_CONV_FACTOR&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;UNIT_PRICE_INCL_TAX*1&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;UNIT_PRICE_INCL_TAX&#x27; || chr(31) || &#x27;65190&#x27; || chr(30) ||
+                         &#x27;TAX_LIABILITY&#x27; || chr(31) || &#x27;EXEMPT&#x27; || chr(30) ||
+                         &#x27;CUSTOMER_TAX_USAGE_TYPE&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;FEE_CODE&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;TAX_CLASS_ID&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;TAX_CALC_STRUCTURE_ID&#x27; || chr(31) || &#x27;&#x27; || chr(30) ||
+                         &#x27;DELIVERY_TYPE&#x27; || chr(31) || &#x27;2&#x27; || chr(30) ||
+                         &#x27;REBATE_BUILDER_DB&#x27; || chr(31) || &#x27;TRUE&#x27; || chr(30) ||
+                         &#x27;DEBIT_INVOICE_ITEM_ID&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;PART_NO&#x27; || chr(31) || &#x27;6F9U1PA#ACJ&#x27; || chr(30) ||
+                         &#x27;CONTRACT&#x27; || chr(31) || &#x27;COVAL&#x27; || chr(30) ||
+                         &#x27;LINE_ITEM_NO&#x27; || chr(31) || &#x27;0&#x27; || chr(30) ||
+                         &#x27;CURRENCY_RATE&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;CONV_FACTOR&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;INVERTED_CONV_FACTOR&#x27; || chr(31) || &#x27;1&#x27; || chr(30) ||
+                         &#x27;COMPANY&#x27; || chr(31) || &#x27;COC&#x27; || chr(30) ||
+                         &#x27;QTY_EDITED_FLAG&#x27; || chr(31) || &#x27;EDITED&#x27; || chr(30) ||
+                         &#x27;RENTAL_DB&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;FETCH_TAX_CODES&#x27; || chr(31) || &#x27;TRUE&#x27; || chr(30) ||
+                         &#x27;SET_TAX_FROM_ORIGINAL&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;MULTIPLE_TAX_LINES&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30);
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+
+BEGIN
+  IFSAPP.RETURN_MATERIAL_LINE_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  commit;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>7. Update Serial Number in RMA</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := NULL;
+   p2_ VARCHAR2(32000) := NULL;
+   p3_ VARCHAR2(32000) :=
+&#x27;RMA_NO&#x27;||chr(31)||&#x27;7830586&#x27;|| chr(30) ||
+                         &#x27;RMA_LINE_NO&#x27;||chr(31)||&#x27;1&#x27;|| chr(30) ||
+                         &#x27;SERIAL_NO&#x27;||chr(31)||&#x27;5CD4155440&#x27;||chr(
+30);
+   p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+
+BEGIN
+IFSAPP.RETURN_MAT_LINE_SERIAL_API.NEW__( p0_ , p1_ , p2_ , p3_ , p4_ );
+COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>8. Approve Updated Serial Number</h3>
+        <pre>DECLARE
+   p0_ FLOAT := 7830586;
+   p1_ FLOAT := 1;
+
+BEGIN
+IFSAPP.RETURN_MATERIAL_LINE_API.Approve_Serial(p0_ , p1_ );
+COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>9. Update DOA Information in RMA</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := &#x27;AAAWLGAAGAALIiDAAB&#x27;;
+  p2_ VARCHAR2(32000) := &#x27;20260721140313&#x27;;
+  p3_ VARCHAR2(32000) := &#x27;C_DOA_TYPE&#x27; || chr(31) || &#x27;Clean DOA&#x27; || chr(30) ||                                     ---- DOA Type
+                         &#x27;C_SETTLEMENT_OPTION&#x27; || chr(31) || &#x27;Providing a Credit Note&#x27; || chr(30) ||              ---- Settelement Option
+                         &#x27;C_REMARKS&#x27; || chr(31) || &#x27;Virtual RMA login-Physical material at Jaipur&#x27; || chr(30) ||  ---- Branch &amp; HO Remarks - Both should be appended.
+                         &#x27;C_DOA_STATE&#x27; || chr(31) || &#x27;Info Not Updated&#x27; || chr(30) ||                             ---- Optional for DOA Current Status.
+                         &#x27;C_PARTNER_DEBIT_NOTE&#x27; || chr(31) || &#x27;20&#x27; || chr(30) ||                                  ---- DOA Type
+                         &#x27;C_PARTNER_DEBIT_NOTE_AMT&#x27; || chr(31) || &#x27;61195&#x27; || chr(30) ||                           ---- Partner Debit Note Amount
+                         &#x27;C_PARTNER_CERTIFICATE_NO&#x27; || chr(31) || &#x27;5156912957&#x27; || chr(30) ||                      ---- DOA Certificate No
+                         &#x27;C_BT_PO_NO&#x27; || chr(31) || &#x27;PDEG01143590&#x27; || chr(30) ||                                  ---- Branch Transfer PO - For Physical Material Movement Only.
+                         &#x27;C_SERIAL_NO&#x27; || chr(31) || &#x27;CND5350TF0&#x27; || chr(30) ||                                   ---- Product Serial No - Its Mandatory
+                         &#x27;C_IMEI_NO&#x27; || chr(31) || &#x27;PJPG02130579&#x27; || chr(30);                                     ---- Used This to Update The Vertual BT Purchase Orders No.
+
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+
+BEGIN
+  IFSAPP.RETURN_MATERIAL_API.MODIFY__(p0_, p1_, p2_, p3_, p4_);
+  commit;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>10. Release RMA</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := &#x27;AAAWLGAAWAANDhMAAE&#x27;;
+   p2_ VARCHAR2(32000) := &#x27;20250423094146&#x27;;
+   p3_ VARCHAR2(32000) := NULL;
+   p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+
+BEGIN
+IFSAPP.RETURN_MATERIAL_API.RELEASE__( p0_ , p1_ , p2_ , p3_ , p4_ );
+commit;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>11. Quick Report by Serial Number</h3>
+        <pre>Select
+      H.Invoice_No, H.Invoice_Date, H.Identity Customer_ID, IFSAPP.Customer_Info_Api.Get_Name(H.Identity)
+Customer_Name,
+      IFSAPP.Customer_Info_Address_Api.Get_City(H.Identity,
+IFSAPP.Savex_Functions_Api.Get_Cust_Default_Doc_Addr_ID(H.Identity)) City,
+      IFSAPP.Customer_Order_Inv_Item_Api.Get_Catalog_No(t.company,t.invoice_id,t.item_id)  Catalog_No,
+      IFSAPP.Customer_Order_Inv_Item_Api.Get_Description(t.company,t.invoice_id,t.item_id) Description
+From
+      IFSAPP.Invoice_Item_Serial T,
+      IFSAPP.Customer_Order_Inv_Head_Uiv H
+Where
+      T.Company = h.Company And
+      T.Invoice_ID = h.Invoice_ID And
+      T.Serial_No like &#x27;&amp;Serial_No%&#x27;</pre>
+      </div>
+      <div class="query">
+        <h3>12. Quick Report by Invoice Number</h3>
+        <pre>SELECT
+    &#x27;&amp;Invoice_No&#x27; AS Invoice_No, -- Substitution variable
+    nvl(
+        IFSAPP.Customer_Order_Inv_Item_Api.Get_Catalog_No(
+            IFSAPP.Site_Api.Get_Company((SELECT Contract FROM IFSAPP.Customer_Order_Inv_Head T WHERE T.Invoice_No =
+&#x27;&amp;Invoice_No&#x27;)),
+            IFSAPP.Savex_Functions_Api.Get_Invoice_ID(&#x27;&amp;Invoice_No&#x27;),
+            Item_ID
+        ),
+        (SELECT b.c5 FROM ifsapp.invoice_item b WHERE b.invoice_id = t.invoice_id AND b.item_id = t.item_id AND b.c5
+&lt;&gt; &#x27;ROUNOFF&#x27; AND b.c6 &lt;&gt; &#x27;ROUNOFF&#x27;)
+    ) AS Part_No, -- Catalog or C5
+    nvl(
+        IFSAPP.Inventory_Part_Api.Get_Description(
+            (SELECT Contract FROM IFSAPP.Customer_Order_Inv_Head T WHERE T.Invoice_No = &#x27;&amp;Invoice_No&#x27;),
+            IFSAPP.Customer_Order_Inv_Item_Api.Get_Catalog_No(
+                IFSAPP.Site_Api.Get_Company((SELECT Contract FROM IFSAPP.Customer_Order_Inv_Head T WHERE T.Invoice_No
+= &#x27;&amp;Invoice_No&#x27;)),
+                IFSAPP.SAVEX_Functions_Api.Get_Invoice_ID(&#x27;&amp;Invoice_No&#x27;),
+                Item_ID
+            )
+        ),
+        (SELECT b.c6 FROM ifsapp.invoice_item b WHERE b.invoice_id = t.invoice_id AND b.item_id = t.item_id AND b.c5
+&lt;&gt; &#x27;ROUNOFF&#x27; AND b.c6 &lt;&gt; &#x27;ROUNOFF&#x27;)
+    ) AS Description, -- Description or C6
+    Serial_No AS Serial_No -- Serial Number
+FROM
+    IFSAPP.Invoice_Item_Serial T -- Main table/view
+WHERE
+    /* T.Company = IFSAPP.Site_Api.Get_Company(
+            (SELECT Contract FROM IFSAPP.Customer_Order_Inv_Head T WHERE T.Invoice_No = &#x27;&amp;Invoice_No&#x27;)
+        ) AND */ -- Commented out condition
+    T.Invoice_ID = IFSAPP.SAVEX_Functions_Api.Get_Invoice_ID(&#x27;&amp;Invoice_No&#x27;); -- Filter by Invoice ID via API</pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 id="section-2">2. Return Completing And SR Invoice Queries</h2>
+      <p class="meta">Source: Return Completing And SR Invoice.html</p>
+      <div class="query">
+        <h3>1. Initialize and Fetch RMA Data</h3>
+        <pre>SELECT T.rma_no,
+       T.rma_line_no,
+       T.part_no,
+       T.qty_to_return AS QTY_RECEIPT, 
+       T.qty_to_return AS QTY_RECEIPT_INV,        
+       T.contract,
+       T.configuration_id,
+       &#x27;DOA-GST&#x27; AS LOCATION_NO,
+       R.lot_batch_no,
+       R.waiv_dev_rej_no,
+       R.serial_no,
+       R.eng_chg_level,
+       R.configuration_id,
+       R.part_ownership_db,
+       T.order_no
+  FROM IFSAPP.RETURN_MATERIAL_LINE T 
+ INNER JOIN IFSAPP.INVENTORY_TRANSACTION_HIST2 R
+    ON T.order_no = R.SOURCE_REF1
+   AND T.part_no  = R.part_no
+   AND T.line_no  = R.source_ref2
+   AND T.rel_no   = R.source_ref3
+ WHERE T.rma_no   = &#x27;7901864&#x27;;</pre>
+      </div>
+      <div class="query">
+        <h3>2. Complete Customer Receipt</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := &#x27;!
+$PACK_START=TRUE
+$RMA_NO=7901864
+$RMA_LINE_NO=1
+$PART_NO=4ZB95A
+$CONTRACT=BAG01
+$CONFIGURATION_ID=*
+$EXPIRATION_DATE=
+$LOCATION_NO=DOA-GST
+$LOT_BATCH_NO=PBAVDL105831-1-1-1
+$SERIAL_NO=*
+$ENG_CHG_LEVEL=1
+$WAIV_DEV_REJ_NO=*
+$PART_OWNERSHIP=COMPANY OWNED
+$HANDLING_UNIT_ID=0
+$OWNING_VENDOR_NO=
+$QTY_RECEIPT=1
+$QTY_RECEIPT_INV=1
+$CATCH_QTY_RECEIPT=
+$RECEIPT_ALL=FALSE
+$PACK_COMPLETE=TRUE
+&#x27;;
+
+   p1_ VARCHAR2(32000) := &#x27;RETURN&#x27;;
+   p2_ VARCHAR2(32000) := &#x27;&#x27;;
+   p3_ VARCHAR2(32000) := &#x27;7901864&#x27;;
+
+BEGIN
+   IFSAPP.Log_SYS.Init_Debug_Session_(&#x27;en&#x27;);
+   
+   BEGIN
+      IFSAPP.Return_Material_Line_API.Unpack_Cust_Receipt__(p0_ , p1_ );
+      p2_ := IFSAPP.Customer_Order_Flow_API.Get_License_Enabled(p3_ , &#x27;INTERACT_RMA&#x27;);
+   END;
+
+   COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>3. Approve for Credit Invoice and Charges</h3>
+        <pre>-- Approve Line Credit
+DECLARE
+   p0_ FLOAT := 7901864;
+   p1_ FLOAT := 1;
+BEGIN
+   IFSAPP.Return_Material_Line_API.Approve_For_Credit__(p0_ , p1_ );
+   COMMIT;
+END;
+
+-- Approve Line Charges
+DECLARE
+   p0_ FLOAT := 7901864;
+BEGIN
+   IFSAPP.Return_Material_API.Approve_Charges__(p0_ );
+   COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>4. Create Credit Invoice and Fetch ID</h3>
+        <pre>-- Generation Block
+DECLARE
+   p0_ FLOAT := 7901864;
+   p1_ FLOAT := NULL;
+   p2_ FLOAT := 0;
+BEGIN
+   BEGIN
+      IFSAPP.Invoice_Customer_Order_API.Create_Invoice_From_Return__(p0_ , p1_ , p1_ , p2_ );
+      IFSAPP.Return_Material_API.Refresh_State(p0_ );
+   END;
+   COMMIT;
+END;
+
+-- Query for Preliminary Invoice Key
+SELECT R.invoice_id 
+  FROM IFSAPP.CUST_ORDER_INV_HEAD_UIV_ALL R 
+ WHERE R.rma_no = &#x27;7901864&#x27; 
+   AND R.state  = &#x27;Preliminary&#x27;;</pre>
+      </div>
+      <div class="query">
+        <h3>5. Post and Print Invoices</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := &#x27;START_EVENT&#x27; || chr(31) || &#x27;510&#x27; || chr(30) ||
+                         &#x27;INVOICE_ID&#x27; || chr(31) || &#x27;65436343&#x27; || chr(30) ||
+                         &#x27;VALIDATEBG&#x27; || chr(31) || &#x27;FALSE&#x27; || chr(30) ||
+                         &#x27;PRINT_METHOD&#x27; || chr(31) || &#x27;PRINT_ONLINE&#x27; || chr(30) ||
+                         &#x27;END&#x27; || chr(31) || &#x27;&#x27; || chr(30);
+  p1_ VARCHAR2(32000) := &#x27;&#x27;;
+  p2_ VARCHAR2(32000) := &#x27;NOI&#x27;;
+
+BEGIN
+  BEGIN
+    IFSAPP.Customer_Order_Flow_API.Start_Print_Invoice__(p0_);
+    p1_ := IFSAPP.Company_Invoice_Info_API.Get_Ncf_Reference_Method_Db(p2_);
+  END;
+  COMMIT;
+END;</pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 id="section-3">3. Branch Transfer Queries</h2>
+      <p class="meta">Source: Branch Transfer.html</p>
+      <div class="query">
+        <h3>1. Create Purchase Part Supplier</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) :=
+      &#x27;PART_NO&#x27;               || CHR(31) || :part_no          || CHR(30) ||
+      &#x27;CONTRACT&#x27;              || CHR(31) || :contract         || CHR(30) ||
+      &#x27;VENDOR_NO&#x27;             || CHR(31) || :vendor_no        || CHR(30) ||
+      &#x27;BUY_UNIT_MEAS&#x27;         || CHR(31) || &#x27;PCS&#x27;             || CHR(30) ||
+      &#x27;CONV_FACTOR&#x27;           || CHR(31) || &#x27;1&#x27;               || CHR(30) ||
+      &#x27;PRICE_UNIT_MEAS&#x27;       || CHR(31) || &#x27;PCS&#x27;             || CHR(30) ||
+      &#x27;PRICE_CONV_FACTOR&#x27;     || CHR(31) || &#x27;1&#x27;               || CHR(30) ||
+      &#x27;STD_MULTIPLE_QTY&#x27;      || CHR(31) || &#x27;1&#x27;               || CHR(30) ||
+      &#x27;STANDARD_PACK_SIZE&#x27;    || CHR(31) || &#x27;1&#x27;               || CHR(30) ||
+      &#x27;PURCHASE_PAYMENT_TYPE&#x27; || CHR(31) || &#x27;Normal&#x27;          || CHR(30) ||
+      &#x27;QTY_CALC_ROUNDING&#x27;     || CHR(31) || &#x27;16&#x27;              || CHR(30) ||
+      &#x27;PART_OWNERSHIP&#x27;        || CHR(31) || &#x27;Company Owned&#x27;   || CHR(30) ||
+      &#x27;STATUS_CODE&#x27;           || CHR(31) || &#x27;2&#x27;               || CHR(30) ||
+      &#x27;ACQUISITION_TYPE&#x27;      || CHR(31) || &#x27;Purchase Only&#x27;   || CHR(30) ||
+      &#x27;MINIMUM_QTY&#x27;           || CHR(31) || &#x27;1&#x27;               || CHR(30) ||
+      &#x27;VENDOR_MANUF_LEADTIME&#x27; || CHR(31) || &#x27;0&#x27;               || CHR(30) ||
+      &#x27;LIST_PRICE&#x27;            || CHR(31) || &#x27;0&#x27;               || CHR(30) ||
+      &#x27;CURRENCY_CODE&#x27;         || CHR(31) || &#x27;INR&#x27;             || CHR(30) ||
+      &#x27;C_HSN_SAC_CODE&#x27;        || CHR(31) || :hsn_sac_code     || CHR(30);
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+BEGIN
+  IFSAPP.PURCHASE_PART_SUPPLIER_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>2. Create Purchase Order Header</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;   -- Out: Returns OBJID
+  p2_ VARCHAR2(32000) := NULL;   -- Out: Returns OBJVERSION
+  p3_ VARCHAR2(32000) :=
+      &#x27;VENDOR_NO&#x27;                   || CHR(31) || :supplier_code   || CHR(30) ||
+      &#x27;CONTRACT&#x27;                    || CHR(31) || :branch_to       || CHR(30) ||
+      &#x27;ORDER_CODE&#x27;                  || CHR(31) || &#x27;1&#x27;              || CHR(30) ||
+      &#x27;WANTED_RECEIPT_DATE&#x27;         || CHR(31) || :order_datetime  || CHR(30) ||
+      &#x27;CURRENCY_CODE&#x27;               || CHR(31) || :currency_code   || CHR(30) ||
+      &#x27;BUYER_CODE&#x27;                  || CHR(31) || &#x27;*&#x27;              || CHR(30) ||
+      &#x27;DELIVERY_ADDRESS&#x27;            || CHR(31) || :delivery_addr   || CHR(30) ||
+      &#x27;DOCUMENT_ADDRESS_ID&#x27;         || CHR(31) || :billing_addr    || CHR(30) ||
+      &#x27;AUTHORIZE_CODE&#x27;              || CHR(31) || &#x27;HOPUR20&#x27;        || CHR(30) ||
+      &#x27;LOCATION_GROUP&#x27;              || CHR(31) || :to_location_grp || CHR(30) ||
+      &#x27;SCHEDULE_AGREEMENT_ORDER_DB&#x27; || CHR(31) || &#x27;NOT SCHEDULE&#x27;  || CHR(30) ||
+      &#x27;ORDER_DATE&#x27;                  || CHR(31) || :order_datetime  || CHR(30) ||
+      &#x27;LANGUAGE_CODE&#x27;               || CHR(31) || &#x27;en&#x27;             || CHR(30) ||
+      &#x27;TAX_LIABILITY&#x27;               || CHR(31) || &#x27;EXEMPT&#x27;         || CHR(30) ||
+      &#x27;INTRASTAT_EXEMPT_DB&#x27;         || CHR(31) || &#x27;INCLUDE&#x27;        || CHR(30) ||
+      &#x27;USE_PRICE_INCL_TAX_DB&#x27;       || CHR(31) || &#x27;FALSE&#x27;          || CHR(30) ||
+      &#x27;PURCHASE_CODE&#x27;               || CHR(31) || &#x27;BT&#x27;             || CHR(30) ||
+      &#x27;DELIVERY_TERMS&#x27;              || CHR(31) || :delivery_term   || CHR(30) ||
+      &#x27;SHIP_VIA_CODE&#x27;               || CHR(31) || :ship_via_code   || CHR(30) ||
+      &#x27;INVOICING_SUPPLIER&#x27;          || CHR(31) || :supplier_code   || CHR(30) ||
+      &#x27;PAY_TERM_ID&#x27;                 || CHR(31) || &#x27;0&#x27;              || CHR(30) ||
+      &#x27;FREIGHT_FLAG&#x27;                || CHR(31) || &#x27;NotApplicable&#x27;  || CHR(30);
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+BEGIN
+  IFSAPP.PURCHASE_ORDER_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>3. Fetch Created PO Number</h3>
+        <pre>SELECT ORDER_NO, CONTRACT, VENDOR_NO
+FROM IFSAPP.PURCHASE_ORDER
+WHERE OBJID      = :objid
+  AND OBJVERSION = :objversion;</pre>
+      </div>
+      <div class="query">
+        <h3>4. Add PO Line Item</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) :=
+      &#x27;ORDER_NO&#x27;                  || CHR(31) || :po_number          || CHR(30) ||
+      &#x27;VENDOR_NO&#x27;                 || CHR(31) || :vendor_no          || CHR(30) ||
+      &#x27;CURRENCY_CODE&#x27;             || CHR(31) || &#x27;INR&#x27;               || CHR(30) ||
+      &#x27;COMPANY&#x27;                   || CHR(31) || :company            || CHR(30) ||
+      &#x27;PART_NO&#x27;                   || CHR(31) || :part_no            || CHR(30) ||
+      &#x27;DESCRIPTION&#x27;               || CHR(31) || :description        || CHR(30) ||
+      &#x27;BUY_QTY_DUE&#x27;               || CHR(31) || :quantity           || CHR(30) ||
+      &#x27;BUY_UNIT_MEAS&#x27;             || CHR(31) || &#x27;PCS&#x27;               || CHR(30) ||
+      &#x27;C_GST_APPLICABLE&#x27;          || CHR(31) || &#x27;Regular&#x27;           || CHR(30) ||
+      &#x27;PLANNED_RECEIPT_DATE&#x27;      || CHR(31) || :planned_date       || CHR(30) ||
+      &#x27;PLANNED_ARRIVAL_DATE&#x27;      || CHR(31) || :planned_date       || CHR(30) ||
+      &#x27;PLANNED_DELIVERY_DATE&#x27;     || CHR(31) || :planned_date       || CHR(30) ||
+      &#x27;WANTED_DELIVERY_DATE&#x27;      || CHR(31) || :planned_date       || CHR(30) ||
+      &#x27;PROMISED_DELIVERY_DATE&#x27;    || CHR(31) || :planned_date       || CHR(30) ||
+      &#x27;FBUY_UNIT_PRICE&#x27;           || CHR(31) || &#x27;0&#x27;                 || CHR(30) ||
+      &#x27;FBUY_UNIT_PRICE_INCL_TAX&#x27;  || CHR(31) || &#x27;0&#x27;                 || CHR(30) ||
+      &#x27;PRICE_UNIT_MEAS&#x27;           || CHR(31) || &#x27;PCS&#x27;               || CHR(30) ||
+      &#x27;BUY_UNIT_PRICE&#x27;            || CHR(31) || &#x27;0&#x27;                 || CHR(30) ||
+      &#x27;BUY_UNIT_PRICE_INCL_TAX&#x27;   || CHR(31) || &#x27;0&#x27;                 || CHR(30) ||
+      &#x27;PRICE_CONV_FACTOR&#x27;         || CHR(31) || &#x27;1&#x27;                 || CHR(30) ||
+      &#x27;DISCOUNT&#x27;                  || CHR(31) || &#x27;0&#x27;                 || CHR(30) ||
+      &#x27;TAX_LIABILITY_TYPE_DB&#x27;     || CHR(31) || &#x27;EXM&#x27;               || CHR(30) ||
+      &#x27;TAXABLE_DB&#x27;                || CHR(31) || &#x27;FALSE&#x27;             || CHR(30) ||
+      &#x27;TAX_LIABILITY&#x27;             || CHR(31) || &#x27;EXEMPT&#x27;             || CHR(30) ||
+      &#x27;AUTOMATIC_INVOICE_DB&#x27;      || CHR(31) || &#x27;MANUAL&#x27;             || CHR(30) ||
+      &#x27;INVOICING_SUPPLIER&#x27;         || CHR(31) || :vendor_no          || CHR(30) ||
+      &#x27;CONTRACT&#x27;                  || CHR(31) || :contract           || CHR(30) ||
+      &#x27;DEFAULT_ADDR_FLAG_DB&#x27;      || CHR(31) || &#x27;Y&#x27;                 || CHR(30) ||
+      &#x27;ADDRESS_ID&#x27;                || CHR(31) || :address_id         || CHR(30) ||
+      &#x27;UNIT_MEAS&#x27;                 || CHR(31) || &#x27;PCS&#x27;               || CHR(30) ||
+      &#x27;CURRENCY_RATE&#x27;             || CHR(31) || &#x27;1&#x27;                 || CHR(30) ||
+      &#x27;PURCHASE_SITE&#x27;             || CHR(31) || :contract           || CHR(30) ||
+      &#x27;FETCH_TAX_CODES&#x27;           || CHR(31) || &#x27;TRUE&#x27;              || CHR(30);
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+BEGIN
+  IFSAPP.PURCHASE_ORDER_LINE_PART_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>5. Create Purchase Order IND Record</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) :=
+      &#x27;ORDER_NO&#x27;       || CHR(31) || :order_no       || CHR(30) ||
+      &#x27;INV_PURCH_FLAG&#x27; || CHR(31) || &#x27;TRUE&#x27;          || CHR(30) ||
+      &#x27;FORM_TYPE&#x27;      || CHR(31) || :form_type      || CHR(30) ||
+      &#x27;FORM_RATE_TYPE&#x27; || CHR(31) || :form_rate_type || CHR(30) ||
+      &#x27;PAY_TERM_INST&#x27;  || CHR(31) || &#x27;Inv Entry Date&#x27;|| CHR(30);
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+BEGIN
+  IFSAPP.PURCHASE_ORDER_IND_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>6. Get Latest PO Variant Metadata</h3>
+        <pre>SELECT R.OBJID, R.OBJVERSION
+FROM IFSAPP.PURCHASE_ORDER R
+WHERE R.ORDER_NO = :order_no;</pre>
+      </div>
+      <div class="query">
+        <h3>7. Release Purchase Order</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := :objid;
+  p2_ VARCHAR2(32000) := :objversion;
+  p3_ VARCHAR2(32000) := NULL;
+  p4_ VARCHAR2(32000) := &#x27;DO&#x27;;
+BEGIN
+  IFSAPP.Log_SYS.Init_Debug_Session_(&#x27;en&#x27;);
+  IFSAPP.PURCHASE_ORDER_API.RELEASE__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>8. Send Purchase Order</h3>
+        <pre>BEGIN
+  IFSAPP.Purchase_Order_Transfer_API.Send_Purchase_Order(:order_no, &#x27;MHS&#x27;);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>9. Get Incoming Customer Order Status</h3>
+        <pre>SELECT state, error_message, objid, objversion
+FROM IFSAPP.EXTERNAL_CUSTOMER_ORDER
+WHERE internal_po_no = :po_no;</pre>
+      </div>
+      <div class="query">
+        <h3>10. Approve Incoming Customer Order</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := :objid;
+  p2_ VARCHAR2(32000) := :objversion;
+  p3_ VARCHAR2(32000) :=
+      &#x27;AUTHORIZE_CODE&#x27; || CHR(31) || &#x27;HOPUR20&#x27; || CHR(30) ||
+      &#x27;ORDER_ID&#x27;       || CHR(31) || &#x27;BT&#x27;      || CHR(30) ||
+      &#x27;ORDER_PREFIX&#x27;   || CHR(31) ||             CHR(30);
+BEGIN
+  IFSAPP.External_Customer_Order_API.Approve__(p0_, p1_, p2_, p3_, &#x27;DO&#x27;);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>11. Get Customer Order Number from PO</h3>
+        <pre>SELECT IFSAPP.PURCHASE_ORDER_API.Get_Vendor_Co_No(:purchase_order_no)
+FROM DUAL;</pre>
+      </div>
+      <div class="query">
+        <h3>12. Get Customer Order Status</h3>
+        <pre>SELECT T.STATE AS CO_STATUS
+FROM IFSAPP.CUSTOMER_ORDER T
+WHERE T.ORDER_NO = :order_no;</pre>
+      </div>
+      <div class="query">
+        <h3>13. Get Customer Order Line Details</h3>
+        <pre>SELECT T.LINE_NO, T.REL_NO, T.CONFIGURATION_ID, T.DESIRED_QTY
+FROM IFSAPP.CUSTOMER_ORDER_LINE T
+WHERE T.ORDER_NO  = :customer_order_no
+  AND T.PART_NO   = :part_no
+  AND T.CONTRACT  = :site
+  AND T.DESIRED_QTY = :quantity
+ORDER BY T.LINE_NO, T.REL_NO;</pre>
+      </div>
+      <div class="query">
+        <h3>14. Fetch Oldest Inventory for Reservation</h3>
+        <pre>SELECT T.lot_batch_no,
+       T.waiv_dev_rej_no,
+       SUM(T.qty_onhand - T.qty_reserved) AS Available_Quantity
+FROM IFSAPP.INVENTORY_PART_IN_STOCK T
+WHERE T.contract  = :site
+  AND T.part_no   = :part_no
+  AND SUBSTR(T.location_no, 1, INSTR(T.location_no, &#x27;-GST&#x27;) - 1) = :location_group
+  AND (T.qty_onhand - T.qty_reserved) &gt; 0
+GROUP BY T.lot_batch_no, T.waiv_dev_rej_no, T.receipt_date
+HAVING SUM(T.qty_onhand - T.qty_reserved) &gt; 0
+ORDER BY T.receipt_date ASC;</pre>
+      </div>
+      <div class="query">
+        <h3>15. Manual Reserve Customer Order</h3>
+        <pre>DECLARE
+  p0_  VARCHAR2(32000) := NULL;
+  p1_  FLOAT           := 0;
+  p2_  VARCHAR2(32000) := :customer_order_no;
+  p3_  VARCHAR2(32000) := :line_no;
+  p4_  VARCHAR2(32000) := :rel_no;
+  p5_  VARCHAR2(32000) := &#x27;0&#x27;;
+  p6_  VARCHAR2(32000) := &#x27;CUSTOMER_ORDER&#x27;;
+  p7_  VARCHAR2(32000) := :site;
+  p8_  VARCHAR2(32000) := :part_no;
+  p9_  VARCHAR2(32000) := :config_id;
+  p10_ VARCHAR2(32000) := :location_group; -- Note: Target group + &#x27;-GST&#x27;
+  p11_ VARCHAR2(32000) := :lot_batch_no;
+  p12_ VARCHAR2(32000) := &#x27;*&#x27;;
+  p13_ VARCHAR2(32000) := &#x27;1&#x27;;
+  p14_ VARCHAR2(32000) := :waiv_dev_rej_no;
+  p15_ FLOAT           := 0;
+  p16_ FLOAT           := 0;
+  p17_ FLOAT           := :qty_to_reserve;
+  p18_ FLOAT           := NULL;
+  p19_ VARCHAR2(32000) := &#x27;&#x27;;
+  p20_ FLOAT           := NULL;
+  p21_ VARCHAR2(32000) := &#x27;&#x27;;
+  p22_ VARCHAR2(32000) := &#x27;Company Owned&#x27;;
+  p23_ VARCHAR2(32000) := &#x27;&#x27;;
+  p24_ VARCHAR2(32000) := &#x27;&#x27;;
+  p25_ VARCHAR2(32000) := &#x27;FALSE&#x27;;
+BEGIN
+  IFSAPP.Reserve_Shipment_API.Reserve_Manually(
+    p0_, p1_, p2_, p3_, p4_, p5_, p6_, p7_, p8_, p9_,
+    p10_, p11_, p12_, p13_, p14_, p15_, p16_, p17_, p18_,
+    p19_, p20_, p21_, p22_, p23_, p24_, p25_
+  );
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>16. Fetch Freight Structure</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := :customer_order_no;
+BEGIN
+  IFSAPP.Cust_Order_Freight_Taxes_Api.Fetch_Freight_Structure(p0_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>17. Distribute Freight Taxes</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := :customer_order_no;
+BEGIN
+  IFSAPP.Cust_Order_Freight_Taxes_Api.Distribute_Freight_Taxes(p0_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>18. Release Order (Event 20)</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) :=
+      &#x27;START_EVENT&#x27;               || CHR(31) || &#x27;20&#x27;                || CHR(30) ||
+      &#x27;ORDER_NO&#x27;                  || CHR(31) || :customer_order_no  || CHR(30) ||
+      &#x27;SALES_PROMOTION_CALCULATED&#x27;|| CHR(31) ||                      CHR(30) ||
+      &#x27;END&#x27;                       || CHR(31) ||                      CHR(30);
+BEGIN
+  IFSAPP.Customer_Order_Flow_API.Start_Release_Order__(p0_);
+  COMMIT;
+END;</pre>
+      </div>
+      <div class="query">
+        <h3>19. Reserve Order (Event 60)</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) :=
+      &#x27;START_EVENT&#x27; || CHR(31) || &#x27;60&#x27;                || CHR(30) ||
+      &#x27;ORDER_NO&#x27;    || CHR(31) || :customer_order_no  || CHR(30) ||
+      &#x27;END&#x27;         || CHR(31) ||                      CHR(30);
+BEGIN
+  IFSAPP.Customer_Order_Flow_API.Start_Reserve_Order__(p0_);
+  COMMIT;
+END;</pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 id="section-4">4. Additional Virtual BT and Gate Pass Queries</h2>
+      <p class="meta">Source: User-provided queries</p>
+
+      <div class="query">
+        <h3>1. Get Supplier Details for Purchase Parts</h3>
+        <pre>SELECT R.part_no,   ----- Take The New Part Nos from the Files, Incorporate the logic of adding #ACJ
+       R.contract, ----- This has to be decided based on the logic.
+       R.vendor_no, ---- SAME AS OUTPUT Hardcoded
+       R.buy_unit_meas, ---
+       R.conv_factor,
+       R.price_unit_meas,
+       R.price_conv_factor,
+       R.std_multiple_qty,
+       R.standard_pack_size,
+       R.purchase_payment_type,
+       R.qty_calc_rounding,
+       R.part_ownership,
+       R.status_code,
+       R.acquisition_type,
+       R.vendor_part_no, ----- Take The New Part Nos from the Files, Incorporate the logic of adding #ACJ
+       R.vendor_part_description, ----- Create the description based on the logic provided.
+       R.minimum_qty,
+       R.vendor_manuf_leadtime,
+       R.country_of_origin,
+       R.price_updation_date,
+       R.list_price,
+       R.currency_code,
+       R.list_price_incl_tax,
+       R.rental_list_price,
+       R.rental_list_price_incl_tax,
+       R.additional_cost_amount,
+       R.additional_cost_incl_tax,
+       R.discount,
+       R.primary_vendor_db,
+       R.use_price_incl_tax_db,
+       R.external_service_allowed_db,
+       R.orders_price_option_db,
+       R.supply_configuration_db,
+       R.quick_registered_part_db,
+       R.multisite_planned_part_db,
+       R.dist_order_coordinator,
+       R.dist_order_receipt_type_db,
+       R.leadtime_auto,
+       R.receive_case,
+       R.sample_percent,
+       R.sample_qty,
+       R.internal_control_time,
+       R.note_id, --- keep this null
+       R.c_hsn_sac_code,
+       R.tariff_code
+  FROM IFSAPP.PURCHASE_PART_SUPPLIER R
+ WHERE R.PART_NO = 'B0BU9UT'
+   AND R.VENDOR_NO ='SG0002'
+   AND R.CONTRACT ='MUG02'; --- USE HERE REFERENCE PART NO</pre>
+      </div>
+
+      <div class="query">
+        <h3>2. Get OBJKEY for VRMA_CUST_ADD_ID</h3>
+        <pre>SELECT OBJKEY
+  FROM IFSAPP.CUST_ORD_CUSTOMER_ADDRESS_ENT
+ WHERE CUSTOMER_ID = 'B01216'
+   AND address_id = '1';</pre>
+      </div>
+
+      <div class="query">
+        <h3>3. Update VRMA_CUST_ADD_ID</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := 'AAH9dAACwAAOAczAAF';
+   p2_ VARCHAR2(32000) := 'CF$_VRMA_CUST_ADD_ID'||chr(31)||'A2EAB3CC62494367859F15769CA54741'||chr(30);
+   p3_ VARCHAR2(32000) := '';
+   p4_ VARCHAR2(32000) := 'DO';
+
+BEGIN
+  IFSAPP.CUSTOMER_ORDER_CFP.Cf_Modify__(p0_ , p1_ , p2_ , p3_ , p4_ );
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>4. Get Object ID and Version for Delivery Term Update</h3>
+        <pre>SELECT R.OBJID, R.OBJVERSION
+  FROM IFSAPP.CUSTOMER_ORDER R
+ WHERE R.ORDER_NO ='CDEG01226304';</pre>
+      </div>
+
+      <div class="query">
+        <h3>5. Update Delivery Term to DBC (Virtual BT)</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := 'AAH9dAACwAAOAczAAF';
+   p2_ VARCHAR2(32000) := '20260721142211';
+   p3_ VARCHAR2(32000) := 'DELIVERY_TERMS'||chr(31)||'DBC'||chr(30);
+   p4_ VARCHAR2(32000) := 'DO';
+
+BEGIN
+  IFSAPP.CUSTOMER_ORDER_API.MODIFY__( p0_ , p1_ , p2_ , p3_ , p4_ );
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>6. Get Object ID and Version for Label Note Update</h3>
+        <pre>SELECT T.OBJVERSION, T.OBJID
+  FROM IFSAPP.PURCHASE_ORDER T
+ WHERE T.ORDER_NO ='PJPG02130579';</pre>
+      </div>
+
+      <div class="query">
+        <h3>7. Update Serial Number in Label Note (Branch Transfer PO)</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := 'AAAWH2AD9AANaOLAAE';
+   p2_ VARCHAR2(32000) := '20260721140745';
+   p3_ VARCHAR2(32000) := 'LABEL_NOTE'||chr(31)||'CND5350TF0'||chr(30);
+   p4_ VARCHAR2(32000) := 'DO';
+
+BEGIN
+  IFSAPP.PURCHASE_ORDER_API.MODIFY__( p0_ , p1_ , p2_ , p3_ , p4_ );
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>8. Get Delivery Note ID for Branch Transfer</h3>
+        <pre>SELECT S.delnote_no
+  FROM IFSAPP.CO_DELIV_NOTE_LINE S
+ WHERE S.order_no ='CDEG01226304';</pre>
+      </div>
+
+      <div class="query">
+        <h3>9. Get Invoice Number for Branch Transfer</h3>
+        <pre>SELECT T.invoice_no
+  FROM IFSAPP.CUST_ORDER_INV_HEAD_UIV_ALL T
+ WHERE T.creators_reference ='CDEG01226304';</pre>
+      </div>
+
+      <div class="query">
+        <h3>10. Create Gate Entry Header for Branch Transfer Invoice</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) := 'GATE_TYPE_CODE' || chr(31) || 'STA' || chr(30) ||
+                         'GR_NO' || chr(31) || 'VBT' || chr(30) ||
+                         'GR_DATE' || chr(31) || '2026-07-21-00.00.00' || chr(30) ||
+                         'CHALLAN_NO' || chr(31) || 'IBTDEG0126100001' || chr(30) ||
+                         'CHALLAN_DATE' || chr(31) || '2026-07-21-00.00.00' || chr(30) ||
+                         'INVOICE_NO' || chr(31) || '47155271' || chr(30) ||
+                         'INVOICE_DATE' || chr(31) || '2026-07-21-00.00.00' || chr(30) ||
+                         'INVOICE_AMT' || chr(31) || '60298.14' || chr(30) ||
+                         'ORDER_NO' || chr(31) || 'PJPG02130579' || chr(30) ||
+                         'VENDOR_NO' || chr(31) || 'SI0093' || chr(30) ||
+                         'MODVATABLE' || chr(31) || 'FALSE' || chr(30) ||
+                         'INV_PURCH_FLAG' || chr(31) || 'TRUE' || chr(30) ||
+                         'REG_SET' || chr(31) || '' || chr(30) ||
+                         'MODVAT_CLAIM_FLAG' || chr(31) || 'FALSE' || chr(30) ||
+                         'IN_TIME' || chr(31) || '2026-07-21-14.13.10' || chr(30) ||
+                         'GATE_ENTRY_DATE' || chr(31) || '2026-07-21-11.13.10' || chr(30) ||
+                         'CONTRACT' || chr(31) || 'JPG02' || chr(30);
+  p4_ VARCHAR2(32000) := 'DO';
+
+BEGIN
+  IFSAPP.GATE_ENTRY_HEADER_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>11. Receive Into Inventory (Inward)</h3>
+        <pre>DECLARE
+   -- clob
+   clob_ VARCHAR2(32000) := '!
+$HEADER_START=TRUE
+$SOURCE_REF1=PJPG02130579
+$SOURCE_REF2=1
+$SOURCE_REF3=1
+$SOURCE_REF4=
+$SOURCE_REF_TYPE_DB=PURCHASE_ORDER
+$GATE_ENTRY_NO=4430439
+$GATE_ENTRY_LINE_NO=1
+$CONV_FACTOR=1
+$CONTRACT=JPG02
+$DESCRIPTION=NB PC Omnibook 5 16-ag1037AU
+$RECEIPT_REFERENCE=47155271
+$RECEIVER=HOPUR20
+$SOURCE_UNIT_MEAS=PCS
+$INV_UNIT_MEAS=PCS
+$SOURCE_QTY_ARRIVED=1
+$INV_QTY_ARRIVED=1
+$CATCH_QTY_ARRIVED=1
+$SOURCE_QTY_TO_INSPECT=0
+$RECEIVE_FROM=IFSAPP
+$ARRIVAL_DATE=2026-07-21-14.26.23
+$DELIVERY_DATE=2026-07-21-00.00.00
+$RECEIVE_CASE_DB=INVDIR
+$SENDER=SI0093
+$SENDER_TYPE_DB=SUPPLIER
+$NOTE_TEXT=
+$QC_CODE=
+$PART_NO=BP0J7PA#ACJ
+$INVENTORY_PART=TRUE
+$PACKING_INSTRUCTION_ID=
+$HANDLING_UNIT_TYPE_ID=
+$PACKING_RULE=
+$ALT_HANDLING_UNIT_LABEL_ID=
+$SSCC=
+$CUSTOMS_DECLARATION_NO=
+$CUSTOMS_DECLARATION_DATE=
+$LINE_START=TRUE
+$ACTIVITY_SEQ=0
+$INPUT_VARIABLE_VALUES=
+$EXPIRATION_DATE=
+$QTY_TO_BACKFLUSH_UPDATE=FALSE
+$SOURCE_QTY_IN_STORE=1
+$INV_QTY_IN_STORE=1
+$CATCH_QTY_IN_STORE=1
+$LOCATION_NO=DOA-GST
+$LOT_BATCH_NO=PDEG01136196-1-1-1
+$SERIAL_NO=*
+$CONDITION_CODE=
+$ENG_CHG_LEVEL=1
+$WAIV_DEV_REJ_NO=*
+$CONFIGURATION_ID=*
+$HANDLING_UNIT_ID=0
+$TRANSIT_ENG_CHG_LEVEL=1
+$MESSAGE_ID=
+$DELNOTE_NO=
+$SEQUENCE_NO=
+$LINE_END=TRUE
+$HEADER_END=TRUE
+';
+
+-- inParam1
+inParam1_ VARCHAR2(32000) := '';
+
+-- inParam2
+inParam2_ VARCHAR2(32000) := 'FALSE';
+
+BEGIN
+    IFSAPP.Log_SYS.Init_Debug_Session_('en');
+    clob_ := IFSAPP.Receive_Order_API.Packed_Arrival(clob_,inParam1_,inParam2_);
+    COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>12. Get Gate Entry Number and Site by Vendor Invoice</h3>
+        <pre>SELECT R.gate_entry_no, R.order_no, R.contract
+  FROM IFSAPP.IMPORT_GATE_ENTRY_HEADER R
+ WHERE R.invoice_no = 'MHI2500112865';</pre>
+      </div>
+
+      <div class="query">
+        <h3>13. Get Supplier Code for Purchase Order</h3>
+        <pre>SELECT S.VENDOR_NO
+  FROM IFSAPP.PURCHASE_ORDER S
+ WHERE S.ORDER_NO ='PDEG01134736';</pre>
+      </div>
+
+      <div class="query">
+        <h3>14. Verify Existing Gate Pass Request Entry</h3>
+        <pre>SELECT T.objid, T.objversion
+  FROM IFSAPP.C_GATE_PASS_REQUEST_GE_MOV T
+ WHERE T.Gate_Entry_No = '4320921'
+   AND T.state = 'Created';</pre>
+      </div>
+
+      <div class="query">
+        <h3>15. Cancel Older Gate Pass Request Entries</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := 'AAAWFCAAWAANOPFAAJ';
+  p2_ VARCHAR2(32000) := '20260721152237';
+  p3_ VARCHAR2(32000) := NULL;
+  p4_ VARCHAR2(32000) := 'DO';
+
+BEGIN
+  IFSAPP.C_GATE_PASS_REQUEST_API.CANCEL__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>16. Get Next Request Number</h3>
+        <pre>SELECT COUNT(T.request_number) + 1 REQUEST_NUMBER
+  FROM IFSAPP.C_Auto_Gate_Pass_Head T
+ WHERE T.gate_entry_no = '4320921';</pre>
+      </div>
+
+      <div class="query">
+        <h3>17. Get Outward Gate Number</h3>
+        <pre>SELECT GATE_NO
+  FROM IFSAPP.C_GATE_MASTER
+ WHERE GATE_TYPE = 'Outward'
+   AND CONTRACT = 'DEG01'
+   AND GATE_NO LIKE 'O%';</pre>
+      </div>
+
+      <div class="query">
+        <h3>18. Create Auto Gate Pass Header</h3>
+        <pre>DECLARE
+  p0_ VARCHAR2(32000) := NULL;
+  p1_ VARCHAR2(32000) := NULL;
+  p2_ VARCHAR2(32000) := NULL;
+  p3_ VARCHAR2(32000) := 'VENDOR_NO' || chr(31) || 'SG0002' || chr(30) ||
+                         'TRANS_SOURCE' || chr(31) || 'GE-MOV' || chr(30) ||
+                         'ADDRESS_ID' || chr(31) || '0A' || chr(30) ||
+                         'GATE_PASS_TYPE' || chr(31) || 'DOA' || chr(30) ||
+                         'RMA_NO' || chr(31) || '7901120' || chr(30) ||
+                         'REQUEST_NUMBER' || chr(31) || '2' || chr(30) ||
+                         'GATE_ENTRY_NO' || chr(31) || '4320921' || chr(30) ||
+                         'SERIAL_NO' || chr(31) || '1' || chr(30) ||
+                         'CONTRACT' || chr(31) || 'DEG01' || chr(30) ||
+                         'GATE_NO' || chr(31) || 'ODEG01' || chr(30) ||
+                         'DEPARTMENT' || chr(31) || '1' || chr(30) ||
+                         'LOCATION_NO' || chr(31) || 'DOA-GST' || chr(30);
+  p4_ VARCHAR2(32000) := 'DO';
+
+BEGIN
+  IFSAPP.C_Auto_Gate_Pass_Head_API.NEW__(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>19. Get Serial Number and Gate Entry Line for Part</h3>
+        <pre>SELECT T.serial_no, T.gate_entry_line_no
+  FROM IFSAPP.IMPORT_GATE_ENTRY_DETAIL T
+ WHERE T.gate_entry_no = '4320921'
+   AND T.part_no = 'BP0J7PA#ACJ';</pre>
+      </div>
+
+      <div class="query">
+        <h3>20. Insert Gate Pass Request Line</h3>
+        <pre>DECLARE
+  p0_ FLOAT := 4320921;
+  p1_ FLOAT := 1; -- SerialNo
+  p2_ FLOAT := 1; -- GateEntryLineNo
+  p3_ FLOAT := 2; --- RequestNumber
+  p4_ FLOAT := 1; --- Return Qty
+
+BEGIN
+  IFSAPP.C_Auto_Gate_Pass_Det_API.InsertGatePassReqLines(p0_, p1_, p2_, p3_, p4_);
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>21. Get ObjID and ObjVersion for Request Approval</h3>
+        <pre>SELECT r.objid, r.objversion
+  FROM ifsapp.C_Auto_Gate_Pass_Head r
+ WHERE r.gate_entry_no ='4320921'
+   AND r.request_number = 2;</pre>
+      </div>
+
+      <div class="query">
+        <h3>22. Approve Auto Gate Pass Request</h3>
+        <pre>DECLARE
+   p0_ VARCHAR2(32000) := NULL;
+   p1_ VARCHAR2(32000) := 'AAI2fDACBAABh7uAAD';
+   p2_ VARCHAR2(32000) := '20260721162941';
+   p3_ VARCHAR2(32000) := NULL;
+   p4_ VARCHAR2(32000) := 'DO';
+BEGIN
+  IFSAPP.C_Auto_Gate_Pass_Head_API.APPROVE__( p0_ , p1_ , p2_ , p3_ , p4_ );
+  COMMIT;
+END;</pre>
+      </div>
+
+      <div class="query">
+        <h3>23. Create Gate Pass for Request Number</h3>
+        <pre>DECLARE
+   p0_ FLOAT := 4320921;
+   p1_ FLOAT := 1; ---SerialNo
+   p2_ VARCHAR2(32000) := '2'; --- RequestNumber
+
+BEGIN
+  IFSAPP.C_Auto_Gate_Pass_Det_API.CreateGatePass( p0_ , p1_ , p2_ );
+  COMMIT;
+END;</pre>
+      </div>
+    </section>
+
+    <footer class="support-footer">For any support contact @ramsumer.n@savex.in</footer>
+  </main>
+  <script>
+    (function () {
+      function slugify(text) {
+        return text.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-");
+      }
+
+      function addHeadingAnchors() {
+        var headings = document.querySelectorAll("main.wrap h2, main.wrap h3");
+        headings.forEach(function (heading) {
+          if (!heading.id) {
+            heading.id = slugify(heading.textContent);
+          }
+          if (!heading.querySelector(".anchor-link")) {
+            var link = document.createElement("a");
+            link.className = "anchor-link";
+            link.href = "#" + heading.id;
+            link.textContent = "#";
+            link.setAttribute("aria-label", "Link to section");
+            heading.appendChild(link);
+          }
+        });
+      }
+
+      function addCopyButtons() {
+        var blocks = document.querySelectorAll("pre");
+        blocks.forEach(function (pre) {
+          var tools = document.createElement("div");
+          tools.className = "query-tools";
+
+          var button = document.createElement("button");
+          button.type = "button";
+          button.className = "copy-btn";
+          button.textContent = "Copy Query";
+
+          button.addEventListener("click", function () {
+            var text = pre.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+              button.textContent = "Copied";
+              button.classList.add("copied");
+              window.setTimeout(function () {
+                button.textContent = "Copy Query";
+                button.classList.remove("copied");
+              }, 1200);
+            });
+          });
+
+          tools.appendChild(button);
+          pre.parentNode.insertBefore(tools, pre);
+        });
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function highlightSql(text) {
+        var html = escapeHtml(text);
+        var tokens = [];
+
+        function stash(regex, cssClass) {
+          html = html.replace(regex, function (m) {
+            var id = "__TOK" + tokens.length + "__";
+            tokens.push('<span class="' + cssClass + '">' + m + '</span>');
+            return id;
+          });
+        }
+
+        stash(/--.*$/gm, "sql-comment");
+        stash(/'(?:''|[^'])*'/g, "sql-string");
+        stash(/:[A-Za-z_][A-Za-z0-9_]*/g, "sql-bind");
+        stash(/\b(SELECT|FROM|WHERE|DECLARE|BEGIN|END|COMMIT|UPDATE|INSERT|INTO|VALUES|DELETE|AND|OR|NOT|NULL|IS|AS|JOIN|INNER|LEFT|RIGHT|ON|GROUP|BY|ORDER|HAVING|DISTINCT|UNION|ALL|CASE|WHEN|THEN|ELSE|LOOP|FOR|WHILE|RETURN|CREATE|ALTER|DROP|TRUNCATE|MERGE|USING|IN|LIKE|SET|TRUE|FALSE)\b/gi, "sql-keyword");
+
+        html = html.replace(/__TOK(\d+)__/g, function (_, i) {
+          return tokens[Number(i)] || _;
+        });
+
+        return html;
+      }
+
+      function applySyntaxHighlighting() {
+        var blocks = document.querySelectorAll("pre");
+        blocks.forEach(function (pre) {
+          var raw = pre.textContent || "";
+          pre.innerHTML = highlightSql(raw);
+        });
+      }
+
+      applySyntaxHighlighting();
+      addHeadingAnchors();
+      addCopyButtons();
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
