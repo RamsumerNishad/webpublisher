@@ -209,8 +209,8 @@
     max-height:100%; max-width:100%;
     width:auto; height:auto;
     object-fit:contain;
+    display:block;
   }
-  .has-img .shot-frame svg{width:100%; height:100%;}
 
   /* ---------- LIGHTBOX ---------- */
   #lb-overlay{
@@ -517,7 +517,7 @@ const slides = [
     html: `
       <h2>The complete workflow, end to end</h2>
       <div class="shot-frame flow-frame" style="background:#0F1A30;">
-        <svg viewBox="0 0 560 720" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 560 720" width="560" height="720" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
           <defs>
             <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker>
             <marker id="arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4FA3FF"/></marker>
