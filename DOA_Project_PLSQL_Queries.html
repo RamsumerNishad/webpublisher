@@ -488,6 +488,15 @@ WHERE
         ) AND */ -- Commented out condition
     T.Invoice_ID = IFSAPP.SAVEX_Functions_Api.Get_Invoice_ID(&#x27;&amp;Invoice_No&#x27;); -- Filter by Invoice ID via API</pre>
       </div>
+      <div class="query">
+        <h3>13. Verify IF RMA Exist For Serial No and Invoice No</h3>
+        <pre>SELECT COUNT(*) AS LINE_COUNT
+FROM IFSAPP.RETURN_MATERIAL_LINE S
+INNER JOIN IFSAPP.RETURN_MAT_LINE_SERIAL T
+    ON S.RMA_NO  = T.RMA_NO
+    WHERE S.DEBIT_INVOICE_NO = &#x27;IONBPG0225100388&#x27;
+    AND T.SERIAL_NO = &#x27;100976264098&#x27;;</pre>
+      </div>
     </section>
 
     <section class="card">
@@ -1411,8 +1420,3 @@ END;</pre>
   </script>
 </body>
 </html>
-
-
-
-
-
