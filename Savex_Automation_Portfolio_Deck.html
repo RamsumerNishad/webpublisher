@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savex Technologies — Automation Portfolio (4 November 2026)</title>
+<!-- Optional web font; falls back to the system stack if offline -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   1. THEME TOKENS — change the accent colour here (one place)
+   ===================================================================== */
+:root{
+  --accent:#1D7A72;          /* teal accent (try #B45309 for amber) */
+  --accent-2:#2A9D8F;        /* lighter accent for gradients */
+  --brand:#0B1E3A;           /* deep navy: title/closing bands, table headers */
+  --brand-2:#13294B;
+  --bg:#F5F7FA; --card:#FFFFFF; --text:#1F2937; --muted:#5B6472;
+  --heading:#0B1E3A; --line:#E3E8EF; --zebra:#F1F4F8; --kpi:#0B1E3A;
+  --shadow:0 10px 30px rgba(11,30,58,.08);
+  --w:1280px; --h:720px;     /* 16:9 design canvas, scaled to fit the screen */
+  --s:1; --ts:.25;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0B1220; --card:#121B2E; --text:#E6EAF2; --muted:#A3ADBF;
+    --heading:#F3F6FB; --line:#243149; --zebra:#172238; --kpi:#F3F6FB;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+
+/* =====================================================================
+   2. BASE LAYOUT & SLIDE ENGINE
+   ===================================================================== */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  overflow:hidden;-webkit-font-smoothing:antialiased}
+.stage{position:absolute;left:50%;top:50%;width:var(--w);height:var(--h);
+  transform:translate(-50%,-50%) scale(var(--s));transform-origin:center}
+.slide{position:absolute;inset:0;width:var(--w);height:var(--h);opacity:0;visibility:hidden;
+  transform:translateX(36px);transition:opacity .55s ease,transform .55s ease,visibility 0s linear .55s;
+  background:var(--bg)}
+.slide.active{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.slide.prev{transform:translateX(-36px)}
+.inner{position:absolute;inset:0;padding:46px 72px 80px;display:flex;flex-direction:column}
+
+/* staggered fade-in of content blocks on the active slide */
+.slide .inner > *{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .inner > *{opacity:1;transform:none}
+.slide.active .inner > *:nth-child(2){transition-delay:.08s}
+.slide.active .inner > *:nth-child(3){transition-delay:.16s}
+.slide.active .inner > *:nth-child(4){transition-delay:.24s}
+.slide.active .inner > *:nth-child(5){transition-delay:.32s}
+
+/* =====================================================================
+   3. TYPOGRAPHY & COMMON COMPONENTS
+   ===================================================================== */
+.kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 10px}
+h1{font-size:40px;line-height:1.15;margin:0 0 6px;color:var(--heading);letter-spacing:-.01em;font-weight:800}
+.sub{font-size:17px;color:var(--muted);margin:0 0 18px;max-width:1040px}
+sup.est{color:var(--accent);font-weight:700;font-size:.6em;vertical-align:super}
+.fn{position:absolute;left:72px;right:300px;bottom:40px;font-size:12px;color:var(--muted)}
+.foot{position:absolute;left:72px;right:72px;bottom:16px;display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--muted);letter-spacing:.04em}
+.foot .num b{color:var(--heading)}
+.bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--line)}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s ease}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;margin-top:6px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 20px;box-shadow:var(--shadow);
+  border-top:5px solid var(--accent);min-width:0}
+.kpi .n{font-size:50px;font-weight:800;color:var(--kpi);letter-spacing:-.02em;line-height:1;white-space:nowrap}
+.kpi .n.small{font-size:36px;padding-top:8px}
+.kpi .c{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.45}
+.kpi .c b{color:var(--text)}
+
+/* category grid */
+.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.cat{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:16px;
+  padding:20px 18px;box-shadow:var(--shadow)}
+.cat .ic{font-size:26px;margin-bottom:8px}
+.cat h3{margin:0 0 10px;font-size:17px;color:var(--heading);line-height:1.3}
+.cat ul{margin:0;padding-left:18px;font-size:14px;line-height:1.55}
+
+/* tables */
+.tblwrap{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+table.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}
+.tbl thead th{position:sticky;top:0;background:var(--brand);color:#fff;text-align:left;padding:11px 14px;
+  font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.tbl tbody td{padding:10px 14px;vertical-align:top;border-top:1px solid var(--line);line-height:1.4}
+.tbl tbody tr:nth-child(even) td{background:var(--zebra)}
+.tbl td.b{font-weight:700;color:var(--heading);width:22%}
+.tbl td.r{font-weight:600;color:var(--accent)}
+.tag{display:inline-block;padding:2px 9px;border-radius:999px;background:rgba(29,122,114,.12);color:var(--accent);
+  font-size:12px;font-weight:700;white-space:nowrap}
+
+/* before / after */
+.ba{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ba .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:var(--shadow)}
+.ba .t{font-weight:700;color:var(--heading);font-size:18px;margin-bottom:14px}
+.ba .before{color:var(--muted);font-size:15px}
+.ba .before b{font-size:30px;color:var(--text);display:block;text-decoration:line-through;text-decoration-color:rgba(180,83,9,.6)}
+.ba .arrow{color:var(--accent);font-size:26px;margin:8px 0}
+.ba .after b{font-size:46px;color:var(--accent);display:block;line-height:1.05;font-weight:800}
+.ba .after{font-size:15px;color:var(--muted)}
+.ba .proof{margin-top:14px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+
+/* CSS bar chart */
+.chart{display:grid;grid-template-columns:330px 1fr 150px;row-gap:7px;column-gap:14px;align-items:center;font-size:15px}
+.chart .lbl{text-align:right;color:var(--text)}
+.chart .track{height:22px;background:var(--zebra);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.chart .fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px;
+  transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.chart .val{font-weight:700;color:var(--heading);white-space:nowrap}
+.total{display:flex;gap:22px;margin-top:14px}
+.total .pill{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 20px;box-shadow:var(--shadow);font-size:14px}
+.total .pill b{display:block;font-size:24px;color:var(--heading)}
+
+/* process flow */
+.flow{display:flex;align-items:stretch;gap:8px;margin:6px 0 22px}
+.step{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 12px;text-align:center;box-shadow:var(--shadow)}
+.step .ic{font-size:30px}
+.step .t{font-weight:700;margin-top:8px;color:var(--heading);font-size:15px}
+.step .d{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.chev{align-self:center;color:var(--accent);font-size:26px;font-weight:800}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:17px;color:var(--heading)}
+.panel ul{margin:0;padding-left:18px;font-size:14.5px;line-height:1.6}
+
+/* strengths */
+.str{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.str .card{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+.str h3{margin:0 0 8px;font-size:20px;color:var(--heading)}
+.str p{margin:0;font-size:15px;line-height:1.55}
+
+/* title & closing bands */
+.slide.band .inner{background:linear-gradient(135deg,#0B1E3A 0%,#13294B 60%,#1D7A72 150%);color:#fff;justify-content:center}
+.slide.band .kicker{color:#7FD1C7}
+.slide.band h1{color:#fff;font-size:62px;line-height:1.08;max-width:980px}
+.slide.band .sub{color:rgba(255,255,255,.82);font-size:22px}
+.slide.band .foot,.slide.band .foot .num b{color:rgba(255,255,255,.75)}
+.slide.band .bar{background:rgba(255,255,255,.18)}
+.deco{position:absolute;right:-120px;top:-140px;width:620px;height:620px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,rgba(127,209,199,.35),rgba(127,209,199,0) 65%);pointer-events:none}
+.deco.b{right:140px;top:300px;width:420px;height:420px;opacity:.7}
+.contact{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:10px}
+.contact .c{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 20px;font-size:15px;line-height:1.55}
+.contact .c b{display:block;color:#7FD1C7;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+
+/* =====================================================================
+   4. CONTROLS, OVERVIEW, PRINT
+   ===================================================================== */
+.nav{position:fixed;right:18px;bottom:16px;display:flex;gap:8px;z-index:60}
+.nav button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);
+  cursor:pointer;font-size:18px;box-shadow:var(--shadow)}
+.nav button:hover{border-color:var(--accent);color:var(--accent)}
+.hint{position:fixed;left:18px;bottom:20px;font-size:12px;color:var(--muted);z-index:60;transition:opacity 1s}
+.hint kbd{border:1px solid var(--line);border-radius:4px;padding:1px 5px;background:var(--card)}
+body.overview{overflow:auto}
+body.overview .stage{position:static;transform:none;width:auto;height:auto;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:18px;padding:28px;max-width:1500px;margin:0 auto}
+body.overview .slide{position:relative;opacity:1;visibility:visible;transform:none;width:100%;height:auto;aspect-ratio:16/9;
+  cursor:pointer;border:3px solid transparent;border-radius:10px;overflow:hidden;transition:none}
+body.overview .slide.active{border-color:var(--accent)}
+body.overview .slide .inner{position:absolute;left:0;top:0;width:var(--w);height:var(--h);transform:scale(var(--ts));transform-origin:top left}
+body.overview .slide .inner > *{opacity:1;transform:none}
+body.overview .slide .fn,body.overview .slide .foot{display:none}
+body.overview .slide .bar{height:2px}
+body.overview .nav,body.overview .hint{display:none}
+@media print{
+  @page{size:1280px 720px;margin:0}
+  html,body{overflow:visible;background:#fff}
+  .stage{position:static;transform:none!important;width:auto;height:auto}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;transform:none!important;width:1280px;height:720px;
+    overflow:hidden;break-after:page;page-break-after:always;transition:none}
+  .slide .inner > *{opacity:1!important;transform:none!important}
+  .nav,.hint{display:none!important}
+  .slide.band .inner{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+<!-- ================= SLIDE 1 — TITLE ================= -->
+<section class="slide band">
+  <div class="inner">
+    <div class="deco"></div><div class="deco b"></div>
+    <p class="kicker">Savex Technologies Private Limited</p>
+    <h1>Automation Portfolio</h1>
+    <p class="sub">Proven results from automation built around the IFS ERP — scale, accuracy and business value</p>
+    <p class="sub" style="font-size:17px;margin-top:6px">4 November 2026</p>
+  </div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 2 — EXECUTIVE SUMMARY ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Executive summary</p>
+    <h1>Automation now carries the bulk of Savex's repetitive ERP work</h1>
+    <p class="sub">Emailed documents become ERP transactions within minutes — with built-in checks, approvals and audit trails.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="n" data-count="2839">0</div><div class="c"><b>emails processed in one week</b> by the central router — 96.5% completed without any manual step</div></div>
+      <div class="kpi"><div class="n"><span data-count="1000">0</span>+</div><div class="c"><b>supplier invoices a day</b> turned into import consignments — over 98% with no human touch</div></div>
+      <div class="kpi"><div class="n small">3–4 hrs</div><div class="c"><b>Azure billing cycle</b>, down from 25+ days — 600+ customers, 1,000+ signed invoices, zero duplicates</div></div>
+      <div class="kpi"><div class="n small"><span data-count="1700">0</span>–2,000<sup class="est">†</sup></div><div class="c"><b>staff-hours returned every month</b> — about 10–12 full-time equivalents</div></div>
+      <div class="kpi"><div class="n"><span data-count="15">0</span><span style="font-size:28px;color:var(--muted)"> /16</span></div><div class="c"><b>registered initiatives live</b>, serving 8+ teams across back office, finance, sales and supply chain</div></div>
+    </div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 3 — STRENGTHS ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Strengths</p>
+    <h1>Scale, accuracy, speed and control — proven in production</h1>
+    <p class="sub">Every figure below comes from live logs, verified cycles or the internal automation register.</p>
+    <div class="str">
+      <div class="card"><h3>📈 Scale</h3><p>2,839 emails handled in one week; 1,000+ invoices a day; 150 branch-transfer orders and 400 transport-task lines a day — peaks absorbed without extra staff.</p></div>
+      <div class="card"><h3>🎯 Accuracy</h3><p>Zero duplicate billings across 1,000+ Azure invoices; 2,336 PO lines updated with 0 failures; over 98% of invoices posted with no human touch; duplicate checks on credit notes and schemes.</p></div>
+      <div class="card"><h3>⚡ Speed</h3><p>Azure billing 25+ days → 3–4 hours; TDS entries 24 person-days → 1 hour; PO price updates 5 days → minutes; payment failures flagged the same day.</p></div>
+      <div class="card"><h3>🛡️ Control</h3><p>Only authorised senders can trigger transactions; exceptions go to managers; every run leaves an audit trail, a result file and a dashboard the business can see.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 4 — BEFORE / AFTER ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Before and after</p>
+    <h1>Days of effort have become hours — or minutes</h1>
+    <p class="sub">Three documented examples from finance and procurement.</p>
+    <div class="ba">
+      <div class="card">
+        <div class="t">Azure subscription billing</div>
+        <div class="before">Before<b>25+ days</b>a month-long manual effort for the whole team</div>
+        <div class="arrow">↓</div>
+        <div class="after"><b>3–4 hours</b>same-day closure, 600+ customers, 1,000+ signed invoices</div>
+        <div class="proof">Verified for two consecutive months (August and September 2026) · 0 duplicate billings · 10–12 working days saved every month</div>
+      </div>
+      <div class="card">
+        <div class="t">TDS entries in IFS</div>
+        <div class="before">Before<b>24 person-days</b>two accounts staff for 10–12 days every month</div>
+        <div class="arrow">↓</div>
+        <div class="after"><b>1 hour</b>completed automatically within the hour</div>
+        <div class="proof">Live since February 2026 · both staff freed for higher-value work · multi-step clerical entry removed</div>
+      </div>
+      <div class="card">
+        <div class="t">Purchase-order price updates</div>
+        <div class="before">Before<b>5 working days</b>a bulk activity holding up goods inward</div>
+        <div class="arrow">↓</div>
+        <div class="after"><b>Minutes</b>from one authorised email</div>
+        <div class="proof">2,336 lines updated in a single run with 0 failures · pricing errors eliminated · on-time inward processing</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 5 — PORTFOLIO AT A GLANCE ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Portfolio at a glance</p>
+    <h1>One connected portfolio across five business areas</h1>
+    <p class="sub">All built on one pattern: receive → validate → post to IFS → confirm back to the requester.</p>
+    <div class="cats">
+      <div class="cat"><div class="ic">📦</div><h3>Core back-office operations</h3><ul>
+        <li>Import consignment processing</li><li>Branch transfer orders</li><li>Transport tasks</li><li>PO price &amp; quantity updates</li><li>DOA / RMA returns</li><li>Azure subscription billing</li><li>SGP campaign set-up</li></ul></div>
+      <div class="cat"><div class="ic">🚚</div><h3>Procure-to-pay &amp; logistics</h3><ul>
+        <li>Supplier payment schedules</li><li>Logitech invoices &amp; PO/ASN API</li><li>Marketing invoice verification</li><li>Customs exchange-rate capture</li></ul></div>
+      <div class="cat"><div class="ic">🧾</div><h3>Finance, tax &amp; billing</h3><ul>
+        <li>Microsoft billing reconciliation</li><li>TDS entries in IFS</li><li>Customer TDS credit notes &amp; offsets</li></ul></div>
+      <div class="cat"><div class="ic">🛒</div><h3>E-commerce &amp; B2B</h3><ul>
+        <li>Meta store payment reconciliation</li><li>Meta store sales dashboards</li><li>HP (I &amp; E) / Fortinet B2B order loading (AI, web-based) — other OEMs on the way</li><li>WhatsApp automation — Beat-to-Order (field sales) &amp; Chat-to-Order (retailers)</li></ul></div>
+      <div class="cat"><div class="ic">🛡️</div><h3>Platform &amp; enablers</h3><ul>
+        <li>Central email router</li><li>Inventory health dashboard</li><li>Serial / IMEI barcode scanner</li><li>Authorised-requester control</li><li>Secure shared foundations</li></ul></div>
+    </div>
+  </div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+<!-- ================= SLIDE 6 — CORE BACK-OFFICE OPERATIONS (1 of 2) ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Core back-office operations (1 of 2)</p>
+    <h1>Hundreds of ERP transactions a day now start from an email</h1>
+    <p class="sub">A request or a supplier invoice arrives by email; the automation validates it and posts it to IFS.</p>
+    <div class="tblwrap"><table class="tbl">
+      <thead><tr><th>Automation</th><th>What it does</th><th>Scale</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Import consignment processing</td><td>Supplier invoice PDFs are read, checked against the purchase order and posted as import consignments. Only exceptions reach a person.</td><td>1,000+ invoices a day</td><td class="r">Over 98% with no human touch · ~600–900 hrs/month<sup class="est">†</sup></td></tr>
+        <tr><td class="b">Branch transfer orders</td><td>Emailed transfer requests become inter-branch purchase orders and transport tasks, after checking the sender is authorised.</td><td>150 orders a day, peaks of 450</td><td class="r">Zero manual effort · ~130–170 hrs/month<sup class="est">†</sup></td></tr>
+        <tr><td class="b">Transport tasks</td><td>Stock-movement lists are validated against live inventory, lots and quantities, then created and executed.</td><td>~400 lines a day, peaks of 2,000–5,000</td><td class="r">No entry errors · ~100–140 hrs/month<sup class="est">†</sup></td></tr>
+        <tr><td class="b">PO price &amp; quantity updates</td><td>One authorised Excel sheet updates thousands of purchase-order lines through change orders, with a line-by-line result.</td><td>2,336 lines in a single run, 0 failures</td><td class="r">5 working days → under 5 minutes</td></tr>
+        <tr><td class="b">DOA / RMA returns</td><td>Returns documents are read, approvals routed, and the RMA, return invoice and warehouse movement created.</td><td>2,000–3,000 cases a month in scope</td><td class="r">Up to 500–1,000 hrs/month<sup class="est">†</sup></td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 7 — CORE BACK-OFFICE OPERATIONS (2 of 2) ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Core back-office operations (2 of 2)</p>
+    <h1>Month-end billing and scheme set-up run on the same engine</h1>
+    <p class="sub">The back office hands over a file; the automation validates, posts to IFS and reports back.</p>
+    <div class="tblwrap"><table class="tbl">
+      <thead><tr><th>Automation</th><th>What it does</th><th>Scale</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Azure subscription billing</td><td>The Microsoft billing file becomes IFS orders, GST-correct invoices, digitally signed PDFs and one usage email per customer.</td><td>600+ customers, 1,000+ signed invoices a month</td><td class="r">25+ days → 3–4 hours · 0 duplicate billings</td></tr>
+        <tr><td class="b">SGP campaign set-up</td><td>Scheme documents become activated campaigns in IFS, with a duplicate check on every scheme number.</td><td>Checked every 5 minutes</td><td class="r">Manual tagging removed · billing accuracy protected</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 8 — PROCURE-TO-PAY & LOGISTICS ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Procure-to-pay &amp; logistics</p>
+    <h1>Supplier payments, receipts and OEM paperwork run on schedule</h1>
+    <p class="sub">Finance and freight bottlenecks clear automatically; vendor transactions happen system-to-system.</p>
+    <div class="tblwrap"><table class="tbl">
+      <thead><tr><th>Automation</th><th>What it does</th><th>Scale</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Supplier payment schedules</td><td>Finance instructions become payment schedules in IFS through the official interface, with a confirmation report emailed back.</td><td>Checked every 5 minutes</td><td class="r">2+ hours saved every working day (~44 hrs/month)</td></tr>
+        <tr><td class="b">Logitech invoices &amp; PO/ASN integration</td><td>Multi-container invoice PDFs are split and posted; purchase orders and shipping notices are exchanged with Logitech by API.</td><td>Per shipment</td><td class="r">Zero manual PO submission · stronger vendor relationship</td></tr>
+        <tr><td class="b">Marketing invoice verification</td><td>Agency invoices are compared with purchase orders and classified as match or mismatch before payment.</td><td>Per batch</td><td class="r">Verification step removed · faster turnaround</td></tr>
+        <tr><td class="b">Customs exchange-rate capture</td><td>The daily customs USD rate is captured and stored for import costing.</td><td>Daily</td><td class="r">Manual rate look-up removed<sup class="est">†</sup></td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 9 — FINANCE, TAX & BILLING ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Finance, tax &amp; billing</p>
+    <h1>Month-end work that took weeks now takes hours</h1>
+    <p class="sub">Tax adjustments and reconciliations are posted automatically, with full duplicate protection.</p>
+    <div class="tblwrap"><table class="tbl">
+      <thead><tr><th>Automation</th><th>What it does</th><th>Scale</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td class="b">TDS entries in IFS</td><td>Supplier TDS certificates are validated and posted automatically each month.</td><td>Monthly cycle</td><td class="r">24 person-days → 1 hour</td></tr>
+        <tr><td class="b">Customer TDS credit notes &amp; offsets</td><td>Credit notes, write-offs and payment offsets are created and approved from one emailed sheet.</td><td>286 offsets posted in October 2026</td><td class="r">Duplicate protection · audit-ready · ~40–50 hrs/month<sup class="est">†</sup></td></tr>
+        <tr><td class="b">Microsoft billing reconciliation</td><td>Microsoft charges are matched to ERP billing with tolerances; a variance dashboard is emailed to the billing team.</td><td>Monthly</td><td class="r">Under- and over-billing caught before customers see it</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 10 — E-COMMERCE & B2B ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">E-commerce &amp; B2B</p>
+    <h1>Digital channels and complex orders run on the same engine</h1>
+    <p class="sub">Online payments, B2B order packets and WhatsApp conversations become validated transactions; people approve only exceptions.</p>
+    <div class="tblwrap"><table class="tbl">
+      <thead><tr><th>Automation</th><th>What it does</th><th>Scale</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td class="b">Meta store payment reconciliation</td><td>Every order on Meta's India store is checked against the payment gateway four times a day; failures are alerted instantly.</td><td>1,143 orders in October 2026 · 660 runs</td><td class="r">Same-day control of online payments · ~40 hrs/month<sup class="est">†</sup></td></tr>
+        <tr><td class="b">Meta store sales dashboards</td><td>Month-to-date and previous-month sales, refunds and payment status are compiled and emailed with the data file.</td><td>Monthly and month-to-date</td><td class="r">Management view of the online channel without spreadsheet work</td></tr>
+        <tr><td class="b">HP (I &amp; E) / Fortinet B2B order loading (AI, web-based)</td><td>Sales upload the order packet (partner PO, end-customer PO, OEM approval, credit approval, pricing sheet); AI reads and cross-checks every document against IFS, a manager approves exceptions, and the campaign, parts, customer order and PO are created. Other OEMs are on the way.</td><td>Web-based · HP Inc, HPE and Fortinet live across 7 branches</td><td class="r">~1 hour saved per order<sup class="est">†</sup> · pricing and approval errors caught before loading · exceptions go to a manager</td></tr>
+        <tr><td class="b">Beat-to-Order — WhatsApp field sales assistant</td><td>An AI assistant in the team's WhatsApp group runs the rep's day: location clock-in, prioritised beat plan, geo-checked store visits, shelf-photo stock counts, photo-to-order drafts, ledger and scheme progress, business-card lead capture, day-close report.</td><td>16-step journey · Apple channel · no app or training needed</td><td class="r">Orders captured on the spot · zero manual reporting · live zone view for managers</td></tr>
+        <tr><td class="b">Chat-to-Order — WhatsApp retailer commerce assistant</td><td>Retailers receive launch schemes by broadcast, ask stock, scheme and payment questions in Hinglish, order from the catalogue or by free text, and upload the invoice to record activations with points and rewards unlocked instantly.</td><td>6-step journey · every active retailer</td><td class="r">Orders without waiting for a visit · instant answers with live stock · scheme uptake tracked automatically</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+<!-- ================= SLIDE 11 — SPOTLIGHT: B2B ORDER LOADING ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">Spotlight · HP (I &amp; E) / Fortinet B2B order loading</p>
+    <h1>Five documents in, one validated IFS order out</h1>
+    <div class="total" style="margin:0 0 16px">
+      <div class="pill"><b>5 documents</b>read and cross-checked per order</div>
+      <div class="pill"><b>Up to 6 IFS records</b>created automatically per order</div>
+      <div class="pill"><b>~1 hr saved<sup class="est">†</sup></b>per order; nothing is loaded silently</div>
+    </div>
+    <div class="two">
+      <div class="panel"><h3>How an order flows</h3><ul>
+        <li><b>Upload</b> — sales upload the packet on the web portal: partner PO, end-customer PO, OEM approval, credit approval and pricing sheet (Fortinet: quote, PO, credit approval, licence sheet).</li>
+        <li><b>Read</b> — OCR and AI pull customer, parts, quantities, prices, approval references and validity dates from every document, whatever the layout.</li>
+        <li><b>Check</b> — documents are reconciled with each other and IFS master data — prices, quantities, approvals, credit, parts and customers — each rule scored PASS / WARNING / ERROR.</li>
+        <li><b>Approve</b> — failed or doubtful checks go to a manager; approved exceptions continue, rejected ones stop.</li>
+        <li><b>Load</b> — campaign, master part, inventory part, supplier link, customer order and purchase order are created in IFS; sales get a verification dashboard by email.</li>
+      </ul></div>
+      <div class="panel"><h3>Business impact</h3><ul>
+        <li><b>Speed</b> — an order that needed a specialist to open five files and key several IFS screens is booked in minutes once approved.</li>
+        <li><b>Accuracy</b> — pricing, quantity and approval mismatches are caught before anything reaches the OEM or the customer.</li>
+        <li><b>Control</b> — every order carries its documents, its checks and its approver; a complete audit trail by design.</li>
+        <li><b>Scalability</b> — one flow already serves HP Inc, HPE and Fortinet; other OEMs join without new manual processes.</li>
+        <li><b>Capacity</b> — ~1 hour of expert time returned per order<sup class="est">†</sup>; in use by Mumbai, Bangalore, Delhi, Gurgaon, Jaipur, Ahmedabad and Bhopal.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+<!-- ================= SLIDE 12 — AI AND THE ROAD AHEAD ================= -->
+<section class="slide">
+  <div class="inner">
+    <p class="kicker">AI and the road ahead</p>
+    <h1>The next wave: documents read by AI, approved by people, posted by the system</h1>
+    <div class="flow">
+      <div class="step"><div class="ic">📄</div><div class="t">Documents arrive</div><div class="d">Order packets, invoices, returns paperwork — by email or upload</div></div>
+      <div class="chev">›</div>
+      <div class="step"><div class="ic">🔍</div><div class="t">Read by OCR + AI</div><div class="d">Fields extracted from PDFs, scans and Excel, whatever the layout</div></div>
+      <div class="chev">›</div>
+      <div class="step"><div class="ic">✅</div><div class="t">Checked against rules</div><div class="d">Cross-document checks, ERP master data, price and approval rules</div></div>
+      <div class="chev">›</div>
+      <div class="step"><div class="ic">👤</div><div class="t">People approve exceptions</div><div class="d">Low-confidence or failed checks go to a manager — never loaded silently</div></div>
+      <div class="chev">›</div>
+      <div class="step"><div class="ic">🏢</div><div class="t">Posted to IFS</div><div class="d">Orders, parts, campaigns, RMAs created with a full audit trail</div></div>
+    </div>
+    <div class="two">
+      <div class="panel"><h3>Already delivered on this pattern</h3><ul>
+        <li><b>HP (I &amp; E) / Fortinet B2B order loading (web-based)</b> — multi-document order packets read, reconciled and approved before loading; live across 7 branches; other OEMs on the way.</li>
+        <li><b>WhatsApp assistants (Beat-to-Order, Chat-to-Order)</b> — handwritten notes become draft orders, shelf photos become IMEI stock counts, invoices become activation records.</li>
+        <li><b>DOA / RMA returns workflow</b> — intake, extraction and approvals built; 2,000–3,000 cases a month in scope.</li>
+      </ul></div>
+      <div class="panel"><h3>Where it goes next</h3><ul>
+        <li><b>Returns at full scale</b> — RMA, return invoice and warehouse movement completed automatically.</li>
+        <li><b>More OEMs on the B2B platform</b> — the same web-based reading, checking and approval flow for every brand.</li>
+        <li><b>New digital channels</b> — WhatsApp assistants extended to more brands and regions.</li>
+        <li><b>Up to 600–1,200 more hours a month<sup class="est">†</sup></b> once the next wave is live.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="fn">† Estimate or projection, pending validation</div>
+  <div class="foot"><span>Savex Technologies · Automation Portfolio</span><span class="num"></span></div>
+  <div class="bar"><i></i></div>
+</section>
+
+</div><!-- /stage -->
+
+<!-- On-screen controls -->
+<div class="nav" aria-label="Slide controls">
+  <button id="prev" title="Previous (←)">‹</button>
+  <button id="next" title="Next (→)">›</button>
+  <button id="grid" title="Overview (G)">▦</button>
+  <button id="full" title="Fullscreen (F)">⛶</button>
+</div>
+<div class="hint" id="hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>F</kbd> fullscreen · <kbd>G</kbd> overview · click to advance</div>
+
+<script>
+/* =====================================================================
+   SLIDE ENGINE — navigation, scaling, animations, overview, print
+   ===================================================================== */
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  const root=document.documentElement, body=document.body;
+  let cur=-1, animTimers=[];
+
+  /* --- scale the 1280x720 canvas to the viewport, keeping 16:9 --- */
+  function fit(){
+    const s=Math.min(innerWidth/1280, innerHeight/720);
+    root.style.setProperty('--s', s);
+    if(body.classList.contains('overview')){
+      const w=slides[0].clientWidth||320;
+      root.style.setProperty('--ts', w/1280);
+    }
+  }
+  addEventListener('resize', fit);
+
+  /* --- footer numbers and per-slide progress bars (also used in print) --- */
+  slides.forEach((sl,i)=>{
+    const num=sl.querySelector('.foot .num');
+    if(num) num.innerHTML='<b>'+(i+1)+'</b> / '+total;
+    const bar=sl.querySelector('.bar i');
+    if(bar) bar.dataset.p=((i+1)/total*100).toFixed(1);
+  });
+
+  /* --- number count-up for elements with data-count --- */
+  function fmt(n,dec){return n.toLocaleString('en-IN',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+  function countUp(el){
+    const target=parseFloat(el.dataset.count), dec=parseInt(el.dataset.decimals||'0',10);
+    const dur=1300, t0=performance.now();
+    function step(t){
+      const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=fmt(target*e,dec);
+      if(p<1){animTimers.push(requestAnimationFrame(step));}
+      else el.textContent=fmt(target,dec);
+    }
+    animTimers.push(requestAnimationFrame(step));
+  }
+  function setFinal(sl){
+    sl.querySelectorAll('[data-count]').forEach(el=>el.textContent=fmt(parseFloat(el.dataset.count),parseInt(el.dataset.decimals||'0',10)));
+    sl.querySelectorAll('.fill[data-w]').forEach(f=>f.style.width=f.dataset.w+'%');
+    const bar=sl.querySelector('.bar i'); if(bar) bar.style.width=bar.dataset.p+'%';
+  }
+  /* --- shrink KPI numbers that are wider than their card (measured on final values) --- */
+  function fitNumbers(){
+    slides.forEach(setFinal);
+    document.querySelectorAll('.kpi .n').forEach(el=>{
+      el.style.fontSize='';
+      let fs=parseFloat(getComputedStyle(el).fontSize);
+      while(el.scrollWidth>el.clientWidth+1 && fs>20){ fs-=1; el.style.fontSize=fs+'px'; }
+    });
+  }
+  function animate(sl){
+    animTimers.forEach(cancelAnimationFrame); animTimers=[];
+    sl.querySelectorAll('[data-count]').forEach(el=>{el.textContent='0'; countUp(el);});
+    sl.querySelectorAll('.fill[data-w]').forEach(f=>{f.style.width='0%'; setTimeout(()=>f.style.width=f.dataset.w+'%',150);});
+    const bar=sl.querySelector('.bar i'); if(bar) requestAnimationFrame(()=>bar.style.width=bar.dataset.p+'%');
+  }
+
+  /* --- go to slide n --- */
+  function go(n){
+    n=Math.max(0,Math.min(total-1,n));
+    if(n===cur) return;
+    slides.forEach((sl,i)=>{
+      sl.classList.toggle('active', i===n);
+      sl.classList.toggle('prev', i<n);
+    });
+    cur=n;
+    history.replaceState(null,'','#'+(n+1));
+    if(!body.classList.contains('overview')) animate(slides[n]);
+  }
+  const next=()=>go(cur+1), prev=()=>go(cur-1);
+
+  /* --- overview grid (G) --- */
+  function toggleOverview(force){
+    const on = force!==undefined ? force : !body.classList.contains('overview');
+    body.classList.toggle('overview', on);
+    if(on){ slides.forEach(setFinal); fit(); slides[cur].scrollIntoView({block:'center'}); }
+    else { fit(); animate(slides[cur]); }
+  }
+  slides.forEach((sl,i)=>sl.addEventListener('click',e=>{
+    if(body.classList.contains('overview')){ go(i); toggleOverview(false); e.stopPropagation(); }
+  }));
+
+  /* --- fullscreen (F) --- */
+  function toggleFull(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    else document.exitFullscreen && document.exitFullscreen();
+  }
+
+  /* --- keyboard --- */
+  addEventListener('keydown', e=>{
+    if(e.target.matches('input,textarea')) return;
+    switch(e.key){
+      case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); go(0); break;
+      case 'End': e.preventDefault(); go(total-1); break;
+      case 'f': case 'F': toggleFull(); break;
+      case 'g': case 'G': toggleOverview(); break;
+      case 'Escape': if(body.classList.contains('overview')) toggleOverview(false); break;
+    }
+  });
+
+  /* --- click / tap to advance (ignores buttons and text selection) --- */
+  document.getElementById('stage').addEventListener('click', e=>{
+    if(body.classList.contains('overview')) return;
+    if(e.target.closest('button,a')) return;
+    if(getSelection && String(getSelection()).length) return;
+    next();
+  });
+  let tx=null;
+  addEventListener('touchstart', e=>{tx=e.touches[0].clientX;}, {passive:true});
+  addEventListener('touchend', e=>{
+    if(tx===null) return; const dx=e.changedTouches[0].clientX-tx; tx=null;
+    if(Math.abs(dx)>60){ dx<0 ? next() : prev(); }
+  });
+
+  /* --- buttons --- */
+  document.getElementById('prev').onclick=e=>{e.stopPropagation();prev();};
+  document.getElementById('next').onclick=e=>{e.stopPropagation();next();};
+  document.getElementById('grid').onclick=e=>{e.stopPropagation();toggleOverview();};
+  document.getElementById('full').onclick=e=>{e.stopPropagation();toggleFull();};
+
+  /* --- print: show final values on every slide --- */
+  addEventListener('beforeprint', ()=>slides.forEach(setFinal));
+
+  /* --- start --- */
+  fit();
+  fitNumbers();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ fitNumbers(); if(cur>=0) animate(slides[cur]); });
+  const start=parseInt((location.hash||'#1').slice(1),10);
+  go(isNaN(start)?0:start-1);
+  setTimeout(()=>{document.getElementById('hint').style.opacity='0';}, 6000);
+})();
+</script>
+</body>
+</html>
