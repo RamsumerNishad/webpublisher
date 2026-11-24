@@ -1,0 +1,723 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savex B2B Order Automation – Functional &amp; Technical Requirements</title>
+<style>
+:root{
+  --navy:#1f3a5f; --blue:#3b6fb6; --teal:#0e8f8a; --green:#1e8e5a; --amber:#d98a00; --red:#c0392b; --violet:#7a5cc2;
+  --ink:#1b2a3a; --muted:#5b6b7f; --line:#dde4ec; --bg:#f5f7fa; --card:#fff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:16px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--blue)}
+header.hero{background:linear-gradient(135deg,#1f3a5f,#2b5a8c 60%,#0e8f8a);color:#fff;padding:54px 24px 44px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+header.hero h1{margin:0 0 8px;font-size:2.1rem;line-height:1.25}
+header.hero p{margin:6px 0;font-size:1.08rem;opacity:.95;max-width:760px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 14px;font-size:.92rem}
+nav.toc{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 6px rgba(16,24,40,.06)}
+nav.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 20px}
+nav.toc a{white-space:nowrap;text-decoration:none;color:var(--navy);font-size:.9rem;padding:13px 11px;border-bottom:3px solid transparent}
+nav.toc a:hover{border-color:var(--teal);color:var(--teal)}
+main{padding:10px 0 60px}
+section{margin:46px 0}
+h2{font-size:1.6rem;color:var(--navy);margin:0 0 6px;padding-bottom:8px;border-bottom:3px solid var(--teal);display:flex;align-items:center;gap:10px}
+h2 .num{background:var(--navy);color:#fff;border-radius:8px;font-size:1rem;padding:2px 10px}
+h3{font-size:1.2rem;color:var(--navy);margin:28px 0 8px}
+h4{margin:18px 0 6px;color:var(--navy)}
+p{margin:8px 0}
+.lead{font-size:1.08rem;color:#2c3e52}
+.part{margin:60px 0 0;padding:18px 22px;border-radius:12px;color:#fff;font-size:1.25rem;font-weight:600}
+.part.a{background:linear-gradient(90deg,#0e8f8a,#1e8e5a)}
+.part.b{background:linear-gradient(90deg,#1f3a5f,#3b6fb6)}
+.part.c{background:linear-gradient(90deg,#8a6d1d,#d98a00)}
+.part small{display:block;font-weight:400;opacity:.92;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0;box-shadow:0 1px 3px rgba(16,24,40,.04)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+.callout{border-left:5px solid var(--blue);background:#eef4fc;border-radius:8px;padding:12px 16px;margin:14px 0}
+.callout.ok{border-color:var(--green);background:#eaf6ef}
+.callout.warn{border-color:var(--amber);background:#fff6e0}
+.callout.crit{border-color:var(--red);background:#fdecea}
+.callout b:first-child{display:block;margin-bottom:2px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:12px 0;font-size:.95rem}
+th{background:#eaf0f7;color:var(--navy);text-align:left;padding:10px 12px;font-weight:600;border-bottom:1px solid var(--line)}
+td{padding:9px 12px;border-bottom:1px solid #edf1f5;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even) td{background:#fafbfd}
+td.id{white-space:nowrap;font-weight:600;color:var(--navy)}
+code{background:#eef2f7;border-radius:4px;padding:1px 6px;font:.88em Consolas,Menlo,monospace}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:600;color:#fff;white-space:nowrap}
+.pill.err{background:var(--red)}.pill.warn{background:var(--amber)}.pill.ok{background:var(--green)}.pill.info{background:var(--blue)}.pill.na{background:#8a97a6}
+.pill.user{background:var(--teal)}.pill.sys{background:var(--blue)}
+.tablewrap{overflow-x:auto}
+/* journey strip */
+.journey{list-style:none;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:20px 0;padding:0;counter-reset:j}
+.journey li{position:relative;background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:10px;padding:14px 12px 12px;text-align:center;font-size:.9rem}
+.journey li b{display:block;color:var(--navy);font-size:1rem;margin:4px 0}
+.journey li .ic{font-size:1.6rem}
+.journey li:not(:last-child)::after{content:"➜";position:absolute;right:-14px;top:42%;color:var(--teal);font-size:1.1rem;z-index:2}
+@media(max-width:900px){.journey{grid-template-columns:repeat(2,1fr)}.journey li::after{display:none}}
+/* before/after */
+.ba h4{margin-top:0}
+.ba.before{border-top:4px solid var(--red)}.ba.after{border-top:4px solid var(--green)}
+ul.tick{list-style:none;padding-left:0;margin:8px 0}
+ul.tick li{padding-left:26px;position:relative;margin:5px 0}
+ul.tick li::before{content:"✔";position:absolute;left:0;color:var(--green)}
+ul.cross li::before{content:"✖";color:var(--red)}
+ul.dot{padding-left:20px}
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0 4px;font-size:.88rem}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:20px;height:14px;border-radius:4px;border:2px solid;display:inline-block}
+.legend i.user{background:#e3f6f4;border-color:#0e8f8a}.legend i.sys{background:#eaf1fb;border-color:#3b6fb6}
+.legend i.ok{background:#e6f5ec;border-color:#1e8e5a}.legend i.warn{background:#fff4dc;border-color:#d98a00}
+.legend i.err{background:#fdeaea;border-color:#c0392b}.legend i.dec{background:#f3effb;border-color:#7a5cc2;transform:rotate(45deg) scale(.8)}
+/* diagrams */
+.diagwrap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;text-align:center}
+svg.diagram{width:100%;max-width:900px;height:auto}
+svg .n{stroke-width:1.6}
+svg .sys{fill:#eaf1fb;stroke:#3b6fb6}svg .user{fill:#e3f6f4;stroke:#0e8f8a}svg .ok{fill:#e6f5ec;stroke:#1e8e5a}
+svg .warn{fill:#fff4dc;stroke:#d98a00}svg .err{fill:#fdeaea;stroke:#c0392b}svg .dec{fill:#f3effb;stroke:#7a5cc2}
+svg .mail{fill:#e8f4fc;stroke:#2a9bd6}svg .ext{fill:#f1f3f5;stroke:#7b8794}svg .store{fill:#fff;stroke:#3b6fb6;stroke-dasharray:5 3}
+svg .note{fill:#fafafa;stroke:#9aa5b1;stroke-dasharray:5 4}
+svg .zone{fill:#fbfcfe;stroke:#9aa5b1;stroke-dasharray:6 4}svg .zone2{fill:#f8fbff;stroke:#3b6fb6}
+svg .a{fill:none;stroke:#5b6b7f;stroke-width:1.7}
+svg .t{font:13px "Segoe UI",Arial,sans-serif;fill:#1b2a3a}
+svg .ts{font:11.5px "Segoe UI",Arial,sans-serif;fill:#5b6b7f}
+svg .lbl{font:600 12px "Segoe UI",Arial,sans-serif;fill:#5b6b7f}
+svg .hd{font:700 16px "Segoe UI",Arial,sans-serif;fill:#1f3a5f}
+svg .hd2{font:700 14px "Segoe UI",Arial,sans-serif;fill:#1f3a5f}
+.diag-note{font-size:.9rem;color:var(--muted);margin:4px 0 0}
+/* status tracks */
+.track{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.track .lab{width:150px;font-weight:600;color:var(--navy);font-size:.9rem}
+.st{background:#eaf0f7;border:1px solid #c9d6e6;border-radius:8px;padding:4px 10px;font:600 .78rem Consolas,Menlo,monospace;color:var(--navy)}
+.st.g{background:#e6f5ec;border-color:#a7d8bb;color:#14663f}.st.a{background:#fff4dc;border-color:#ecc77a;color:#8a5a00}.st.r{background:#fdeaea;border-color:#eaa9a3;color:#9b2c20}
+.arrow{color:var(--teal);font-weight:700}
+/* chain (release) */
+.chain{display:flex;flex-wrap:wrap;gap:8px 0;align-items:stretch;margin:14px 0}
+.chain .s{background:#fff;border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:10px;padding:10px 12px;font-size:.88rem;flex:1 1 150px;min-width:150px;max-width:210px}
+.chain .s b{display:block;color:var(--navy)}
+.chain .s.gate{border-top-color:var(--amber);background:#fffaf0}
+.chain .s.end{border-top-color:var(--green)}
+.chain .x{align-self:center;color:var(--teal);font-weight:700;padding:0 6px}
+/* walkthrough */
+td.step{width:36px;text-align:center}
+.bubble{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:.85rem;text-align:center}
+.who{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--teal)}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 20px 50px}
+dl.gloss{display:grid;grid-template-columns:200px 1fr;gap:6px 18px}
+dl.gloss dt{font-weight:700;color:var(--navy)}dl.gloss dd{margin:0}
+@media(max-width:700px){dl.gloss{grid-template-columns:1fr}}
+@media print{nav.toc{display:none}body{background:#fff}.card,table,.diagwrap{break-inside:avoid}header.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <h1>Savex B2B Order Automation</h1>
+  <p><b>Functional &amp; Technical Requirements</b> – written in plain language, with step-by-step workflows and every check and balance in one place.</p>
+  <p>Think of the system as a careful assistant: it reads the order documents, cross-checks them like an auditor, asks the right people to approve anything unusual, and then creates the purchase order in the ERP.</p>
+  <div class="chips">
+    <span class="chip">3 product lines: HPI · HPE · Fortinet</span>
+    <span class="chip">20 / 16 / 14 automatic checks</span>
+    <span class="chip">Up to 5 safety gates before ERP</span>
+    <span class="chip">Every action is audited</span>
+    <span class="chip">Prepared 24 Nov 2026 from the live project code</span>
+  </div>
+</div></header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#big">1 · Big picture</a>
+  <a href="#people">2 · Who uses it</a>
+  <a href="#docs">3 · Documents</a>
+  <a href="#walk">4 · Step by step</a>
+  <a href="#fr">5 · Functional needs</a>
+  <a href="#rules">6 · The checks</a>
+  <a href="#gates">7 · Approvals</a>
+  <a href="#erp">8 · ERP loading</a>
+  <a href="#cb">9 · Checks &amp; balances</a>
+  <a href="#arch">10 · Architecture</a>
+  <a href="#tech">11 · Technical needs</a>
+  <a href="#release">12 · Release</a>
+  <a href="#notes">13 · Notes</a>
+  <a href="#gloss">Glossary</a>
+</div></nav>
+
+<main><div class="wrap">
+
+<!-- ====================================================== 1 -->
+<section id="big">
+<h2><span class="num">1</span> The big picture</h2>
+<p class="lead">When a B2B deal comes in, Savex receives a small bundle of documents – the OEM approval or quote, the partner’s purchase order, the end customer’s purchase order and a credit approval. Someone has to read all of them, make sure they agree with each other, get sign-off for anything odd, and then key the order into the ERP (IFS). This system does that work.</p>
+
+<div class="grid2">
+  <div class="card ba before"><h4>Before</h4>
+    <ul class="tick cross">
+      <li>Read PDFs and e-mails by eye</li>
+      <li>Cross-check 15–20 business rules by hand</li>
+      <li>Build the Excel loading sheet manually</li>
+      <li>Create part masters and the PO in IFS by hand</li>
+      <li>Easy to miss an expired deal or a duplicate order</li>
+    </ul></div>
+  <div class="card ba after"><h4>After</h4>
+    <ul class="tick">
+      <li>Upload once – the system reads and sorts the files</li>
+      <li>Every rule is checked the same way, every time</li>
+      <li>Excel loading format and PDF report are generated</li>
+      <li>Approvers decide from an e-mail; the ERP load is automatic</li>
+      <li>Hard stops for expired deals, untrusted quotes and duplicates</li>
+    </ul></div>
+</div>
+
+<h3>The journey in six steps</h3>
+<ol class="journey">
+  <li><div class="ic">📤</div><b>Upload</b>Create a transaction and add the order documents</li>
+  <li><div class="ic">🔎</div><b>Read</b>OCR + AI pull out names, dates, parts, quantities, prices</li>
+  <li><div class="ic">✅</div><b>Check</b>Rules compare the documents with each other</li>
+  <li><div class="ic">🖊️</div><b>Approve</b>Anything unusual goes to the right people</li>
+  <li><div class="ic">🏭</div><b>Load</b>A bridge creates the purchase order in IFS</li>
+  <li><div class="ic">📬</div><b>Notify</b>Owner gets e-mails, PO PDF, Excel and J&nbsp;Number</li>
+</ol>
+
+<div class="callout"><b>One rule of thumb that runs through the whole system</b>
+AI is used only to <i>read</i> documents. It never decides whether an order is acceptable – that is always done by fixed, repeatable business rules and by people.</div>
+</section>
+
+<!-- ====================================================== 2 -->
+<section id="people">
+<h2><span class="num">2</span> Who uses it</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Who</th><th>What they do in the system</th></tr></thead>
+<tbody>
+<tr><td><b>Sales Team</b> <small>(role “sales”)</small></td><td>Creates transactions, uploads documents, fills the loading inputs, runs validation, fixes and re-uploads, downloads the Excel and PDF. Sees their own transactions.</td></tr>
+<tr><td><b>Support Team</b> <small>(role “support”)</small></td><td>Can see every transaction and download the PDF. When mapped as a <b>Level 1 / Level 2 approver</b> for a product line, approves exceptions (warnings and errors).</td></tr>
+<tr><td><b>Business Team / Product Manager</b></td><td>Can see everything, download formats and read the audit trail. Product Managers (approver level 3) decide <b>value and margin escalations</b> straight from an e-mail link – no login needed.</td></tr>
+<tr><td><b>Administrator</b></td><td>Everything above, plus: users, roles, product lines, approver mapping, audit trail, repair tools (re-read a document, fix a line description) and the IFS queue controls.</td></tr>
+<tr><td><b>Ops Admin</b></td><td>Creates and manages users only.</td></tr>
+<tr><td><b>IFS Bridge</b> <small>(a system account)</small></td><td>A background worker inside the Savex network. It collects approved orders, creates them in IFS and reports back. It is not a person.</td></tr>
+</tbody></table></div>
+<p>A person can hold several roles at once; they get the combined permissions. A user can also be limited to certain product lines (empty = all).</p>
+</section>
+
+<!-- ====================================================== 3 -->
+<section id="docs">
+<h2><span class="num">3</span> Product lines and the documents each needs</h2>
+<p>Each product line has its own set of upload “slots”. A slot marked <span class="pill err">mandatory</span> must be filled before the order can pass validation; otherwise the transaction stays at <code>DOCUMENTS_INCOMPLETE</code>. The list lives in <code>config/document_requirements.json</code>, so it can change without a code release.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Product line</th><th>Documents (slot)</th><th>Mandatory?</th><th>Several files?</th><th>Accepted file types</th></tr></thead>
+<tbody>
+<tr><td rowspan="4"><b>HPI</b><br><small>HP Inc.</small></td><td>OEM Approval (OPG)</td><td>Yes</td><td>No</td><td>Any allowed type</td></tr>
+<tr><td>Partner PO</td><td>Yes</td><td>Yes</td><td>Any allowed type</td></tr>
+<tr><td>End Customer PO</td><td>Yes</td><td>Yes</td><td>Any allowed type</td></tr>
+<tr><td>BDR / IC Approval</td><td>Yes</td><td>No</td><td>Any allowed type</td></tr>
+<tr><td rowspan="6"><b>HPE</b><br><small>HP Enterprise</small></td><td>EOP / OEM / OPG</td><td>Yes</td><td>No</td><td>PDF</td></tr>
+<tr><td>Partner PO</td><td>Yes</td><td>Yes</td><td>PDF, Word, images</td></tr>
+<tr><td>End Customer PO <small>(or the HP team’s approval e-mail if no PO exists)</small></td><td>Yes</td><td>Yes</td><td>PDF, Word, images, .eml, .msg</td></tr>
+<tr><td>BDR / IC Approval</td><td>Yes</td><td>No</td><td>PDF, .eml, .msg</td></tr>
+<tr><td>Checklist (End Customer &amp; Partner)</td><td>Yes</td><td>No</td><td>PDF, Word, Excel, images</td></tr>
+<tr><td>Partial Loading Approval (HPE Team) · NDA</td><td>Only when needed*</td><td>No</td><td>.eml, .msg, PDF (NDA: PDF)</td></tr>
+<tr><td rowspan="4"><b>Fortinet</b></td><td>FTQ – Fortinet Quote</td><td>Yes</td><td>No</td><td>PDF, .eml, .msg, Word</td></tr>
+<tr><td>Partner PO</td><td>Yes</td><td>Yes</td><td>PDF, Word, images</td></tr>
+<tr><td>BDR / IC Approval</td><td>Yes</td><td>No</td><td>PDF, .eml, .msg</td></tr>
+<tr><td>License Sheet</td><td>Yes</td><td>No</td><td>Excel, PDF</td></tr>
+</tbody></table></div>
+<p class="diag-note">* HPE: when <b>Partial Loading = YES</b>, the HPE Team approval becomes mandatory for ISS and Storage orders. For Networking it is replaced by a Business Team approval. NDA is for Storage orders only.</p>
+<p>Fortinet also supports an optional <b>Loading Format</b> e-mail from the business; if uploaded, it pre-fills the empty loading inputs (it never overwrites what the user already typed).</p>
+<div class="callout"><b>Global upload limits</b> Allowed types: <code>.pdf .png .jpg .jpeg .tiff .xlsx .xls .msg .eml .doc .docx</code> · maximum <b>25&nbsp;MB</b> per file · empty files are refused.</div>
+</section>
+
+<!-- ============================================================ PART A -->
+<div class="part a">Part A – Functional requirements<small>What the system must do for the people who use it</small></div>
+
+<section id="walk">
+<h2><span class="num">4</span> Step by step: one order from start to finish</h2>
+<p>Read this table left to right: what <span class="pill user">you do</span>, what <span class="pill sys">the system does</span>, and which <b>checks &amp; balances</b> protect that step.</p>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>You do</th><th>The system does</th><th>Checks &amp; balances</th></tr></thead>
+<tbody>
+<tr><td class="step"><span class="bubble">1</span></td><td><b>Sign in</b> with your company e-mail and password (or Microsoft sign-in).</td><td>Confirms the account exists and is active, then opens a session.</td><td>5 wrong passwords → locked for 15 minutes · unknown or inactive users refused · sessions end after a password change or “sign out everywhere”.</td></tr>
+<tr><td class="step"><span class="bubble">2</span></td><td><b>Create a transaction</b> and choose the product line.</td><td>Creates a unique transaction number (product-line code + date and time in India time).</td><td>You only see your own transactions (Support, Business and Admin roles see all).</td></tr>
+<tr><td class="step"><span class="bubble">3</span></td><td><b>Upload the documents</b> into their slots.</td><td>Saves each file on the server, then reads it in the background (OCR + AI) so the screen stays fast.</td><td>File type, size (25 MB) and “not empty” checks · the file type must be allowed for that slot · re-uploading a single-file slot <i>replaces</i> the old file · every upload is audit-logged.</td></tr>
+<tr><td class="step"><span class="bubble">4</span></td><td><b>Look at what was read</b>: partner, end customer, EOP / quote number, line items.</td><td>Detects the document type with a confidence score and refreshes the dashboard as each file is processed.</td><td>Below 80% confidence the type must be confirmed by you · a wrong file can be replaced or removed.</td></tr>
+<tr><td class="step"><span class="bubble">5</span></td><td><b>Complete the loading inputs.</b> Loading Location Site is always required; Fortinet and HPE have a few more.</td><td>Derives the ordering branch from the delivery pincode / city when it is blank. Saves each edit.</td><td>Site code must be exactly 5 letters/digits (e.g. <code>MUVPU</code>) · Fortinet: Ordering Branch, AM name, Sales person (and BT To Site for CHG04) · HPE: Partial Loading YES needs its approval document · every edit logs old → new value.</td></tr>
+<tr><td class="step"><span class="bubble">6</span></td><td><b>Click “Run validation”.</b></td><td>Re-reads anything not yet read, merges documents, matches lines, runs the rules, saves the results.</td><td>Blocked with a clear message if inputs are missing · missing mandatory documents → <code>DOCUMENTS_INCOMPLETE</code> · a missing input makes a rule <b>fail</b>, never silently pass.</td></tr>
+<tr><td class="step"><span class="bubble">7</span></td><td><b>Review the results.</b> Fix and re-upload if needed, then run again.</td><td>Shows each rule as PASS / WARNING / ERROR / INFORMATION / NOT APPLICABLE with “expected vs found” and a suggested action.</td><td>Totals are always recalculated by the system – figures stated on a document are never trusted blindly.</td></tr>
+<tr><td class="step"><span class="bubble">8</span></td><td><b>Wait for approvals</b> (only if there were warnings or errors).</td><td>Applies the safety gates (section 7) and e-mails the approvers.</td><td>Deal-date and trusted-sender gates stop the order before any approval · approvals are one-time e-mail links or in-app buttons · a rejection comes back to you with the reason.</td></tr>
+<tr><td class="step"><span class="bubble">9</span></td><td><b>Nothing – it is automatic.</b></td><td>Queues the order for IFS; the bridge creates the purchase order and reports back.</td><td>Duplicate-load checks · test-replica-only lock · PO lines must equal loading rows (section 8).</td></tr>
+<tr><td class="step"><span class="bubble">10</span></td><td><b>Download and track.</b> Excel loading format, PDF report, PO PDFs.</td><td>Sends e-mails and in-app alerts (validation done, approved, PO created, J Number assigned, action required).</td><td>Alerts are best-effort – a failed e-mail never breaks the order itself.</td></tr>
+<tr><td class="step"><span class="bubble">11</span></td><td><b>Need a change after the PO exists?</b> Start a new transaction.</td><td>The finished transaction is <b>frozen</b>: documents and fields can no longer change.</td><td>Only an administrator can cancel and re-create the IFS PO of a finished run; the old PO is cancelled first.</td></tr>
+</tbody></table></div>
+
+<h3>Workflow diagram – from upload to validation</h3>
+<div class="legend">
+  <span><i class="user"></i>You do</span><span><i class="sys"></i>System does</span><span><i class="dec"></i>Check / decision</span>
+  <span><i class="warn"></i>Needs attention</span><span><i class="err"></i>Stopped</span><span><i class="ok"></i>Done</span>
+</div>
+<div class="diagwrap"><svg viewBox="0 0 900 1130" class="diagram" role="img" aria-label="From upload to validation" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/></marker></defs><rect x="180.0" y="15.0" width="300" height="50" rx="10" class="n user"/><text x="330" y="37.0" class="t" text-anchor="middle">1  Create a transaction</text><text x="330" y="53.0" class="ts" text-anchor="middle">pick HPI / HPE / Fortinet</text><rect x="180.0" y="95.0" width="300" height="50" rx="10" class="n user"/><text x="330" y="117.0" class="t" text-anchor="middle">2  Upload the required documents</text><text x="330" y="133.0" class="ts" text-anchor="middle">one slot per document type</text><polygon points="330,175.0 480.0,215 330,255.0 180.0,215" class="n dec"/><text x="330" y="212.0" class="t" text-anchor="middle">File allowed?</text><text x="330" y="228.0" class="ts" text-anchor="middle">type · size · right slot</text><rect x="180.0" y="300.0" width="300" height="50" rx="10" class="n sys"/><text x="330" y="322.0" class="t" text-anchor="middle">3  Read the file (OCR) and</text><text x="330" y="338.0" class="t" text-anchor="middle">sort it by document type</text><polygon points="330,385.0 480.0,425 330,465.0 180.0,425" class="n dec"/><text x="330" y="422.0" class="t" text-anchor="middle">Sure about the type?</text><text x="330" y="438.0" class="ts" text-anchor="middle">confidence of 80% or more</text><rect x="180.0" y="495.0" width="300" height="50" rx="10" class="n sys"/><text x="330" y="517.0" class="t" text-anchor="middle">4  Pull out the business fields</text><text x="330" y="533.0" class="ts" text-anchor="middle">partner, customer, EOP, lines, prices</text><rect x="180.0" y="585.0" width="300" height="50" rx="10" class="n user"/><text x="330" y="607.0" class="t" text-anchor="middle">5  Fill the loading inputs</text><text x="330" y="623.0" class="ts" text-anchor="middle">Loading Site is mandatory</text><rect x="180.0" y="668.0" width="300" height="44" rx="10" class="n user"/><text x="330" y="695.0" class="t" text-anchor="middle">6  Click “Run validation”</text><polygon points="330,745.0 480.0,785 330,825.0 180.0,785" class="n dec"/><text x="330" y="782.0" class="t" text-anchor="middle">Loading inputs complete?</text><text x="330" y="798.0" class="ts" text-anchor="middle">site code + product-line fields</text><polygon points="330,855.0 480.0,895 330,935.0 180.0,895" class="n dec"/><text x="330" y="892.0" class="t" text-anchor="middle">All mandatory</text><text x="330" y="908.0" class="t" text-anchor="middle">documents present?</text><rect x="180.0" y="972.0" width="300" height="56" rx="10" class="n sys"/><text x="330" y="997.0" class="t" text-anchor="middle">7  Merge → match → run the checks</text><text x="330" y="1013.0" class="ts" text-anchor="middle">20 HPI · 16 HPE · 14 Fortinet + duplicate check</text><rect x="180.0" y="1057.0" width="300" height="56" rx="10" class="n ok"/><text x="330" y="1082.0" class="t" text-anchor="middle">8  Results saved: PASS / WARNING / ERROR</text><text x="330" y="1098.0" class="ts" text-anchor="middle">owner gets a dashboard e-mail with the Excel</text><rect x="585.0" y="187.0" width="230" height="56" rx="10" class="n err"/><text x="700" y="212.0" class="t" text-anchor="middle">Rejected with a clear</text><text x="700" y="228.0" class="t" text-anchor="middle">message – upload again</text><rect x="585.0" y="397.0" width="230" height="56" rx="10" class="n user"/><text x="700" y="422.0" class="t" text-anchor="middle">You confirm the</text><text x="700" y="438.0" class="t" text-anchor="middle">document type</text><rect x="585.0" y="757.0" width="230" height="56" rx="10" class="n warn"/><text x="700" y="782.0" class="t" text-anchor="middle">Blocked with a message:</text><text x="700" y="798.0" class="t" text-anchor="middle">“fill these fields first”</text><rect x="585.0" y="864.0" width="230" height="62" rx="10" class="n warn"/><text x="700" y="892.0" class="t" text-anchor="middle">Status: DOCUMENTS INCOMPLETE</text><text x="700" y="908.0" class="ts" text-anchor="middle">upload the rest, then re-run</text><path d="M330,65 L330,95" class="a " marker-end="url(#ah)"/><path d="M330,145 L330,175" class="a " marker-end="url(#ah)"/><path d="M330,255 L330,300" class="a " marker-end="url(#ah)"/><text x="338" y="277" class="lbl" text-anchor="start">Yes</text><path d="M330,350 L330,385" class="a " marker-end="url(#ah)"/><path d="M330,465 L330,495" class="a " marker-end="url(#ah)"/><text x="338" y="477" class="lbl" text-anchor="start">Yes</text><path d="M330,545 L330,585" class="a " marker-end="url(#ah)"/><path d="M330,635 L330,668" class="a " marker-end="url(#ah)"/><path d="M330,712 L330,745" class="a " marker-end="url(#ah)"/><path d="M330,825 L330,855" class="a " marker-end="url(#ah)"/><text x="338" y="837" class="lbl" text-anchor="start">Yes</text><path d="M330,935 L330,972" class="a " marker-end="url(#ah)"/><text x="338" y="949" class="lbl" text-anchor="start">Yes</text><path d="M330,1028 L330,1057" class="a " marker-end="url(#ah)"/><path d="M480.0,215 L585,215" class="a " marker-end="url(#ah)"/><text x="502.0" y="207" class="lbl" text-anchor="middle">No</text><path d="M700,187 L700,120 L480.0,120" class="a " marker-end="url(#ah)"/><path d="M480.0,425 L585,425" class="a " marker-end="url(#ah)"/><text x="502.0" y="417" class="lbl" text-anchor="middle">No</text><path d="M700,453 L700,520 L480.0,520" class="a " marker-end="url(#ah)"/><path d="M480.0,785 L585,785" class="a " marker-end="url(#ah)"/><text x="502.0" y="777" class="lbl" text-anchor="middle">No</text><path d="M700,757 L700,610 L480.0,610" class="a " marker-end="url(#ah)"/><path d="M480.0,895 L585,895" class="a " marker-end="url(#ah)"/><text x="502.0" y="887" class="lbl" text-anchor="middle">No</text></svg></div>
+<p class="diag-note">Every “No” branch ends with a clear message to the user – the system never fails silently.</p>
+</section>
+
+<section id="fr">
+<h2><span class="num">5</span> Functional requirements</h2>
+<p>Each line says <b>what</b> the system must do and <b>how it is kept safe</b>. All of these are implemented in the current code.</p>
+
+<h3>Access and accounts</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-01</td><td>Let authorised staff sign in with a company e-mail (Microsoft Entra ID in production mode, or a local password login).</td><td>Unknown or inactive users are refused; the first admin is created automatically on an empty database.</td></tr>
+<tr><td class="id">FR-02</td><td>Manage the password life-cycle: change, “forgot password” by e-mail link, “sign out everywhere”.</td><td>Min. 12 characters with upper, lower, digit and special · last 5 passwords cannot be reused · reset link valid 30 minutes · max 5 reset requests per 30 minutes · 5 failed sign-ins lock the account for 15 minutes.</td></tr>
+<tr><td class="id">FR-03</td><td>Give each person only the permissions of their roles (Sales, Support, Business, Admin, Ops Admin); roles can be combined.</td><td>Every protected action checks the permission first; users can also be limited to chosen product lines.</td></tr>
+</tbody></table></div>
+
+<h3>Transactions and documents</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-04</td><td>Create a transaction with a unique number and keep everything about the order under it.</td><td>Number = product-line code + date/time (IST); duplicates are impossible.</td></tr>
+<tr><td class="id">FR-05</td><td>Accept uploads into the slots of the product line and reject anything that does not belong.</td><td>Allowed type · ≤ 25 MB · not empty · slot-specific extensions · category must exist for the product line.</td></tr>
+<tr><td class="id">FR-06</td><td>Replace or delete a document until the PO exists in IFS.</td><td>Replacing keeps one file per single-file slot; both actions are audit-logged; locked once the PO is created.</td></tr>
+<tr><td class="id">FR-07</td><td>Detect the document type automatically and report how sure it is.</td><td>Keyword and file-name scoring from <code>classification_keywords.json</code>; below 80% needs manual confirmation.</td></tr>
+<tr><td class="id">FR-08</td><td>Read each file (text, tables, e-mails) and extract the business fields as soon as it is uploaded.</td><td>Runs in the background; extraction is repeated at validation time only for files that are still unread.</td></tr>
+<tr><td class="id">FR-09</td><td>Combine several Partner POs or End-Customer POs into one order view.</td><td>Lines are joined, totals are summed, every PO number is kept, and a repeat of the same PO number is ignored.</td></tr>
+<tr><td class="id">FR-10</td><td>Show the dashboard (partner, end customer, EOP / quote, branch, site, lines) while documents are still being uploaded.</td><td>A frozen (IFS-done) transaction is never rebuilt; an empty extraction never wipes existing lines.</td></tr>
+</tbody></table></div>
+
+<h3>Loading inputs</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-11</td><td>Require the <b>Loading Location Site</b> before validation can run.</td><td>Exactly 5 letters/digits, upper-cased; otherwise “Please enter a valid Site Code”.</td></tr>
+<tr><td class="id">FR-12</td><td>Work out the Ordering Branch from the delivery pincode / city (<code>branch_mapping.json</code>) when it is blank.</td><td>The user can overwrite; the mapping is a config file, not code.</td></tr>
+<tr><td class="id">FR-13</td><td><b>Fortinet:</b> require Ordering Branch, Fortinet AM Name and Sales Person Name; require BT To Site when the site is CHG04; keep USD→INR rates for hardware and software.</td><td>Validation is blocked with a list of what is missing · the latest saved rates are the default for new orders and the last 20 changes are kept.</td></tr>
+<tr><td class="id">FR-14</td><td><b>HPE:</b> capture Partial Loading, margin %, discount %, RDD date and business vertical.</td><td>Partial Loading must be YES/NO; YES makes the HPE Team approval document mandatory (ISS, Storage) or routes to the Business Team (Networking).</td></tr>
+<tr><td class="id">FR-15</td><td>Record every manual edit.</td><td>Audit entry with the old and new value and the user.</td></tr>
+</tbody></table></div>
+
+<h3>Validation</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-16</td><td>Run the rule set of the product line on demand and show PASS / WARNING / ERROR / INFORMATION / NOT APPLICABLE.</td><td>HPI 20 rules · HPE 16 rules · Fortinet 14 rules, plus a duplicate-order check for all (section 6).</td></tr>
+<tr><td class="id">FR-17</td><td>Show for every rule what was expected, what was found and what to do next.</td><td>Side-by-side values; name-match tiles with similarity scores; price and quantity grids.</td></tr>
+<tr><td class="id">FR-18</td><td>Treat missing evidence as a failure.</td><td>A rule that needs a missing document fails; only genuinely conditional rules stay “not applicable”.</td></tr>
+<tr><td class="id">FR-19</td><td>Write line descriptions in the Savex house style.</td><td>HP lines follow the “BZ” description rules; Fortinet lines follow the SKU book (Coterm / Renewal / Software / Hardware). A regenerated HP description never replaces a more complete stored one.</td></tr>
+<tr><td class="id">FR-20</td><td><b>Fortinet:</b> build the PO header notes – Order type, CPQ, Reseller, End User, Credit Term, Reseller POS ID, FF Details (hardware), FC Quote ID (renewal / co-term), Trade-UP ID (hardware).</td><td>Order type is “Stocking” only when reseller and end user are both Savex; “Standard” credit term becomes “45 Days”; fixed freight forwarder for hardware.</td></tr>
+</tbody></table></div>
+
+<h3>Approvals and gates</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-21</td><td>Stop any order whose OEM deal window does not include today.</td><td>Hard gate, all product lines; happens before approvals and before IFS; needs an extended OEM approval to continue.</td></tr>
+<tr><td class="id">FR-22</td><td><b>Fortinet:</b> refuse orders whose quote cannot be proven to come from the trusted sender.</td><td>Hard gate; approvers cannot override it.</td></tr>
+<tr><td class="id">FR-23</td><td><b>HPE:</b> escalate to the Product Manager when EOP value and PO value differ by more than ₹1, when the margin surplus is negative, or for Networking partial loading.</td><td>E-mail with the Excel attached and one-click Approve / Reject; the PM decides <i>before</i> Level 1 / 2 are asked.</td></tr>
+<tr><td class="id">FR-24</td><td>Send warnings and errors to Level 1 then (if mapped) Level 2 approvers of the product line.</td><td>Approvers are an admin-maintained list per product line and level; with nobody mapped, no approval is required.</td></tr>
+<tr><td class="id">FR-25</td><td>Let approvers decide in the app or from the e-mail.</td><td>Links are random, single-use and expire after the first decision; the first decision stands.</td></tr>
+<tr><td class="id">FR-26</td><td>Return a rejected order to its owner with the reason.</td><td>The owner corrects and re-runs validation; approvals restart.</td></tr>
+</tbody></table></div>
+
+<h3>Outputs, ERP loading and alerts</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-27</td><td>Generate the Excel loading format (the “5th document”) and a PDF validation report.</td><td>Format differs per product line; file name uses the EOP number, e.g. <code>Excel Format For EOP_NO …xlsx</code>.</td></tr>
+<tr><td class="id">FR-28</td><td>Queue a cleared order for the IFS bridge automatically.</td><td>Only after all gates; duplicate-load checks run first.</td></tr>
+<tr><td class="id">FR-29</td><td>Prevent the same order being loaded twice.</td><td>Three layers – see section 9.</td></tr>
+<tr><td class="id">FR-30</td><td>Create part masters and purchase orders in IFS, store the PO PDFs and show the PO numbers.</td><td>Test replicas only; PO lines must match the loading rows; failures carry an exact reason.</td></tr>
+<tr><td class="id">FR-31</td><td><b>Fortinet:</b> follow the billing flow chosen by the loading site (Direct or Branch Transfer) and e-mail the PO to the vendor with the PO PDF and License Sheet.</td><td>One e-mail per PO, sent once; admins can resend; the vendor acknowledgement is recorded as a manual step.</td></tr>
+<tr><td class="id">FR-32</td><td>Tell the owner the J Number when IFS assigns it.</td><td>Sent the first time it appears.</td></tr>
+<tr><td class="id">FR-33</td><td>Let an administrator cancel and re-create the PO of a finished or part-failed run.</td><td>The old run is archived; the old PO / orders are cancelled before new ones are built.</td></tr>
+<tr><td class="id">FR-34</td><td>Notify people in the app (bell) and by e-mail at each milestone.</td><td>See the notification list in section 8.</td></tr>
+</tbody></table></div>
+
+<h3>Administration and audit</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>The system must…</th><th>Safeguard</th></tr></thead>
+<tbody>
+<tr><td class="id">FR-35</td><td>Let admins add users one by one or by CSV upload, activate / deactivate, change roles and product lines, reset passwords and delete users.</td><td>Bad CSV rows are reported and not applied; inactive users cannot sign in.</td></tr>
+<tr><td class="id">FR-36</td><td>Maintain product lines and the approver list (level 1, level 2, and level 3 = Product Manager).</td><td>Changes take effect for the next validation run.</td></tr>
+<tr><td class="id">FR-37</td><td>Keep an audit trail per transaction: uploads, replacements, edits, validation runs, approvals, IFS steps, downloads.</td><td>Who, what, old value, new value, when – readable by admins and the Business Team.</td></tr>
+<tr><td class="id">FR-38</td><td>Keep documents until a user deletes them; optionally purge old uploads.</td><td>Default is “keep forever”; the optional purge never touches transactions, results, audit or PO PDFs.</td></tr>
+<tr><td class="id">FR-39</td><td>Let admins re-read a document or fix a line description without a code change.</td><td>Both repair actions are audited.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="rules">
+<h2><span class="num">6</span> The checks, in plain words</h2>
+<p>Results use five labels: <span class="pill ok">PASS</span> all good · <span class="pill warn">WARNING</span> a person should look · <span class="pill err">ERROR</span> something is wrong · <span class="pill info">INFORMATION</span> good to know · <span class="pill na">NOT APPLICABLE</span> does not concern this order. Limits (quantity tolerance 0.5, price tolerance 1.0, 60-day delivery window) sit in <code>config/validation_config.json</code>.</p>
+
+<h3>HPI and HPE checks</h3>
+<p class="diag-note">The OEM Approval is the <b>base document</b>: names and values on the other documents are compared against it. HPE skips checks 10, 14, 15 and 16.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>Question the system asks</th><th>What it compares</th><th>If not OK</th></tr></thead>
+<tbody>
+<tr><td class="id">1</td><td>Is the OEM document really an OPG (Order Processing Guideline)?</td><td>Heading of the OEM Approval</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">2</td><td>Is the partner the same company everywhere?</td><td>OEM vs IC Approval vs Partner PO (similar-name match)</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">3</td><td>Is the end customer the same everywhere?</td><td>OEM vs IC Approval vs End Customer PO (alternate buyer names accepted, e.g. GeM)</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">4</td><td>Is the credit approved?</td><td>Status on the IC Approval</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">5</td><td>Does the credit cover the order value?</td><td>IC approved value vs Partner PO total</td><td><span class="pill err">ERROR</span> · <span class="pill warn">WARNING</span> if approved but no value is stated</td></tr>
+<tr><td class="id">6</td><td>Are the credit days within what was sanctioned?</td><td>Partner PO days vs IC days</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">7</td><td>Is this a Savex deal?</td><td>“Reseller A” on the OEM Approval</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">8</td><td>Is the deal still valid today?</td><td>Deal begin / end dates on the OEM Approval</td><td><span class="pill err">ERROR</span> (and Gate 1 stops loading)</td></tr>
+<tr><td class="id">9</td><td>Is the requested delivery date not too far out?</td><td>Partner PO date within 60 days</td><td><span class="pill warn">WARNING</span> if past or beyond 60 days; no date = pass</td></tr>
+<tr><td class="id">10</td><td>Is partial loading allowed?</td><td>Partner qty below OEM qty is allowed only for staggered EOP deals <small>(HPI only)</small></td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">11</td><td>Is the quantity within what the OEM authorised?</td><td>Partner PO quantity vs OEM min / max</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">12</td><td>Do the prices agree?</td><td>OEM price vs Partner PO price</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">13</td><td>Do the part numbers match?</td><td>OEM vs Partner PO</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">14</td><td>China-plant (IDS) configuration?</td><td>OEM Approval <small>(HPI only)</small></td><td><span class="pill na">NOT APPLICABLE</span></td></tr>
+<tr><td class="id">15</td><td>RCTO is the default for India-plant orders</td><td>Reminder <small>(HPI only)</small></td><td><span class="pill info">INFORMATION</span></td></tr>
+<tr><td class="id">16</td><td>Is it a PIPP deal?</td><td>OEM heading / end user <small>(HPI only)</small></td><td><span class="pill info">INFORMATION</span> or <span class="pill na">N/A</span></td></tr>
+<tr><td class="id">17</td><td>Is it reseller-to-reseller?</td><td>Partner vs End Customer</td><td><span class="pill info">INFORMATION</span> if they look like the same company</td></tr>
+<tr><td class="id">18</td><td>Is it a firm PO, not just an intent?</td><td>Words like “letter of intent”, “letter of acceptance”, “draft PO”</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">19</td><td>Is the end-customer delivery date reasonable?</td><td>End Customer PO date within 60 days</td><td><span class="pill warn">WARNING</span> · <span class="pill err">ERROR</span> if the EC PO is missing</td></tr>
+<tr><td class="id">20</td><td>Is it the India price list?</td><td>Price List Code on the OEM Approval must be <code>IN</code></td><td><span class="pill warn">WARNING</span> if missing · <span class="pill err">ERROR</span> if different</td></tr>
+<tr><td class="id">99</td><td>Has this order already been loaded?</td><td>Same Partner PO number or quote number on another active transaction</td><td><span class="pill err">ERROR</span></td></tr>
+</tbody></table></div>
+
+<h3>Fortinet checks</h3>
+<p class="diag-note">The FTQ (Fortinet Quote) is the base document. Rule 99 (duplicate order) also applies.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>Question the system asks</th><th>What it compares</th><th>If not OK</th></tr></thead>
+<tbody>
+<tr><td class="id">1</td><td>Does the FTQ carry an explicit “approved” statement for its quote number?</td><td>FTQ approval text</td><td><span class="pill err">ERROR</span> · <span class="pill warn">WARNING</span> if it does not name the quote</td></tr>
+<tr><td class="id">2</td><td>Is the BDR / IC credit approved?</td><td>BDR/IC status</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">3</td><td>Is the customer (reseller) the same everywhere?</td><td>FTQ, Partner PO, License Sheet, BDR/IC</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">4</td><td>Is the end customer the same everywhere?</td><td>FTQ, Partner PO, License Sheet, BDR/IC</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">5</td><td>Is the end-customer website captured?</td><td>License Sheet</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">6</td><td>Is the reseller website captured?</td><td>License Sheet</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">7</td><td>Does the BDR / IC value cover the order?</td><td>BDR/IC amount vs Partner PO total</td><td><span class="pill err">ERROR</span> · <span class="pill warn">WARNING</span> if a figure is missing</td></tr>
+<tr><td class="id">8</td><td>Are the PO credit days within the BDR / IC days?</td><td>Partner PO vs BDR/IC (“30EXT45” counts as 45)</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">9</td><td>Is the FTQ still valid today?</td><td>FTQ approved / expires dates</td><td><span class="pill err">ERROR</span> (and Gate 1 stops loading)</td></tr>
+<tr><td class="id">10</td><td>Is the Partner PO price at or above Fortinet’s cost?</td><td>FTQ distributor $ × USD→INR rate vs PO unit price (lump-sum POs compared on totals; Singapore deals compared in USD)</td><td><span class="pill err">ERROR</span> · <span class="pill warn">WARNING</span> if there are no prices to compare</td></tr>
+<tr><td class="id">11</td><td>Do the part numbers match across documents?</td><td>FTQ, Partner PO, Loading Format, License Sheet</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">12</td><td>Do quantity and unit price match line by line?</td><td>FTQ vs Partner PO vs Loading Format (one grid, one row per FTQ line)</td><td><span class="pill err">ERROR</span></td></tr>
+<tr><td class="id">13</td><td>Are the ordered SKUs covered by the credit authorisation?</td><td>SKUs present in both FTQ and PO must be on the BDR/IC authorised list; PO-only SKUs are flagged but do not block</td><td><span class="pill err">ERROR</span> · <span class="pill warn">WARNING</span> for extra PO-only SKUs</td></tr>
+<tr><td class="id">14</td><td>Are the PO header details complete?</td><td>The nine header notes (see FR-20)</td><td><span class="pill warn">WARNING</span> or <span class="pill err">ERROR</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="gates">
+<h2><span class="num">7</span> After validation: who has to say “yes”?</h2>
+<p>The order walks through up to five gates, in this exact sequence. A <b>hard stop</b> ends the journey right there – no approver is asked, nothing reaches IFS.</p>
+<div class="legend">
+  <span><i class="sys"></i>System step</span><span><i class="user"></i>Human decision</span><span><i class="dec"></i>Gate</span>
+  <span><i class="err"></i>Hard stop</span><span><i class="warn"></i>Held</span><span><i class="ok"></i>Cleared</span>
+</div>
+<div class="diagwrap"><svg viewBox="0 0 940 1095" class="diagram" role="img" aria-label="Approval gates" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/></marker></defs><rect x="315.0" y="17.0" width="310" height="46" rx="10" class="n sys"/><text x="470" y="45.0" class="t" text-anchor="middle">Validation finished – results saved</text><polygon points="470,104.0 640.0,150 470,196.0 300.0,150" class="n dec"/><text x="470" y="139.0" class="t" text-anchor="middle">Gate 1 · Deal window</text><text x="470" y="155.0" class="t" text-anchor="middle">covers today?</text><text x="470" y="171.0" class="ts" text-anchor="middle">all product lines</text><polygon points="470,239.0 640.0,285 470,331.0 300.0,285" class="n dec"/><text x="470" y="274.0" class="t" text-anchor="middle">Gate 2 · FTQ comes from a</text><text x="470" y="290.0" class="t" text-anchor="middle">trusted sender?</text><text x="470" y="306.0" class="ts" text-anchor="middle">Fortinet only</text><polygon points="470,374.0 640.0,420 470,466.0 300.0,420" class="n dec"/><text x="470" y="417.0" class="t" text-anchor="middle">Any WARNING or ERROR</text><text x="470" y="433.0" class="t" text-anchor="middle">in the checks?</text><polygon points="470,503.0 640.0,555 470,607.0 300.0,555" class="n dec"/><text x="470" y="544.0" class="t" text-anchor="middle">Gate 3 · HPE only: value gap &gt; ₹1,</text><text x="470" y="560.0" class="t" text-anchor="middle">negative margin, or Networking</text><text x="470" y="576.0" class="t" text-anchor="middle">partial loading?</text><rect x="315.0" y="657.0" width="310" height="56" rx="10" class="n sys"/><text x="470" y="682.0" class="t" text-anchor="middle">Gate 4 · Support Team Level 1 approves</text><text x="470" y="698.0" class="ts" text-anchor="middle">skipped when nobody is mapped</text><polygon points="470,760.0 620.0,800 470,840.0 320.0,800" class="n dec"/><text x="470" y="805.0" class="t" text-anchor="middle">Level 2 approver mapped?</text><polygon points="470,869.0 640.0,915 470,961.0 300.0,915" class="n dec"/><text x="470" y="912.0" class="t" text-anchor="middle">Gate 5 · Same Partner PO with</text><text x="470" y="928.0" class="t" text-anchor="middle">the same lines already loaded?</text><rect x="315.0" y="1005.0" width="310" height="50" rx="10" class="n ok"/><text x="470" y="1035.0" class="t" text-anchor="middle">QUEUED for IFS loading</text><rect x="20.0" y="108.0" width="220" height="84" rx="10" class="n err"/><text x="130" y="139.0" class="t" text-anchor="middle">STOP · Deal expired or not</text><text x="130" y="155.0" class="t" text-anchor="middle">yet effective. Upload an</text><text x="130" y="171.0" class="t" text-anchor="middle">extended OEM approval.</text><rect x="20.0" y="243.0" width="220" height="84" rx="10" class="n err"/><text x="130" y="274.0" class="t" text-anchor="middle">STOP · PO creation blocked.</text><text x="130" y="290.0" class="t" text-anchor="middle">Approvers cannot override.</text><text x="130" y="306.0" class="t" text-anchor="middle">Upload a trusted FTQ.</text><rect x="20.0" y="392.0" width="220" height="56" rx="10" class="n ok"/><text x="130" y="417.0" class="t" text-anchor="middle">READY FOR DOWNLOAD</text><text x="130" y="433.0" class="ts" text-anchor="middle">no approval needed</text><rect x="685.0" y="512.0" width="250" height="86" rx="10" class="n user"/><text x="810" y="544.0" class="t" text-anchor="middle">Business Team (Product Manager)</text><text x="810" y="560.0" class="t" text-anchor="middle">gets an e-mail with one-click</text><text x="810" y="576.0" class="t" text-anchor="middle">Approve / Reject</text><rect x="685.0" y="775.0" width="250" height="50" rx="10" class="n sys"/><text x="810" y="805.0" class="t" text-anchor="middle">Level 2 approver approves</text><rect x="685.0" y="873.0" width="250" height="84" rx="10" class="n warn"/><text x="810" y="904.0" class="t" text-anchor="middle">HELD · owner is e-mailed.</text><text x="810" y="920.0" class="t" text-anchor="middle">Manual re-queue only if it is</text><text x="810" y="936.0" class="t" text-anchor="middle">a deliberate repeat tranche.</text><path d="M470,63 L470,104" class="a " marker-end="url(#ah)"/><path d="M470,196 L470,239" class="a " marker-end="url(#ah)"/><text x="478" y="212" class="lbl" text-anchor="start">Yes</text><path d="M470,331 L470,374" class="a " marker-end="url(#ah)"/><text x="478" y="347" class="lbl" text-anchor="start">Yes / n.a.</text><path d="M470,466 L470,503" class="a " marker-end="url(#ah)"/><text x="478" y="478" class="lbl" text-anchor="start">Yes</text><path d="M470,607 L470,657" class="a " marker-end="url(#ah)"/><text x="478" y="619" class="lbl" text-anchor="start">No</text><path d="M470,713 L470,760" class="a " marker-end="url(#ah)"/><path d="M470,840 L470,869" class="a " marker-end="url(#ah)"/><text x="462" y="868" class="lbl" text-anchor="end">No</text><path d="M470,961 L470,1005" class="a " marker-end="url(#ah)"/><text x="478" y="975" class="lbl" text-anchor="start">No</text><path d="M300,150 L240,150" class="a " marker-end="url(#ah)"/><text x="275" y="142" class="lbl" text-anchor="middle">No</text><path d="M300,285 L240,285" class="a " marker-end="url(#ah)"/><text x="275" y="277" class="lbl" text-anchor="middle">No</text><path d="M300,420 L240,420" class="a " marker-end="url(#ah)"/><text x="275" y="412" class="lbl" text-anchor="middle">No</text><path d="M130,448 L130,915 L300,915" class="a " marker-end="url(#ah)"/><path d="M640,555 L685,555" class="a " marker-end="url(#ah)"/><text x="662" y="547" class="lbl" text-anchor="middle">Yes</text><path d="M810,598 L810,685 L625.0,685" class="a " marker-end="url(#ah)"/><text x="802" y="627" class="lbl" text-anchor="end">Approved</text><path d="M620,800 L685,800" class="a " marker-end="url(#ah)"/><text x="650" y="792" class="lbl" text-anchor="middle">Yes</text><path d="M810,825 L810,852 L470,852" class="a " marker-end="url(#ah)"/><path d="M640,915 L685,915" class="a " marker-end="url(#ah)"/><text x="662" y="907" class="lbl" text-anchor="middle">Yes</text><rect x="20" y="978" width="220" height="104" rx="10" class="n note"/><text x="130" y="1003.0" class="t" text-anchor="middle">If any approver REJECTS:</text><text x="130" y="1019.0" class="ts" text-anchor="middle">the owner is told why, fixes</text><text x="130" y="1035.0" class="ts" text-anchor="middle">the documents or values and</text><text x="130" y="1051.0" class="ts" text-anchor="middle">re-runs validation; approvals</text><text x="130" y="1067.0" class="ts" text-anchor="middle">restart from the top.</text></svg></div>
+
+<div class="tablewrap"><table>
+<thead><tr><th>Gate</th><th>Applies to</th><th>What triggers it</th><th>Who decides</th><th>Can it be overridden?</th></tr></thead>
+<tbody>
+<tr><td class="id">1 · Deal window</td><td>All product lines</td><td>Today is before the deal start or after its end</td><td>Nobody – upload an extended OEM approval and re-run</td><td><span class="pill err">No</span></td></tr>
+<tr><td class="id">2 · Trusted sender</td><td>Fortinet</td><td>The FTQ origin cannot be verified (expected text <code>sfdc-deployment</code> in the sender or the forwarded FTQ)</td><td>Nobody – upload a trusted FTQ</td><td><span class="pill err">No</span></td></tr>
+<tr><td class="id">3 · Business Team (PM)</td><td>HPE</td><td>EOP and PO value differ by more than ₹1 · negative margin surplus · Networking partial loading</td><td>Product Manager (level 3) via e-mail link</td><td><span class="pill warn">By PM decision</span></td></tr>
+<tr><td class="id">4 · Support Team</td><td>All, when warnings or errors exist</td><td>Any WARNING or ERROR result</td><td>Level 1, then Level 2 if mapped</td><td><span class="pill warn">By approver decision</span></td></tr>
+<tr><td class="id">5 · Duplicate load</td><td>All</td><td>Same Partner PO number and the same part+quantity lines already queued or done</td><td>Held; manual re-queue by an admin for a deliberate repeat</td><td><span class="pill warn">Manual re-queue</span></td></tr>
+</tbody></table></div>
+<div class="callout ok"><b>All checks passed?</b> Then no approval is needed: the order becomes <code>READY_FOR_DOWNLOAD</code> and goes straight to the duplicate gate and the IFS queue.</div>
+</section>
+
+<section id="erp">
+<h2><span class="num">8</span> Loading into the ERP (IFS) and what people get told</h2>
+<p>IFS lives inside the Savex network. The cloud/web app never talks to it directly. Instead, a small <b>bridge</b> worker inside the network <i>pulls</i> approved orders, builds them in IFS and <i>pushes</i> the result back.</p>
+<div class="diagwrap"><svg viewBox="0 0 900 905" class="diagram" role="img" aria-label="IFS loading" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/></marker></defs><rect x="170.0" y="17.0" width="320" height="46" rx="10" class="n sys"/><text x="330" y="37.0" class="t" text-anchor="middle">QUEUED for IFS</text><text x="330" y="53.0" class="ts" text-anchor="middle">set after the last approval gate</text><rect x="170.0" y="92.0" width="320" height="56" rx="10" class="n sys"/><text x="330" y="117.0" class="t" text-anchor="middle">Bridge polls the queue every 60 s</text><text x="330" y="133.0" class="t" text-anchor="middle">and claims the order (IN PROGRESS)</text><polygon points="330,175.0 490.0,220 330,265.0 170.0,220" class="n dec"/><text x="330" y="217.0" class="t" text-anchor="middle">Safe target?</text><text x="330" y="233.0" class="ts" text-anchor="middle">test replicas only – never LIVE</text><rect x="170.0" y="297.0" width="320" height="56" rx="10" class="n sys"/><text x="330" y="322.0" class="t" text-anchor="middle">Prepare the ERP set-up</text><text x="330" y="338.0" class="ts" text-anchor="middle">part masters, deal campaign, supplier agreement</text><rect x="170.0" y="382.0" width="320" height="56" rx="10" class="n sys"/><text x="330" y="407.0" class="t" text-anchor="middle">Create the Purchase Order(s), add tax,</text><text x="330" y="423.0" class="t" text-anchor="middle">release (Fortinet: HW and SW split)</text><polygon points="330,465.0 490.0,510 330,555.0 170.0,510" class="n dec"/><text x="330" y="507.0" class="t" text-anchor="middle">PO lines = loading rows?</text><text x="330" y="523.0" class="ts" text-anchor="middle">the bridge reconciles its own work</text><rect x="170.0" y="587.0" width="320" height="56" rx="10" class="n ok"/><text x="330" y="612.0" class="t" text-anchor="middle">DONE posted back · PO number stored</text><text x="330" y="628.0" class="ts" text-anchor="middle">PO PDF saved on the server</text><rect x="170.0" y="672.0" width="320" height="56" rx="10" class="n sys"/><text x="330" y="697.0" class="t" text-anchor="middle">Fortinet: PO PDF + License Sheet e-mailed</text><text x="330" y="713.0" class="ts" text-anchor="middle">to the vendor, once per PO</text><rect x="170.0" y="755.0" width="320" height="50" rx="10" class="n user"/><text x="330" y="777.0" class="t" text-anchor="middle">PO acknowledgement recorded</text><text x="330" y="793.0" class="ts" text-anchor="middle">manual step</text><rect x="170.0" y="832.0" width="320" height="56" rx="10" class="n ok"/><text x="330" y="857.0" class="t" text-anchor="middle">J Number appears in IFS → published back</text><text x="330" y="873.0" class="ts" text-anchor="middle">owner is e-mailed the key references</text><rect x="580.0" y="185.0" width="240" height="70" rx="10" class="n err"/><text x="700" y="209.0" class="t" text-anchor="middle">Refused: the bridge will not</text><text x="700" y="225.0" class="t" text-anchor="middle">start, and the app rejects</text><text x="700" y="241.0" class="t" text-anchor="middle">any non-test result</text><rect x="580.0" y="468.0" width="240" height="84" rx="10" class="n err"/><text x="700" y="499.0" class="t" text-anchor="middle">FAILED with the exact reason.</text><text x="700" y="515.0" class="t" text-anchor="middle">“Action required” e-mail to the</text><text x="700" y="531.0" class="t" text-anchor="middle">owner. Fix, then re-queue.</text><path d="M330,63 L330,92" class="a " marker-end="url(#ah)"/><path d="M330,148 L330,175" class="a " marker-end="url(#ah)"/><path d="M330,265 L330,297" class="a " marker-end="url(#ah)"/><text x="338" y="278" class="lbl" text-anchor="start">Yes</text><path d="M330,353 L330,382" class="a " marker-end="url(#ah)"/><path d="M330,438 L330,465" class="a " marker-end="url(#ah)"/><path d="M330,555 L330,587" class="a " marker-end="url(#ah)"/><text x="338" y="568" class="lbl" text-anchor="start">Yes</text><path d="M330,643 L330,672" class="a " marker-end="url(#ah)"/><path d="M330,728 L330,755" class="a " marker-end="url(#ah)"/><path d="M330,805 L330,832" class="a " marker-end="url(#ah)"/><path d="M490.0,220 L580,220" class="a " marker-end="url(#ah)"/><text x="512.0" y="212" class="lbl" text-anchor="middle">No</text><path d="M490.0,510 L580,510" class="a " marker-end="url(#ah)"/><text x="512.0" y="502" class="lbl" text-anchor="middle">No</text></svg></div>
+
+<h3>Fortinet: two billing flows, chosen once from the loading site</h3>
+<p>The flow is decided from the Loading Location Site and is never mixed. Hardware and software purchase orders are kept separate.</p>
+<div class="legend">
+  <span><i class="sys"></i>Document created in IFS</span><span><i style="background:#e8f4fc;border-color:#2a9bd6"></i>E-mail</span><span><i class="warn"></i>Manual step</span>
+</div>
+<div class="diagwrap"><svg viewBox="0 0 900 700" class="diagram" role="img" aria-label="Fortinet billing flows" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/></marker></defs><text x="230" y="22" class="hd" text-anchor="middle">DIRECT billing</text><text x="230" y="40" class="ts" text-anchor="middle">loading sites CHVA4 · SGS01 · SNS01 · others</text><text x="670" y="22" class="hd" text-anchor="middle">BRANCH TRANSFER</text><text x="670" y="40" class="ts" text-anchor="middle">loading site CHG04 (BT To Site is mandatory)</text><rect x="30.0" y="68.0" width="400" height="44" rx="10" class="n sys"/><text x="230" y="95.0" class="t" text-anchor="middle">1  Purchase Order at the loading site</text><path d="M230,112.0 L230,134.0" class="a " marker-end="url(#ah)"/><rect x="30.0" y="134.0" width="400" height="44" rx="10" class="n mail"/><text x="230" y="161.0" class="t" text-anchor="middle">2  PO e-mailed to the vendor</text><path d="M230,178.0 L230,200.0" class="a " marker-end="url(#ah)"/><rect x="30.0" y="200.0" width="400" height="44" rx="10" class="n warn"/><text x="230" y="227.0" class="t" text-anchor="middle">3  PO acknowledgement</text><path d="M230,244.0 L230,266.0" class="a " marker-end="url(#ah)"/><rect x="30.0" y="266.0" width="400" height="56" rx="10" class="n sys"/><text x="230" y="291.0" class="t" text-anchor="middle">4  Sale Customer Order at the site</text><text x="230" y="307.0" class="ts" text-anchor="middle">planned · released by the billing team</text><path d="M230,322.0 L230,344.0" class="a " marker-end="url(#ah)"/><rect x="30.0" y="344.0" width="400" height="56" rx="10" class="n warn"/><text x="230" y="369.0" class="t" text-anchor="middle">5  Manual pegging:</text><text x="230" y="385.0" class="t" text-anchor="middle">PO → Sale Customer Order</text><rect x="470.0" y="68.0" width="400" height="44" rx="10" class="n sys"/><text x="670" y="95.0" class="t" text-anchor="middle">1  Loading PO at CHG04</text><path d="M670,112.0 L670,134.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="134.0" width="400" height="44" rx="10" class="n mail"/><text x="670" y="161.0" class="t" text-anchor="middle">2  PO e-mailed to the vendor</text><path d="M670,178.0 L670,200.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="200.0" width="400" height="44" rx="10" class="n warn"/><text x="670" y="227.0" class="t" text-anchor="middle">3  PO acknowledgement</text><path d="M670,244.0 L670,266.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="266.0" width="400" height="56" rx="10" class="n sys"/><text x="670" y="291.0" class="t" text-anchor="middle">4  BT Purchase Order at the BT site</text><text x="670" y="307.0" class="ts" text-anchor="middle">hardware and software kept separate</text><path d="M670,322.0 L670,344.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="344.0" width="400" height="56" rx="10" class="n sys"/><text x="670" y="369.0" class="t" text-anchor="middle">5  BT Customer Order at CHG04</text><text x="670" y="385.0" class="ts" text-anchor="middle">raised by IFS from the BT PO</text><path d="M670,400.0 L670,422.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="422.0" width="400" height="56" rx="10" class="n warn"/><text x="670" y="447.0" class="t" text-anchor="middle">6  Manual pegging 1:</text><text x="670" y="463.0" class="t" text-anchor="middle">Loading PO → BT Customer Order</text><path d="M670,478.0 L670,500.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="500.0" width="400" height="56" rx="10" class="n sys"/><text x="670" y="525.0" class="t" text-anchor="middle">7  Sale Customer Order at the BT site</text><text x="670" y="541.0" class="ts" text-anchor="middle">planned · released by the billing team</text><path d="M670,556.0 L670,578.0" class="a " marker-end="url(#ah)"/><rect x="470.0" y="578.0" width="400" height="56" rx="10" class="n warn"/><text x="670" y="603.0" class="t" text-anchor="middle">8  Manual pegging 2:</text><text x="670" y="619.0" class="t" text-anchor="middle">BT PO → Sale Customer Order</text></svg></div>
+<p class="diag-note">SNS01 (Savex Singapore PTE) lives on its own IFS replica (SGPREP); every other site uses SVXREP. Singapore deals are priced and billed in USD.</p>
+
+<h3>E-mails and alerts people receive</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>When</th><th>Who gets it</th><th>What it says</th></tr></thead>
+<tbody>
+<tr><td>Validation finished</td><td>Transaction owner</td><td>Status, number of passed / warning / error checks, the lines, and the Excel loading sheet attached</td></tr>
+<tr><td>Approval needed (Level 1 / 2)</td><td>Mapped approvers</td><td>Which rules need a decision, with one-click Approve / Reject</td></tr>
+<tr><td>Value / margin escalation (HPE)</td><td>Product Manager</td><td>The reasons, EOP / PO totals and the Excel; one-click Approve / Reject</td></tr>
+<tr><td>Approved or rejected</td><td>Owner</td><td>Who decided, the reason when rejected, and what to do next</td></tr>
+<tr><td>Deal not valid / duplicate held / action required</td><td>Owner</td><td>The exact reason and the step that needs a human</td></tr>
+<tr><td>PO created in IFS</td><td>Owner (in-app alert); Fortinet vendor address (PO e-mail)</td><td>PO numbers; the vendor gets the PO PDF and License Sheet</td></tr>
+<tr><td>J Number assigned</td><td>Owner</td><td>J Numbers, PO numbers and the order lines</td></tr>
+<tr><td>Account events</td><td>The user</td><td>Welcome e-mail and password-reset link</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="cb">
+<h2><span class="num">9</span> Checks and balances at a glance</h2>
+<p>The system defends an order in layers. If one layer misses something, the next one catches it.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Layer</th><th>Safeguard</th><th>What happens when it trips</th></tr></thead>
+<tbody>
+<tr><td rowspan="4"><b>1 · Entry</b></td><td>File type, size, not-empty and slot rules</td><td>Upload refused with a clear message</td></tr>
+<tr><td>Mandatory documents per product line</td><td>Status <code>DOCUMENTS_INCOMPLETE</code></td></tr>
+<tr><td>Mandatory loading inputs (site code, Fortinet fields, BT site, HPE partial-loading document)</td><td>“Run validation” is blocked with the list of missing items</td></tr>
+<tr><td>Password policy, lock-out, single-use reset and approval links</td><td>Access denied or link expired</td></tr>
+<tr><td rowspan="4"><b>2 · Reading</b></td><td>Document-type confidence ≥ 80%</td><td>User must confirm the type</td></tr>
+<tr><td>Totals are always recalculated, never copied from a document</td><td>Prevents silent arithmetic errors</td></tr>
+<tr><td>Never-wipe guard: an empty re-read cannot erase existing lines</td><td>Previous good data is kept</td></tr>
+<tr><td>Same PO uploaded twice is ignored when merging</td><td>No double counting</td></tr>
+<tr><td rowspan="2"><b>3 · Business rules</b></td><td>20 / 16 / 14 deterministic rules; the OEM Approval or FTQ is the base</td><td>PASS / WARNING / ERROR with expected vs found</td></tr>
+<tr><td>Missing evidence fails the rule</td><td>No “vacuous” passes</td></tr>
+<tr><td rowspan="2"><b>4 · Hard gates</b></td><td>Deal window includes today</td><td>Stopped before approvals and IFS</td></tr>
+<tr><td>Fortinet: quote from a trusted sender</td><td>Stopped; cannot be overridden</td></tr>
+<tr><td rowspan="3"><b>5 · People</b></td><td>Product Manager sign-off for value gaps and negative margin (HPE)</td><td>Pending until decided; rejection returns to owner</td></tr>
+<tr><td>Level 1 then Level 2 approval for warnings and errors</td><td>Pending until decided; rejection returns to owner</td></tr>
+<tr><td>First decision stands; links are single-use</td><td>Repeated clicks change nothing</td></tr>
+<tr><td rowspan="4"><b>6 · Duplicates</b></td><td>Rule 99 – same Partner PO number or quote number on another active transaction</td><td>Validation ERROR (rejected transactions do not count, so a redo is possible)</td></tr>
+<tr><td>Queue gate – same Partner PO <i>and</i> same part+quantity lines already queued or done</td><td>Held with an e-mail; manual re-queue only</td></tr>
+<tr><td>Bridge – finds the existing PO by its reference and resumes it</td><td>No second PO for a retry</td></tr>
+<tr><td>IFS agreement period maximum</td><td>Blocks cumulative over-loading, even for manual loads outside this system</td></tr>
+<tr><td rowspan="3"><b>7 · ERP safety</b></td><td>Environment lock: only SVXREP / SGPREP test replicas; SVXLIVE is refused at both ends</td><td>Bridge will not start; app rejects results from other environments</td></tr>
+<tr><td>Reconciliation: PO lines must equal the loading rows</td><td>A “DONE” report is turned into FAILED with the reason</td></tr>
+<tr><td>Idempotent bridge steps; failures post an exact reason</td><td>Safe to retry</td></tr>
+<tr><td rowspan="3"><b>8 · After the fact</b></td><td>Frozen transaction once the PO exists</td><td>No edits, no re-validation; start a new transaction</td></tr>
+<tr><td>Full audit trail (who, what, old → new, when)</td><td>Every decision is traceable</td></tr>
+<tr><td>Admin-only re-create cancels the old PO first</td><td>No orphaned documents in IFS</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ============================================================ PART B -->
+<div class="part b">Part B – Technical requirements<small>How the system is built, configured, secured and released</small></div>
+
+<section id="arch">
+<h2><span class="num">10</span> Architecture</h2>
+<div class="diagwrap"><svg viewBox="0 0 940 565" class="diagram" role="img" aria-label="System architecture" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6b7f"/></marker></defs><rect x="30" y="438" width="520" height="112" rx="12" class="zone"/><text x="46" y="458" class="ts">Savex network (on-premises)</text><rect x="250" y="20" width="450" height="285" rx="12" class="zone2"/><text x="268" y="42" class="hd2">Application server (FastAPI)</text><rect x="267.5" y="65.0" width="175" height="40" rx="10" class="n sys"/><text x="355" y="90.0" class="t" text-anchor="middle">Sign-in, roles, audit</text><rect x="457.5" y="65.0" width="175" height="40" rx="10" class="n sys"/><text x="545" y="90.0" class="t" text-anchor="middle">Upload &amp; file storage</text><rect x="267.5" y="121.0" width="175" height="40" rx="10" class="n sys"/><text x="355" y="146.0" class="t" text-anchor="middle">Classify → OCR → Extract</text><rect x="457.5" y="121.0" width="175" height="40" rx="10" class="n sys"/><text x="545" y="146.0" class="t" text-anchor="middle">Normalize → Reconcile</text><rect x="267.5" y="177.0" width="175" height="40" rx="10" class="n sys"/><text x="355" y="202.0" class="t" text-anchor="middle">Validation engine (rules)</text><rect x="457.5" y="177.0" width="175" height="40" rx="10" class="n sys"/><text x="545" y="202.0" class="t" text-anchor="middle">Approvals &amp; gates</text><rect x="267.5" y="233.0" width="175" height="40" rx="10" class="n sys"/><text x="355" y="258.0" class="t" text-anchor="middle">Excel + PDF generation</text><rect x="457.5" y="233.0" width="175" height="40" rx="10" class="n sys"/><text x="545" y="258.0" class="t" text-anchor="middle">E-mail + in-app alerts</text><rect x="35.0" y="42.0" width="150" height="56" rx="10" class="n user"/><text x="110" y="67.0" class="t" text-anchor="middle">Users’ browser</text><text x="110" y="83.0" class="ts" text-anchor="middle">web page (SPA)</text><path d="M185,70 L250,70" class="a " marker-end="url(#ah)"/><text x="217" y="58" class="lbl" text-anchor="middle">HTTPS</text><rect x="735.0" y="57.0" width="190" height="56" rx="10" class="n ext"/><text x="830" y="82.0" class="t" text-anchor="middle">Azure Document</text><text x="830" y="98.0" class="t" text-anchor="middle">Intelligence (OCR)</text><rect x="735.0" y="137.0" width="190" height="56" rx="10" class="n ext"/><text x="830" y="162.0" class="t" text-anchor="middle">Azure OpenAI</text><text x="830" y="178.0" class="t" text-anchor="middle">extraction &amp; descriptions</text><rect x="735.0" y="217.0" width="190" height="56" rx="10" class="n ext"/><text x="830" y="242.0" class="t" text-anchor="middle">E-mail (SMTP)</text><text x="830" y="258.0" class="t" text-anchor="middle">alerts, approvals, PO</text><path d="M700,85 L735,85" class="a " marker-end="url(#ah)"/><path d="M700,165 L735,165" class="a " marker-end="url(#ah)"/><path d="M700,245 L735,245" class="a " marker-end="url(#ah)"/><rect x="365.0" y="359.0" width="150" height="52" rx="10" class="n store"/><text x="440" y="382.0" class="t" text-anchor="middle">Database</text><text x="440" y="398.0" class="ts" text-anchor="middle">transactions, results, audit</text><rect x="540.0" y="359.0" width="150" height="52" rx="10" class="n store"/><text x="615" y="382.0" class="t" text-anchor="middle">Document storage</text><text x="615" y="398.0" class="ts" text-anchor="middle">server folder / share</text><path d="M440,305 L440,359" class="a " marker-end="url(#ah)"/><path d="M615,305 L615,359" class="a " marker-end="url(#ah)"/><rect x="45.0" y="472.0" width="170" height="56" rx="10" class="n sys"/><text x="130" y="497.0" class="t" text-anchor="middle">IFS Bridge worker</text><text x="130" y="513.0" class="ts" text-anchor="middle">Python, runs on-prem</text><rect x="325.0" y="472.0" width="190" height="56" rx="10" class="n store"/><text x="420" y="497.0" class="t" text-anchor="middle">IFS ERP (Oracle)</text><text x="420" y="513.0" class="ts" text-anchor="middle">SVXREP · SGPREP only</text><path d="M215,500 L325,500" class="a " marker-end="url(#ah)"/><text x="270" y="490" class="lbl" text-anchor="middle">reads / writes</text><path d="M130,472 L130,350 L300,350 L300,305" class="a " marker-end="url(#ah)"/><text x="142" y="410" class="lbl" text-anchor="start">polls queue &amp;</text><text x="142" y="424" class="lbl" text-anchor="start">posts results (HTTPS)</text></svg></div>
+<p class="diag-note">Only OCR and AI extraction leave the server (to Azure). The database, uploaded documents and the IFS bridge stay under Savex control. The cloud never opens a connection into the factory network: the bridge calls out.</p>
+
+<h3>Code map – where things live</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Folder / file</th><th>Responsibility</th></tr></thead>
+<tbody>
+<tr><td><code>app/main.py</code></td><td>Starts the web app, adds security headers, wires the API routes, serves the web page, seeds the first admin, recovers stuck transactions at start-up</td></tr>
+<tr><td><code>app/api/</code></td><td>The web API: sign-in, transactions and documents, admin, profile and notifications, IFS bridge queue, e-mail approval links</td></tr>
+<tr><td><code>app/authentication/</code></td><td>Passwords, password policy, role permissions (RBAC), Microsoft Entra token check</td></tr>
+<tr><td><code>app/document_upload/</code></td><td>Upload validation and file storage (local folder by default; Azure Blob optional)</td></tr>
+<tr><td><code>app/document_classification/</code></td><td>Keyword scoring that decides the document type</td></tr>
+<tr><td><code>app/ocr/</code></td><td>Azure Document Intelligence wrapper; local parser for .eml e-mails</td></tr>
+<tr><td><code>app/extraction/</code></td><td>AI-assisted extraction of business fields per document type</td></tr>
+<tr><td><code>app/normalization/</code> · <code>app/reconciliation/</code></td><td>Merge all documents into one internal order model; recompute totals; derive the branch</td></tr>
+<tr><td><code>app/validation/</code></td><td><code>engine.py</code> = HPI / HPE rules · <code>fortinet.py</code> = Fortinet rules · <code>helpers.py</code> = fuzzy name match and date parsing</td></tr>
+<tr><td><code>app/business_rules/</code></td><td>Deal-date gate, Fortinet billing flow (Direct / Branch Transfer), branch mapping</td></tr>
+<tr><td><code>app/description/</code> · <code>app/po_header/</code></td><td>House-style part descriptions (HP “BZ”, Fortinet SKU book) · Fortinet PO header notes</td></tr>
+<tr><td><code>app/approvals.py</code></td><td>All gates, L1 / L2 / PM approvals, duplicate-load check, queueing for IFS</td></tr>
+<tr><td><code>app/processing.py</code></td><td>The orchestrator that runs the whole pipeline and sets the status</td></tr>
+<tr><td><code>app/excel_generation/</code> · <code>app/pdf_generation/</code></td><td>Excel loading formats and the PDF report</td></tr>
+<tr><td><code>app/notifications/</code> · <code>app/audit/</code></td><td>E-mail templates and in-app alerts · audit-trail writer</td></tr>
+<tr><td><code>app/user_management/</code> · <code>app/storage_cleanup/</code></td><td>User creation / CSV import · optional purge of old uploads</td></tr>
+<tr><td><code>app/static/</code></td><td>The web page: <code>index.html</code>, <code>app.js</code>, <code>styles.css</code></td></tr>
+<tr><td><code>config/</code></td><td>Business master data as JSON (branches, keywords, document slots, thresholds, Fortinet SKU book, IFS masters, branch-transfer sites and suppliers)</td></tr>
+<tr><td><code>scripts/</code></td><td><code>ifs_svxrep_bridge.py</code> (the IFS worker) · <code>sync_from_dev.ps1</code> and <code>deploy.ps1</code> (release) · master-data builders</td></tr>
+<tr><td><code>tests/</code></td><td>Automated tests (24 test files) plus QA runners and reports</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="tech">
+<h2><span class="num">11</span> Technical requirements</h2>
+
+<h3>11.1 Technology stack</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Area</th><th>Technology</th></tr></thead>
+<tbody>
+<tr><td>Web back end</td><td>Python 3.12 · FastAPI · Uvicorn (Gunicorn on Azure App Service)</td></tr>
+<tr><td>Database</td><td>SQLAlchemy 2. SQLite by default (WAL mode, 30 s busy timeout); PostgreSQL supported through <code>DATABASE_URL</code>. Tables are created at start-up; new columns are added automatically on SQLite.</td></tr>
+<tr><td>Front end</td><td>One web page in plain JavaScript (<code>app/static</code>), hash routing, cache-busted with <code>v=YYYYMMDD-N</code></td></tr>
+<tr><td>Reading documents</td><td>Azure AI Document Intelligence (OCR) · Azure OpenAI (field extraction and descriptions; model set by <code>AZURE_OPENAI_DEPLOYMENT</code>) · <code>pypdf</code> and <code>extract-msg</code> for local text / .msg parsing</td></tr>
+<tr><td>Sign-in</td><td>Local signed session tokens (<code>AUTH_MODE=dev</code>) or Microsoft Entra ID bearer tokens (<code>AUTH_MODE=entra</code>)</td></tr>
+<tr><td>Outputs</td><td><code>openpyxl</code> (Excel) · <code>reportlab</code> (PDF)</td></tr>
+<tr><td>E-mail</td><td>SMTP with HTML templates; credentials from the environment or an encrypted credential store</td></tr>
+<tr><td>ERP bridge</td><td>Python worker using the Oracle client through modules of the separate HP-I project (<code>ifs_api</code>, <code>ifs_ops</code>)</td></tr>
+<tr><td>Monitoring</td><td>Python logging; Application Insights optional</td></tr>
+<tr><td>Quality</td><td>pytest + httpx</td></tr>
+</tbody></table></div>
+
+<h3>11.2 What happens inside one validation run</h3>
+<ol>
+<li><b>Read what is missing</b> – any file not yet processed goes through OCR → classify → AI extraction. Results are stored per document so they are reused.</li>
+<li><b>Merge</b> – documents of one category are combined; Fortinet FTQ and BDR documents feed the same slots as OEM Approval and IC Approval.</li>
+<li><b>Normalize</b> – one internal order model keyed by part number / config ID; OCR repairs and fuzzy matching.</li>
+<li><b>Reconcile</b> – line totals recomputed; ordering branch derived.</li>
+<li><b>Enrich</b> – house-style descriptions; user-entered fields are carried over; Fortinet billing plan and Singapore rules applied; Savex’s own tax number is never stored as a party’s.</li>
+<li><b>Validate</b> – HPI / HPE engine or Fortinet engine, then the duplicate-order check; a rule that crashes counts as a failure, never a crash.</li>
+<li><b>Save and route</b> – results replace the previous run; status set; gates and approvals applied; owner notified.</li>
+</ol>
+
+<h3>11.3 Status tracks</h3>
+<p>An order carries four independent status tracks:</p>
+<div class="card">
+  <div class="track"><span class="lab">Transaction status</span>
+    <span class="st">DRAFT</span><span class="arrow">→</span><span class="st">PROCESSING</span><span class="arrow">→</span><span class="st">VALIDATION_IN_PROGRESS</span><span class="arrow">→</span>
+    <span class="st a">DOCUMENTS_INCOMPLETE</span><span class="st a">VALIDATION_WARNING</span><span class="st r">VALIDATION_ERROR</span><span class="st g">READY_FOR_DOWNLOAD</span><span class="arrow">→</span><span class="st g">COMPLETED</span></div>
+  <div class="track"><span class="lab">Business Team (PM)</span>
+    <span class="st">(blank)</span><span class="arrow">→</span><span class="st a">PENDING</span><span class="arrow">→</span><span class="st g">APPROVED</span><span class="st r">REJECTED</span></div>
+  <div class="track"><span class="lab">Support approval</span>
+    <span class="st">NOT_REQUIRED</span><span class="st a">PENDING_L1</span><span class="arrow">→</span><span class="st a">PENDING_L2</span><span class="arrow">→</span><span class="st g">APPROVED</span><span class="st r">REJECTED</span></div>
+  <div class="track"><span class="lab">IFS loading</span>
+    <span class="st">(blank)</span><span class="arrow">→</span><span class="st a">QUEUED</span><span class="arrow">→</span><span class="st a">IN_PROGRESS</span><span class="arrow">→</span><span class="st g">DONE</span><span class="st r">FAILED</span></div>
+</div>
+<p class="diag-note">A document has its own states: Pending → Uploaded → Classified → Processed → Validated (or Error / Deleted). A transaction left half-way by a server restart is re-evaluated from its saved results at start-up so it never shows a spinner forever.</p>
+
+<h3>11.4 Data kept</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Table</th><th>Holds</th></tr></thead>
+<tbody>
+<tr><td><code>transactions</code></td><td>Number, owner, status, partner, end customer, EOP, branch, site, product line, approval fields (PM, L1, L2 with e-mail and time), IFS status / environment / result, the normalized order model and the validation summary</td></tr>
+<tr><td><code>documents</code></td><td>Category, detected category, confidence, file name and path, size, extracted data, status</td></tr>
+<tr><td><code>validation_results</code></td><td>One row per rule per run: result, severity, expected / found values, message, suggested action, detail</td></tr>
+<tr><td><code>audit_logs</code></td><td>Transaction number, user, action, document, old and new value, time</td></tr>
+<tr><td><code>users</code> · <code>password_history</code> · <code>password_reset_tokens</code></td><td>Accounts, roles, product lines, lock-out counters, last 5 password hashes, reset tokens</td></tr>
+<tr><td><code>product_lines</code> · <code>approver_mappings</code></td><td>Product-line master and who approves at level 1, 2 or 3 (Product Manager)</td></tr>
+<tr><td><code>notifications</code> · <code>conversion_rates</code></td><td>In-app alerts · Fortinet USD→INR rate history</td></tr>
+</tbody></table></div>
+
+<h3>11.5 Settings</h3>
+<p>Settings come from environment variables or a <code>.env</code> file – never from the code. Business master data is in <code>config/*.json</code> and can be edited without a release.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Setting</th><th>Default</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>ENVIRONMENT</code></td><td>development</td><td><code>production</code> switches on strict transport security and closes open cross-origin access</td></tr>
+<tr><td><code>AUTH_MODE</code> / <code>OCR_MODE</code> / <code>EXTRACTION_MODE</code></td><td>dev / stub / stub</td><td>Local test stand-ins versus real Entra ID, Azure OCR and Azure OpenAI</td></tr>
+<tr><td><code>DATABASE_URL</code></td><td><code>sqlite:///./b2b_app.db</code></td><td>Where business data is kept</td></tr>
+<tr><td><code>STORAGE_MODE</code> · <code>LOCAL_STORAGE_DIR</code></td><td>local · <code>.local_storage</code></td><td>Where documents and PO PDFs live (folder, share, or optional Azure Blob)</td></tr>
+<tr><td><code>SOURCE_DOC_RETENTION_HOURS</code></td><td>0</td><td>0 = keep uploads forever; above 0 enables the optional purge job</td></tr>
+<tr><td><code>MAX_UPLOAD_MB</code> · <code>ALLOWED_FILE_TYPES</code></td><td>25 · see section 3</td><td>Upload limits</td></tr>
+<tr><td><code>CLASSIFICATION_CONFIDENCE_THRESHOLD</code></td><td>0.80</td><td>Below this the user confirms the type</td></tr>
+<tr><td><code>EXPECTED_FTQ_SENDER</code></td><td>sfdc-deployment</td><td>Trusted-sender text for Fortinet quotes (blank turns the check off)</td></tr>
+<tr><td><code>FORTINET_VENDOR_PO_EMAIL</code></td><td>an internal address</td><td>Where Fortinet purchase orders are e-mailed (interim process)</td></tr>
+<tr><td><code>VALIDATION_TODAY</code></td><td>blank</td><td>Test only: the date the deal-window checks treat as “today”</td></tr>
+<tr><td><code>LOGIN_MAX_FAILED_ATTEMPTS</code> · <code>LOGIN_LOCKOUT_MINUTES</code></td><td>5 · 15</td><td>Account lock-out</td></tr>
+<tr><td><code>PASSWORD_MIN_LENGTH</code> · <code>PASSWORD_HISTORY_COUNT</code> · <code>PASSWORD_RESET_TTL_MINUTES</code></td><td>12 · 5 · 30</td><td>Password policy</td></tr>
+<tr><td><code>EMAIL_*</code> · <code>SMTP_*</code> · <code>APP_BASE_URL</code></td><td>—</td><td>Mail server, sender, reply-to and the web address used in e-mail links</td></tr>
+<tr><td><code>AZURE_*</code> keys</td><td>blank</td><td>Document Intelligence, OpenAI, Key Vault, Application Insights</td></tr>
+</tbody></table></div>
+
+<h3>11.6 Security, reliability and quality requirements</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Area</th><th>Requirement as built</th></tr></thead>
+<tbody>
+<tr><td><b>Access</b></td><td>Every API call needs a valid session or Entra token except sign-in and password reset. Permissions are checked on each action. Approval and reset links use random 32-byte tokens that are single-use.</td></tr>
+<tr><td><b>Transport &amp; headers</b></td><td>HTTPS in production (strict-transport-security on). Headers: no content sniffing, no framing, no referrer. Cross-origin access is open only outside production.</td></tr>
+<tr><td><b>Secrets</b></td><td>No keys or passwords in source. Values come from the environment, Key Vault references or an encrypted credential store.</td></tr>
+<tr><td><b>Safe errors</b></td><td>Users see a generic message on unexpected failures; the detail is only written to the log. Document contents are not logged.</td></tr>
+<tr><td><b>Responsiveness</b></td><td>Uploads return immediately; OCR / AI and validation run in the background and the page polls for the result.</td></tr>
+<tr><td><b>Resilience</b></td><td>Stuck jobs are recovered at start-up · e-mail and in-app alerts are best-effort · bridge steps are idempotent and orphaned “in progress” items are reclaimed at bridge start · re-reads never erase good data.</td></tr>
+<tr><td><b>Traceability</b></td><td>Audit log for every significant action; validation results are stored per run.</td></tr>
+<tr><td><b>Data retention</b></td><td>Uploaded documents and PO PDFs are kept until a user deletes them (optional time-based purge). Transactions, results and audit are never purged by clean-up.</td></tr>
+<tr><td><b>Time zone</b></td><td>Transaction numbers and “today” checks follow India time.</td></tr>
+<tr><td><b>Maintainability</b></td><td>One module per concern, replaceable behind a small interface; business rules and master data live in JSON where possible.</td></tr>
+<tr><td><b>Testing</b></td><td>Automated tests cover validation rules, Fortinet rules and lines, approvals, deal-date gate, billing flow, bridge rules, Excel output, vendor e-mail, passwords and more. The release script refuses to deploy if they fail.</td></tr>
+</tbody></table></div>
+
+<h3>11.7 API cheat-sheet</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Area</th><th>Main endpoints</th></tr></thead>
+<tbody>
+<tr><td>Sign-in</td><td><code>POST /api/auth/login</code> · <code>GET /api/auth/me</code> · change / forgot / reset password · <code>logout-all</code></td></tr>
+<tr><td>Transactions</td><td><code>POST / GET /api/transactions</code> · <code>GET / DELETE /api/transactions/{id}</code> · <code>PATCH …/product-line</code></td></tr>
+<tr><td>Documents</td><td><code>POST …/documents</code> · <code>GET …/documents</code> · <code>GET …/documents/{doc}/content</code> · <code>DELETE …/documents/{doc}</code> · <code>GET …/document-requirements</code></td></tr>
+<tr><td>Validation &amp; edits</td><td><code>POST …/validate</code> (runs in background) · <code>GET …/validation</code> · <code>PATCH …/fields</code> · <code>PATCH …/line-economics</code></td></tr>
+<tr><td>Outputs</td><td><code>GET …/excel</code> · <code>GET …/excel-data</code> · <code>GET …/pdf</code> · <code>GET …/po-pdf/{po}</code></td></tr>
+<tr><td>Approvals</td><td><code>POST …/approve</code> · <code>POST …/reject</code> · <code>POST …/pm-decision</code> · e-mail links <code>/api/approval/{token}/{action}</code> and <code>/api/pm/{token}/{action}</code></td></tr>
+<tr><td>IFS bridge (admin)</td><td><code>GET /api/ifs/queue</code> · <code>POST …/claim</code> · <code>…/requeue</code> · <code>…/recreate</code> · <code>…/result</code> · <code>…/po-resend</code> · <code>…/po-ack</code></td></tr>
+<tr><td>Administration</td><td><code>/api/admin/users</code> (add, bulk, template, active, roles, product-lines, password, delete) · <code>/product-lines</code> · <code>/approvers</code> · <code>/audit/{transaction_no}</code> · <code>/transactions/{id}/reextract</code></td></tr>
+<tr><td>Profile &amp; alerts</td><td><code>/api/profile</code> · <code>/api/notifications</code> (list, unread count, read, read-all)</td></tr>
+<tr><td>System</td><td><code>GET /health</code> · interactive docs at <code>/docs</code></td></tr>
+</tbody></table></div>
+
+<h3>11.8 The IFS bridge in more detail</h3>
+<ul class="dot">
+<li>Runs inside the Savex network as a Python worker; settings are <code>B2B_CLOUD_URL</code> (default <code>http://127.0.0.1:8000</code>), <code>B2B_BRIDGE_EMAIL</code> and <code>B2B_BRIDGE_PASSWORD</code>. Options <code>--dry-run</code> and <code>--once</code> are available.</li>
+<li><b>Environment lock:</b> its Oracle connection is pinned to the SVXREP test replica (SNS01 orders use the SGPREP replica). It refuses to start if the connection resolves to SVXLIVE, and the app rejects results from any other environment.</li>
+<li><b>Fortinet purchase orders</b> are split into hardware and software, with their own address, delivery-terms, ship-via and Location-Group profiles, and the numbered PO header notes written to the PO. Coterm / renewal parts get the required commodity groups and tax code.</li>
+<li>After creating a PO it checks its own work (PO lines vs loading rows), renders the PO PDF, and reports DONE or FAILED with the full step log.</li>
+<li>It also refreshes J Numbers from IFS and re-aligns part descriptions between the app and IFS in small, budgeted batches.</li>
+</ul>
+</section>
+
+<section id="release">
+<h2><span class="num">12</span> Environments and how a change goes live</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Place</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><b>Development folder</b> <code>DocumentScrapping</code></td><td>Full working copy with tests, virtual environment and scratch files. Stub modes and SQLite make it usable without Azure.</td></tr>
+<tr><td><b>Production folder</b> <code>B2B_Production</code></td><td>A clean checkout of deployable files only (no tests, logs or scratch). Every release and git push comes from here.</td></tr>
+<tr><td><b>Azure App Service</b></td><td>Runs the web app: resource group <code>rg-hpib2b-prod</code>, app <code>app-hpib2b-prod</code>.</td></tr>
+<tr><td><b>On-premises bridge host</b></td><td>A Windows machine with network access to the IFS replicas.</td></tr>
+</tbody></table></div>
+
+<div class="chain">
+  <div class="s"><b>1 · Edit &amp; test</b>Change code in the development folder and run the tests</div><div class="x">➜</div>
+  <div class="s"><b>2 · Sync</b><code>sync_from_dev.ps1</code> copies only app, config, scripts, docs, requirements – never tests, scratch files, caches, logs or <code>.env</code></div><div class="x">➜</div>
+  <div class="s gate"><b>3 · Test gate</b><code>deploy.ps1</code> runs the full test suite – stops on any failure</div><div class="x">➜</div>
+  <div class="s gate"><b>4 · Import check</b>The app must start cleanly</div><div class="x">➜</div>
+  <div class="s"><b>5 · Version bump</b>Page asset version becomes <code>v=YYYYMMDD-N</code> so browsers load the new files</div><div class="x">➜</div>
+  <div class="s"><b>6 · Zip &amp; deploy</b>Zip of requirements + app + config is pushed to App Service</div><div class="x">➜</div>
+  <div class="s gate"><b>7 · Verify live</b>After ~3 minutes the live page must show the new version marker</div><div class="x">➜</div>
+  <div class="s end"><b>8 · Commit &amp; push</b>Only now is the deployed state committed to git</div>
+</div>
+<ul class="dot">
+<li><b>If a gate fails:</b> tests red → nothing is deployed; version marker mismatch → nothing is pushed; investigate first.</li>
+<li><b>After a release:</b> pull the new commit into the development folder; restart the IFS bridge if its script or the HP-I modules changed.</li>
+<li><b>Rollback:</b> redeploy the previous good commit. The database and stored documents are not touched by an app rollback.</li>
+<li><code>-SkipTests</code> exists for emergencies only.</li>
+</ul>
+</section>
+
+<!-- ============================================================ PART C -->
+<div class="part c">Part C – Notes for the team<small>Things worth knowing or tidying – found while reading the project</small></div>
+
+<section id="notes">
+<h2><span class="num">13</span> Open points</h2>
+<p>These are observations from the current files, not requirements. They are listed so that the documents and the system say the same thing.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>Observation</th><th>Suggestion</th></tr></thead>
+<tbody>
+<tr><td class="id">1</td><td><b>Hosting story differs between documents.</b> <code>deploy.ps1</code> and the documentation portal deploy to Azure App Service, while the README and <code>.env.example</code> describe a local / on-premises setup (SQLite or on-prem Postgres, local storage). <code>docs/ARCHITECTURE.md</code> still lists PostgreSQL Flexible Server and Blob storage.</td><td>Confirm what production actually uses and align the README, ARCHITECTURE and DEPLOYMENT guides.</td></tr>
+<tr><td class="id">2</td><td><b>Retention.</b> Some older text says source documents are deleted after 2 days. The code default keeps them indefinitely (<code>SOURCE_DOC_RETENTION_HOURS=0</code>).</td><td>Update the older wording; set a value only if the business wants a purge.</td></tr>
+<tr><td class="id">3</td><td><b>Rule counts.</b> The older portal says 19 rules; the HPI engine has 20 (plus the duplicate check). A Fortinet code comment still says “11 rules”; the rule list has 14.</td><td>Refresh the portal and the comment.</td></tr>
+<tr><td class="id">4</td><td><b>Manual “confirm document type” endpoint is not reachable.</b> <code>confirm_classification</code> in <code>app/api/routes_transactions.py</code> has no route decorator, so a low-confidence document cannot be confirmed through the API.</td><td>Add the route decorator (and a test), or remove the function if the upload slot always sets the type.</td></tr>
+<tr><td class="id">5</td><td><b>Defaults to change before real use.</b> The default password for new users and the session-signing secret have development values. In local sign-in mode, an <code>X-User-Email</code> header is accepted for testing.</td><td>Use Entra mode or a strong secret in production, and make sure the header shortcut is not reachable.</td></tr>
+<tr><td class="id">6</td><td><b>Unused approver block.</b> <code>validation_config.json</code> contains an “approvers” section with placeholder addresses that no code reads; approvers actually come from Admin → Approver mapping.</td><td>Remove it to avoid confusion.</td></tr>
+<tr><td class="id">7</td><td><b>Interim vendor address.</b> Fortinet purchase orders go to one configured mailbox until the Fortinet order desk takes over.</td><td>Switch <code>FORTINET_VENDOR_PO_EMAIL</code> when the final process is agreed.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="gloss">
+<h2>Glossary</h2>
+<div class="card"><dl class="gloss">
+<dt>B2B</dt><dd>Business-to-business order placed through a partner (reseller).</dd>
+<dt>OEM / OPG</dt><dd>The manufacturer’s approval for a special-price deal – HP calls it the Order Processing Guideline.</dd>
+<dt>EOP</dt><dd>The deal / quote reference on the HP approval, used as the order’s reference number.</dd>
+<dt>FTQ</dt><dd>Fortinet Quote – Fortinet’s approved quote, the base document for Fortinet orders.</dd>
+<dt>Partner PO (PPO)</dt><dd>The purchase order the reseller sends to Savex.</dd>
+<dt>End Customer PO</dt><dd>The purchase order the final customer gave the reseller.</dd>
+<dt>BDR / IC Approval</dt><dd>Internal credit approval for the partner and order value.</dd>
+<dt>License Sheet</dt><dd>Fortinet spreadsheet listing licences, customer and website details.</dd>
+<dt>Loading Format</dt><dd>The business’s order-loading e-mail / sheet; also the name of the Excel the system generates.</dd>
+<dt>Loading Location Site</dt><dd>The 5-character site code where the order is loaded in IFS (e.g. MUVPU, CHG04).</dd>
+<dt>BT (Branch Transfer)</dt><dd>Billing route where goods are loaded at one site and transferred to another before billing the customer.</dd>
+<dt>IFS</dt><dd>The ERP where part masters and purchase orders are created. SVXREP / SGPREP are test replicas.</dd>
+<dt>J Number</dt><dd>A reference IFS assigns to the PO line after creation; the owner is e-mailed when it appears.</dd>
+<dt>RDD</dt><dd>Requested Delivery Date.</dd>
+<dt>RNW / Coterm</dt><dd>Fortinet renewal and co-terminous licence lines (named with a -RNW or COTERM prefix/suffix).</dd>
+<dt>OCR</dt><dd>Turning a scanned page or PDF into readable text and tables.</dd>
+<dt>RBAC</dt><dd>Role-based access control – what each person is allowed to do.</dd>
+<dt>Bridge</dt><dd>The on-premises worker that carries approved orders into IFS and brings the result back.</dd>
+</dl></div>
+</section>
+
+</div></main>
+<footer>Savex B2B Operations &amp; Document Automation · Functional &amp; Technical Requirements · prepared 24 Nov 2026 from the project source, configuration and existing documentation.</footer>
+</body>
+</html>
+
